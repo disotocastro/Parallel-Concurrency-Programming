@@ -3,51 +3,100 @@
 
 # Glosario
 
-## Programación serial.
+## Programación serial:
+  Tareas que se ejecutan de de manera secuencial, siguiendo el orden especifico con el que fueron programadas.
 
-## Programación concurrente.
+## Programación concurrente:
+  Todo lo que no es serial, las tareas se van intercalando. Se está haciendo una cosa y de repente cambia a hacer otra.
+ 
+## Programación paralela:
+  Las tareas se están realizando al mismo tiempo, de manera simultanea. El paralelismo es una forma de concurrencia.
 
-## Programación paralela.
+## Concurrencia de tareas:
+  separación de problemas (diferentes ejecutantes hacen diferentes tareas)
 
-## Concurrencia de tareas.
+  ### Recursos mono-hilo: call-back, async/await:
 
-## Paralelismo de datos.
+  ### Call-back: 
+    Manejo de eventos, los eventos son cosas que no se saben cuando van a pasar. 
+  ### Async/Await:
+    Forma de programar que utiliza JS para programar de manera concurrente, su código puede llegar a parecer de manera serial.
 
-## Hilo de ejecución.
+  ### Compartidos multi-hilo: Pthreads, OpenMP: 
+    Multiples ejecutantes en un ambiente de recursos compartidos. Los ejecutantes multi-hilo se comparten información (estado de memoria, recursos, estado) sin
+    necesidad de un tercero (sistema operativo), no hay que solicitarle al OS algo para que esto suceda. 
+  #### Pthreads:
+    Tecnología que nos permite crear hilos de ejecución, controlarlos a nuestro gusto. Concurrencia procidemental.
+  #### OpenMP:
+    Solo sirve para un subconjunto, cierto tipo de problemas, más declarativo. Un poco más funcional. 
+  ### Recursos distribuidos simetricamente: Clusters 
+    Todas las máquinas son lo más similares entre ellas, comparten las mismas especificaciones en TODO. Estos son clusters de computadoras. 
+    MPI: Interfaz de Paso de Mensajes: Mecanismo para comunicar ejecutantes que distribuyen recursos. Pueden esta en la misma maquina pero no comparten recursos.
 
-## Indeterminismo.
+  ### Recursos distribuidos asimétricamente: Mallas
+    Distantas oficinas de trabajo, una en CR y otra en Madrid. Se necesita invervención del sistema operativo. La comunicación es más limitada y lenda.
 
-## Memoria privada y compartida.
+    Los recursos no son simetricos, los recursos tienen que correr en muchos tipos de hardware distinto (Malla).
+    EJ: Desarrollar una aplicación para Android, recompilarla para IOS y luego tmb para PC... 
 
-## Espera activa.
+  ### Acelerador: Heterogéneo multiproceso
+    Combinación de recursos compartidos con recursos distribuidos.
+    Dispositivos optimizados para un cierto problema (EJ: Tarjetas de video)
+    Aquí se consiguen los mejores resultados.
+    Las intrucciones están divididos para el CPU y el GPU. Dos segmentos de código en el mismo programa, el CPU llama al GPU a ir realizando cierta tarea
+    Mientras el CPU continua haciendo otras tareas y espera el resultado del GPU.
 
-## Condición de carrera.
 
-## Control de concurrencia.
+## Paralelismo de datos:
+  Su objetivo es el incremento del desempeño, tiene que ver con el High Performance Computers
 
-## Seguridad condicional.
 
-## Exclusión mutua.
 
-## Semáforo.
+## Hilo de ejecución:
 
-## Barrera.
+## Indeterminismo:
 
-## Variable de condición.
+## Memoria privada y compartida:
 
-## Candado de lectura y escritura.
+## Espera activa:
 
-## Descomposición.
+## Condición de carrera:
 
-## Mapeo.
+## Control de concurrencia:
 
-## Incremento de velocidad.
+## Seguridad condicional:
 
-## Comunicación punto a punto entre procesos.
+## Exclusión mutua:
 
-## Comunicación colectiva entre procesos.
+## Semáforo:
 
-## Reducción.
+## Barrera:
+
+## Variable de condición:
+
+## Candado de lectura y escritura:
+
+## Descomposición:
+
+## Mapeo:
+
+## Incremento de velocidad:
+
+## Comunicación punto a punto entre procesos:
+
+## Comunicación colectiva entre procesos:
+
+## Reducción:
+
+# Otras definiciones importantes
+## HPC
+  High Performance Computers  
+
+# Ejemplo 1:
+
+
+
+
 
 
 
@@ -105,24 +154,6 @@ Choose a self-explaining name for your project.
 
 ## Description
 Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
 
 ## Contributing
 State if you are open to contributions and what your requirements are for accepting them.
