@@ -1,9 +1,57 @@
 # concurrente24a-diego_soto
 
 
+# Glosario
 
-## Getting started
+## Programación serial.
 
+## Programación concurrente.
+
+## Programación paralela.
+
+## Concurrencia de tareas.
+
+## Paralelismo de datos.
+
+## Hilo de ejecución.
+
+## Indeterminismo.
+
+## Memoria privada y compartida.
+
+## Espera activa.
+
+## Condición de carrera.
+
+## Control de concurrencia.
+
+## Seguridad condicional.
+
+## Exclusión mutua.
+
+## Semáforo.
+
+## Barrera.
+
+## Variable de condición.
+
+## Candado de lectura y escritura.
+
+## Descomposición.
+
+## Mapeo.
+
+## Incremento de velocidad.
+
+## Comunicación punto a punto entre procesos.
+
+## Comunicación colectiva entre procesos.
+
+## Reducción.
+
+
+
+## Resto del readme por defecto, puede servir para ver otras funcionalidades del Markdown
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
 
 Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
