@@ -91,8 +91,13 @@
 # Otras definiciones importantes
 ## HPC
   High Performance Computers  
+## Linter o Lint
+  Del ingles "Pelusa" quita cosas indeseables en el codigo
+  para usarlo: cpplint prueba.c
 
-# Ejemplo 1:
+## valgrind
+  valgrind --leak-check=full ./prueba
+
 
 
 
