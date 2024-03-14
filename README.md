@@ -15,7 +15,7 @@
 ## Concurrencia de tareas:
   Separación de problemas (diferentes ejecutantes hacen diferentes tareas)
 
-  ### Recursos mono-hilo: call-back, async/await:
+### Recursos mono-hilo: call-back, async/await:
 
   ### Call-back: 
     Manejo de eventos, los eventos son cosas que no se saben cuando van a pasar. 
@@ -61,6 +61,8 @@
 ## Espera activa:
 
 ## Condición de carrera:
+  Competir por un mismo recurso
+
 
 ## Control de concurrencia:
 
