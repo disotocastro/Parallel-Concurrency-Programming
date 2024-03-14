@@ -13,7 +13,7 @@
   Las tareas se están realizando al mismo tiempo, de manera simultanea. El paralelismo es una forma de concurrencia.
 
 ## Concurrencia de tareas:
-  separación de problemas (diferentes ejecutantes hacen diferentes tareas)
+  Separación de problemas (diferentes ejecutantes hacen diferentes tareas)
 
   ### Recursos mono-hilo: call-back, async/await:
 
