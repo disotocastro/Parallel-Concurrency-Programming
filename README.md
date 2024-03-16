@@ -51,6 +51,12 @@ Mientras el CPU continua haciendo otras tareas y espera el resultado del GPU.
 Su objetivo es el incremento del desempeño, tiene que ver con el High Performance Computers
 
 
+## Rastreo de memoria:
+Correr el programa e ir creando evidencia de lo que va pasando en el programa
+Se rastrean 3 recursos
+- Memoria
+- Procesamiento
+- Comunicación 
 
 ## Hilo de ejecución:
 
@@ -97,14 +103,17 @@ Competir por un mismo recurso
 
 ## Reducción:
 
-# Otras definiciones importantes
+
+
+
+# Otras definiciones importantes:
 ## HPC
   High Performance Computers  
 ## Linter o Lint
 Del ingles "Pelusa" quita cosas indeseables en el codigo
 para usarlo: cpplint prueba.c
 
-## valgrind
+## valgrind -> memcheck
 Corre codigo de cualquier programa, solo se necesita el ejecutable
 valgrind --leak-check=full ./prueba
 
@@ -118,6 +127,9 @@ Unintialized memory
 Thread sanitazer
 ## ubsan
 Undefined behavior
+
+
+# Funcionamiento
 
 
 

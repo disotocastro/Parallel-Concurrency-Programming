@@ -18,6 +18,7 @@ int main(void) {
   int error = pthread_create(&thread, /*Parametro*/ NULL, greet, /*Args*/ NULL);
   if (error == EXIT_SUCCESS) {
     //sleep(2); // para probar que el codigo sea concurrente
+
     printf("Hello from main thread \n");
     pthread_join(thread, /*valor de puntero a puntero*/ NULL);
   } else {
