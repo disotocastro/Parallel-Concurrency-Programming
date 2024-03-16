@@ -55,6 +55,13 @@
 ## Hilo de ejecución:
 
 ## Indeterminismo:
+La concurrencia genera indetermismo, eso es que uno no puede predecir el orden
+en el que se van a ejecutar las condiciones concurrentes.
+Cuando se tiene concurrencia, naturalmente está el indeterminismo.
+
+Sino hay indeterminismo, esto puede ser serial. Concurrente es lo que no es
+serial. 
+ 
 
 ## Memoria privada y compartida:
 
