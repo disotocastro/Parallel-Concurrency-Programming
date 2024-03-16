@@ -94,11 +94,25 @@
 ## HPC
   High Performance Computers  
 ## Linter o Lint
-  Del ingles "Pelusa" quita cosas indeseables en el codigo
-  para usarlo: cpplint prueba.c
+Del ingles "Pelusa" quita cosas indeseables en el codigo
+para usarlo: cpplint prueba.c
 
 ## valgrind
-  valgrind --leak-check=full ./prueba
+Corre codigo de cualquier programa, solo se necesita el ejecutable
+valgrind --leak-check=full ./prueba
+
+
+# Sanitazers: Necesitan codigo fuente
+## Asan 
+Invalid access and memory leaks
+## msan
+Unintialized memory
+## tsan
+Thread sanitazer
+## ubsan
+Undefined behavior
+
+
 
 
 

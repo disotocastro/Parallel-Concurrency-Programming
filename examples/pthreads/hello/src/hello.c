@@ -17,6 +17,7 @@ int main(void) {
   int error = pthread_create(&thread, /*Parametro*/ NULL, greet, /*Args*/ NULL);
   if (error == EXIT_SUCCESS) {
     printf("Hello from main thread \n");
+    pthread_join(thread, /*valor de puntero a puntero*/ NULL);
   } else {
   // archivo para reportar errores
     fprintf(stderr, "Could not create secondary thread\n");
@@ -42,6 +43,11 @@ void* greet(void* data) {
 
 // https://jeisson.ecci.ucr.ac.cr/concurrente/2021b/lecciones/0823-tools/g3/hello_impl-pthread_create-stderr.mp4
 // Para compilar: cc -g -Wall -Wextra hello.c -o hello -pthread
+
+
+
+// Solucion del ejercicio:
+//https://jeisson.ecci.ucr.ac.cr/concurrente/2021b/lecciones/0823-tools/g1/fix_thread_leak-pthread_join.mp4
 
 
 
