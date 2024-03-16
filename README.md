@@ -1,6 +1,5 @@
 # concurrente24a-diego_soto
 
-
 # Glosario
 
 ## Programación serial:
@@ -74,10 +73,11 @@ serial.
 ## Espera activa:
 
 ## Condición de carrera:
-Competir por un mismo recurso
-
+Es cuando dos hilos están peleando por un mismo recurso
 
 ## Control de concurrencia:
+Si dos hilos intentan escribir en el mismo archivo, el primero que llegó escribe
+y el otro espera. Se definirará mejor más adelante.
 
 ## Seguridad condicional:
 
