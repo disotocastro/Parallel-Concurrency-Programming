@@ -4,51 +4,51 @@
 # Glosario
 
 ## Programación serial:
-  Tareas que se ejecutan de de manera secuencial, siguiendo el orden especifico con el que fueron programadas.
+Tareas que se ejecutan de de manera secuencial, siguiendo el orden especifico con el que fueron programadas.
 
 ## Programación concurrente:
-  Todo lo que no es serial, las tareas se van intercalando. Se está haciendo una cosa y de repente cambia a hacer otra.
+Todo lo que no es serial, las tareas se van intercalando. Se está haciendo una cosa y de repente cambia a hacer otra.
  
 ## Programación paralela:
-  Las tareas se están realizando al mismo tiempo, de manera simultanea. El paralelismo es una forma de concurrencia.
+Las tareas se están realizando al mismo tiempo, de manera simultanea. El paralelismo es una forma de concurrencia.
 
 ## Concurrencia de tareas:
-  Separación de problemas (diferentes ejecutantes hacen diferentes tareas)
+Separación de problemas (diferentes ejecutantes hacen diferentes tareas)
 
 ### Recursos mono-hilo: call-back, async/await:
 
-  ### Call-back: 
-    Manejo de eventos, los eventos son cosas que no se saben cuando van a pasar. 
-  ### Async/Await:
-    Forma de programar que utiliza JS para programar de manera concurrente, su código puede llegar a parecer de manera serial.
+### Call-back: 
+Manejo de eventos, los eventos son cosas que no se saben cuando van a pasar. 
+### Async/Await:
+Forma de programar que utiliza JS para programar de manera concurrente, su código puede llegar a parecer de manera serial.
 
-  ### Compartidos multi-hilo: Pthreads, OpenMP: 
-    Multiples ejecutantes en un ambiente de recursos compartidos. Los ejecutantes multi-hilo se comparten información (estado de memoria, recursos, estado) sin
-    necesidad de un tercero (sistema operativo), no hay que solicitarle al OS algo para que esto suceda. 
-  #### Pthreads:
-    Tecnología que nos permite crear hilos de ejecución, controlarlos a nuestro gusto. Concurrencia procidemental.
-  #### OpenMP:
-    Solo sirve para un subconjunto, cierto tipo de problemas, más declarativo. Un poco más funcional. 
-  ### Recursos distribuidos simetricamente: Clusters 
-    Todas las máquinas son lo más similares entre ellas, comparten las mismas especificaciones en TODO. Estos son clusters de computadoras. 
-    MPI: Interfaz de Paso de Mensajes: Mecanismo para comunicar ejecutantes que distribuyen recursos. Pueden esta en la misma maquina pero no comparten recursos.
+### Compartidos multi-hilo: Pthreads, OpenMP: 
+Multiples ejecutantes en un ambiente de recursos compartidos. Los ejecutantes multi-hilo se comparten información (estado de memoria, recursos, estado) sin
+necesidad de un tercero (sistema operativo), no hay que solicitarle al OS algo para que esto suceda. 
+#### Pthreads:
+Tecnología que nos permite crear hilos de ejecución, controlarlos a nuestro gusto. Concurrencia procidemental.
+#### OpenMP:
+Solo sirve para un subconjunto, cierto tipo de problemas, más declarativo. Un poco más funcional. 
+### Recursos distribuidos simetricamente: Clusters 
+Todas las máquinas son lo más similares entre ellas, comparten las mismas especificaciones en TODO. Estos son clusters de computadoras. 
+MPI: Interfaz de Paso de Mensajes: Mecanismo para comunicar ejecutantes que distribuyen recursos. Pueden esta en la misma maquina pero no comparten recursos.
 
-  ### Recursos distribuidos asimétricamente: Mallas
-    Distantas oficinas de trabajo, una en CR y otra en Madrid. Se necesita invervención del sistema operativo. La comunicación es más limitada y lenda.
+### Recursos distribuidos asimétricamente: Mallas
+Distantas oficinas de trabajo, una en CR y otra en Madrid. Se necesita invervención del sistema operativo. La comunicación es más limitada y lenda.
 
-    Los recursos no son simetricos, los recursos tienen que correr en muchos tipos de hardware distinto (Malla).
-    EJ: Desarrollar una aplicación para Android, recompilarla para IOS y luego tmb para PC... 
+Los recursos no son simetricos, los recursos tienen que correr en muchos tipos de hardware distinto (Malla).
+EJ: Desarrollar una aplicación para Android, recompilarla para IOS y luego tmb para PC... 
 
-  ### Acelerador: Heterogéneo multiproceso
-    Combinación de recursos compartidos con recursos distribuidos.
-    Dispositivos optimizados para un cierto problema (EJ: Tarjetas de video)
-    Aquí se consiguen los mejores resultados.
-    Las intrucciones están divididos para el CPU y el GPU. Dos segmentos de código en el mismo programa, el CPU llama al GPU a ir realizando cierta tarea
-    Mientras el CPU continua haciendo otras tareas y espera el resultado del GPU.
+### Acelerador: Heterogéneo multiproceso
+Combinación de recursos compartidos con recursos distribuidos.
+Dispositivos optimizados para un cierto problema (EJ: Tarjetas de video)
+Aquí se consiguen los mejores resultados.
+Las intrucciones están divididos para el CPU y el GPU. Dos segmentos de código en el mismo programa, el CPU llama al GPU a ir realizando cierta tarea
+Mientras el CPU continua haciendo otras tareas y espera el resultado del GPU.
 
 
 ## Paralelismo de datos:
-  Su objetivo es el incremento del desempeño, tiene que ver con el High Performance Computers
+Su objetivo es el incremento del desempeño, tiene que ver con el High Performance Computers
 
 
 
@@ -68,7 +68,7 @@ serial.
 ## Espera activa:
 
 ## Condición de carrera:
-  Competir por un mismo recurso
+Competir por un mismo recurso
 
 
 ## Control de concurrencia:
