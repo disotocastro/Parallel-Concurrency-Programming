@@ -1,0 +1,1 @@
+1. Para que git no me pida las credenciales: git config --global credential.helper store
