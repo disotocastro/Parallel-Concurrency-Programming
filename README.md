@@ -58,6 +58,8 @@ Se rastrean 3 recursos
 - Comunicación 
 
 ## Hilo de ejecución:
+Un arreglo de valores que el OS carga en los registros de una CPU y permiten
+ejecutar código en esa CPU.
 
 ## Indeterminismo:
 La concurrencia genera indetermismo, eso es que uno no puede predecir el orden

@@ -19,6 +19,7 @@ y ejecuta la accion.
 
 # Invocación de main(). Stack frame
 
-- 
+- Stack frame: Region de la memoria donde se colocan variables globales de la
+invocacion de una subrutina.
 
 

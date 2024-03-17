@@ -24,3 +24,4 @@ Recuerde revisar que su solución no haga mal uso de la memoria ni la concurrenc
  y de apegarse a la covención de estilos. Si usa rand(), el linter advertirá de 
  que este procedimiento no es reentrante. Puede usar el procedimiento rand_r() 
  cuya documentación puede obtener en la línea de comandos con man rand_r.
+ 
