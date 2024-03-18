@@ -1,3 +1,6 @@
+// "Copyright 2024 Diego Soto"
+
+
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>

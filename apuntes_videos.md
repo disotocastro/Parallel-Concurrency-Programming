@@ -10,14 +10,13 @@ static proboca que se cargue en el segmento de datos y no en la invocacion de la
 - Las variables globales son malas practicas de programacion en el mundo serial, pero
 en el mundo concurrente son HORRIBLES. NO usar, prohibidas en el curso. 
 
-# Creación del hilo principal. El ambiente de ejecución del lenguaje (crt0)
+## Creación del hilo principal. El ambiente de ejecución del lenguaje (crt0)
 
 - Cuando el sistema operativo crea el hilo principal, va a ejecutar
 la libreria de C, Runtime Library o Crt0. Esta funcion localiza la funcion Main 
 y ejecuta la accion.
 
-
-# Invocación de main(). Stack frame
+## Invocación de main(). Stack frame
 
 - Stack frame: Region de la memoria donde se colocan variables globales de la
 invocacion de una subrutina.
