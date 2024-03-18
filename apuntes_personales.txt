@@ -1,1 +1,12 @@
 1. Para que git no me pida las credenciales: git config --global credential.helper store
+
+
+
+
+
+
+anidando 3 ciclos for
+
+i = 0,
+j = 1, 
+k = j
