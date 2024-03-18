@@ -58,7 +58,7 @@ void* gen_rnumber(void* seed) {
   unsigned int unique_seed = *base_seed * thread_id;
 
   // Puntero que apunta al bloque de memoria asignado por malloc
-  int* rnumber = (int*)malloc(sizeof(int));
+  int* rnumber = (int*)malloc(1 * sizeof(int));
 
   if (rnumber) {
     *rnumber = rand_r(&unique_seed) % 100;
