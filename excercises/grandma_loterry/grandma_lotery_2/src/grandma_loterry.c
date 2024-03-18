@@ -25,10 +25,6 @@ int main(void) {
     // Casteo de void a int
     printf("Number from Thread1: %d\n", (int)rnumber1);
     printf("Number from Thread2: %d\n", (int)rnumber2);
-
-    // Ya que se utilizo malloc:
-    free(rnumber1);
-    free(rnumber2);
   } else {
       // Reporte de errores
       fprintf(stderr, "Error while creating threads\n");
