@@ -31,7 +31,7 @@ int main(void) {
   } else {
       // Reporte de errores
       fprintf(stderr, "Error while creating threads\n");
-  }
+    }
   return EXIT_SUCCESS;
 
 }

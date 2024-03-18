@@ -22,8 +22,9 @@ int main(void) {
     pthread_join(thread1, (void*)&rnumber1);
     pthread_join(thread2, (void*)&rnumber2);
 
-    printf("Number from Thread1: %d\n", *rnumber1);
-    printf("Number from Thread2: %d\n", *rnumber2);
+    // Casteo de void a int
+    printf("Number from Thread1: %d\n", (int)rnumber1);
+    printf("Number from Thread2: %d\n", (int)rnumber2);
 
     // Ya que se utilizo malloc:
     free(rnumber1);
@@ -31,7 +32,7 @@ int main(void) {
   } else {
       // Reporte de errores
       fprintf(stderr, "Error while creating threads\n");
-  }
+    }
   return EXIT_SUCCESS;
 
 }
@@ -57,15 +58,29 @@ void* gen_rnumber(void* seed) {
   // obteniendo un valor único para cada hilo
   unsigned int unique_seed = *base_seed * thread_id;
 
-  // Puntero que apunta al bloque de memoria asignado por malloc
-  int* rnumber = (int*)malloc(1 * sizeof(int));
+
+  /**
+   * @brief Esto es igual al codigo anterior, sin embargo
+   * los mensajes del profesor Alberto dicen:
+   * 
+   * "Recordar que cuando se hace un join, uno puede guardar el valor de retorno 
+   * que es de tipo void*, void* se utiliza para retornar direcciones de memoria
+   * también lo podemos utilizar para retornar un valor que pueda almacenarse 
+   * en 64bits. 
+   * 
+   * Lo único que hay que hacer es "castear" el valor de int a void*
+   * 
+   * y luego en el main volver a castear de void*  a int"
+  */
+
+  // Se genera el numero random en un int 
+  int rnumber = rand_r(&unique_seed) % 100;
 
   if (rnumber) {
-    *rnumber = rand_r(&unique_seed) % 100;
-    return (void*)rnumber;
-  } else {
+    // casteo del int a void*
+    return (void*) rnumber;
+  } else{
     fprintf(stderr, "Error while generating random number\n");
-    return NULL; // EXIT_FAILURE tira warning por ser void*
+    return NULL;
   }
-
 }
