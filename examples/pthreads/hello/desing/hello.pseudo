@@ -1,7 +1,0 @@
-main:
-  create_thread(greet())
-  print("Hello from manin thread")
-
-
-greet:
-  print("Hello from secondary)
