@@ -2,11 +2,15 @@
 
 
 
-
-
-
 anidando 3 ciclos for
 
 i = 0,
 j = 1, 
 k = j
+
+
+para el proyecto se necesitan 2 estructuras de datos, una para almacenar los
+numeros y otra para 
+
+
+<stdint.h>
