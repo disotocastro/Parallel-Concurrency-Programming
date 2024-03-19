@@ -7,15 +7,17 @@
 #include "statistics.h"
 
 const char* const statistics_help = 
-  "Stats v1.0.0 Diego Soto ...."
-  "Stats v1.0.0 Diego Soto ...."
-  "Stats v1.0.0 Diego Soto ...."
+  "Stats v1.0.0 Diego Soto"
+  "Usage: stats [-b] [Files]\n"
+  "Options:\n"
+  " -b Data is binary \n"
 ;
 
 // Registro privado
 typedef struct statistics {
   // atributos de la clase
   bool help_asked; 
+  bool binary_file; 
 } statistics_t;
 
 int statistics_analyze_arguments(statistics_t* statistics, int argc, char* argv[]);
@@ -34,7 +36,8 @@ statistics_t* statistics_create(void) {
   statistics_t* statistics = (statistics_t*) 
     calloc(1, sizeof(statistics_t) );
     if (statistics){
-      /* code */
+      statistics->help_asked = false;
+      statistics->binary_file = false;
     }
     
   return statistics;
@@ -65,7 +68,12 @@ int statistics_analyze_arguments(statistics_t* statistics, int argc
     if ( strcmp(argv[index], "--help") == 0) {
       statistics->help_asked = true;
       break;
-    }  
+    } 
+
+    // Comparacion de archivos binarios
+    if ( strcmp(argv[index], "-b") == 0) {
+      statistics->binary_file = true;
+    }
   }
 
   return EXIT_SUCCESS;
