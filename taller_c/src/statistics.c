@@ -6,6 +6,7 @@
 #include <stdint.h>
 
 #include "statistics.h"
+#include "array_double.h"
 
 const char* const statistics_help = 
   "Stats v1.0.0 Diego Soto"
@@ -35,7 +36,7 @@ typedef struct statistics {
   // En cambio, si lo hago con punteros es memoria discontinua
   statistics_file_t* files_head;
   statistics_file_t* files_tail;
-
+  array_double_t values; 
 
 
 
@@ -48,6 +49,8 @@ int statistics_print_help(void);
 int statistics_enqueue_file(statistics_t* statistics, const char* filename);
 int statistics_analyze_file(statistics_t* statistics, FILE* file);
 
+void statistics_print(const statistics_t* statistics);
+
 
 
 void statistics_destroy(statistics_t* statistics) {
@@ -58,7 +61,7 @@ void statistics_destroy(statistics_t* statistics) {
     statistics->files_head = current->next;
     free(current);
   }
-
+  array_double_init(&statistics->values);
   free(statistics);
 }
 
@@ -75,6 +78,8 @@ statistics_t* statistics_create(void) {
       statistics->files_head = NULL;
       statistics->files_tail = NULL;
       statistics->file_count = 0;
+      array_double_init(&statistics->values);
+
     }
     
   return statistics;
@@ -118,13 +123,13 @@ int statistics_run(statistics_t* statistics, int argc, char* argv[]) {
   }
 
 
+  if (error == EXIT_SUCCESS) {
+    statistics_print(statistics);
+  }
   
 
 
-
-
-
-
+  
 
   return error; 
 }  
@@ -197,6 +202,7 @@ int statistics_enqueue_file(statistics_t* statistics, const char* filename) {
 int statistics_analyze_file(statistics_t* statistics, FILE* file) {
   assert(statistics);
   assert(file);
+  int error = EXIT_SUCCESS;
 
   double value = 0.0;
   if (statistics->binary_file){
@@ -206,16 +212,38 @@ int statistics_analyze_file(statistics_t* statistics, FILE* file) {
     // cuantos elementos = 1,
     // archivo = file
     while (fread(&value, sizeof(double),1,file) == 1) {
+      array_double_append(&statistics->values, value);
+
+      if (error) {
+        break;
+      }
+      
+
       printf("value = %lf\n", value);
 
     }
   } else{
-    FILE* output = fopen("output001.bin", "wb");
+    //FILE* output = fopen("output001.bin", "wb");
     while (fscanf(file,"%lf", &value) == 1){
-      printf("value = %lf\n", value);
-      fwrite(&value, sizeof(value),1, output);
+      error = array_double_append(&statistics->values, value);
+      
+      if (error) {
+        break;
+      }
+
+      //printf("value = %lf\n", value);
+      //fwrite(&value, sizeof(value),1, output);
     }
-    fclose(output);
+    //fclose(output);
   }
-  return EXIT_SUCCESS;
+  return error;
+}
+
+void statistics_print(const statistics_t* statistics) {
+  assert(statistics);
+  for (size_t i = 0; i < statistics->values.count; i++){
+    const double value =  statistics->values.elements[i];
+    printf("value %zu = %lf\n", i, value);
+  }
+  
 }

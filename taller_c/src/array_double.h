@@ -14,7 +14,7 @@ typedef struct {
 
 int array_double_init(array_double_t* array);
 void array_double_destroy(array_double_t* array);
-int array_double_append(array_double_t* array);
+int array_double_append(array_double_t* array, double element);
 
 
 
