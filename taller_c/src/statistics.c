@@ -29,6 +29,7 @@ typedef struct statistics {
   // atributos de la clase
   bool help_asked; 
   bool binary_file; 
+  size_t file_count;
 
   // Si hago un archivo normal, es memoria continua
   // En cambio, si lo hago con punteros es memoria discontinua
@@ -72,6 +73,7 @@ statistics_t* statistics_create(void) {
       statistics->binary_file = false;
       statistics->files_head = NULL;
       statistics->files_tail = NULL;
+      statistics->file_count = 0;
     }
     
   return statistics;
@@ -85,11 +87,35 @@ int statistics_run(statistics_t* statistics, int argc, char* argv[]) {
       return statistics_print_help();
     }
 
-    for(statistics_file_t* current = statistics->files_head; current; 
-      current = current->next) {
-        const char* filename = current->filename;
+    if (statistics->file_count > 0) {
+      for(statistics_file_t* current = statistics->files_head; current; 
+        current = current->next) {
+      const char* filename = current->filename;
+
+                                          //read binary, read text
+      const char* open_mode = statistics->binary_file ? "rb" : "rt";
+      FILE* file = fopen(filename, open_mode);
+
+      if (file) {
         printf("Processing... %s\n", filename);
+        fclose(file);
+      } else {
+        fprintf(stderr, "error> could not open %s\n", filename);
+        error = 20;
+        // break ?, si se hace se detiene por compelto
+      }
+    } 
+    } else {
+      if (statistics->binary_file){
+        freopen("", "rb", stdin);
+      }
+      printf("Processing stdin\n");
     }
+    
+
+
+
+
 
     
   }
@@ -124,19 +150,14 @@ int statistics_analyze_arguments(statistics_t* statistics, int argc
     if ( strcmp(argv[index], "-b") == 0 ) {
       printf("argv[%d] == [%s]\n", index, argv[index]);
       statistics->binary_file = true;
-    }
-
     // el puntero es una desreferenciacion, basicamnete es como
     // hacer *argv[index] == argv[index][0]
-    if ( *argv[index] == '-') { // argv[index][0]
+    } else if (*argv[index] == '-'){ // argv[index][0]
       fprintf(stderr, "error: unknow option: %s\n", argv[index]);
       return  EXIT_FAILURE;
-    } else {
+    } else{
       statistics_append_file(statistics, argv[index]);
     }
-    
-
-
   }
 
   return EXIT_SUCCESS;
@@ -168,6 +189,7 @@ int statistics_append_file(statistics_t* statistics, const char* filename) {
       statistics->files_tail->next = node;
       statistics->files_tail = statistics->files_tail->next;
     }
+    ++ statistics->file_count;
     return EXIT_SUCCESS;
   } else{
       fprintf(stderr, "error: couldnt create node ");
