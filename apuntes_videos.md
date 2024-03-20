@@ -22,3 +22,5 @@ y ejecuta la accion.
 invocacion de una subrutina.
 
 
+## Colas de archivos
+- Una cola utiliza memoria discontinua
