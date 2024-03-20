@@ -45,7 +45,8 @@ int statistics_analyze_arguments(statistics_t* statistics, int argc, char* argv[
 
 int statistics_print_help(void);
 
-int statistics_append_file(statistics_t* statistics, const char* filename);
+int statistics_enqueue_file(statistics_t* statistics, const char* filename);
+int statistics_analyze_file(statistics_t* statistics, FILE* file);
 
 
 
@@ -89,35 +90,31 @@ int statistics_run(statistics_t* statistics, int argc, char* argv[]) {
 
     if (statistics->file_count > 0) {
       for(statistics_file_t* current = statistics->files_head; current; 
-        current = current->next) {
-      const char* filename = current->filename;
+          current = current->next) {
+        const char* filename = current->filename;
 
-                                          //read binary, read text
-      const char* open_mode = statistics->binary_file ? "rb" : "rt";
-      FILE* file = fopen(filename, open_mode);
+                                            //read binary, read text
+        const char* open_mode = statistics->binary_file ? "rb" : "rt";
+        FILE* file = fopen(filename, open_mode);
 
-      if (file) {
-        printf("Processing... %s\n", filename);
-        fclose(file);
-      } else {
-        fprintf(stderr, "error> could not open %s\n", filename);
-        error = 20;
-        // break ?, si se hace se detiene por compelto
-      }
-    } 
+        if (file) {
+          printf("Processing... %s\n", filename);
+          statistics_analyze_file(statistics, file);
+          fclose(file);
+        } else {
+          fprintf(stderr, "error> could not open %s\n", filename);
+          error = 20;
+          // break ?, si se hace se detiene por compelto
+        }
+     } 
     } else {
       if (statistics->binary_file){
         freopen("", "rb", stdin);
       }
+      statistics_analyze_file(statistics, stdin);
       printf("Processing stdin\n");
     }
-    
-
-
-
-
-
-    
+  
   }
 
 
@@ -156,7 +153,7 @@ int statistics_analyze_arguments(statistics_t* statistics, int argc
       fprintf(stderr, "error: unknow option: %s\n", argv[index]);
       return  EXIT_FAILURE;
     } else{
-      statistics_append_file(statistics, argv[index]);
+      statistics_enqueue_file(statistics, argv[index]);
     }
   }
 
@@ -170,7 +167,7 @@ int statistics_print_help(void) {
 }
 
 
-int statistics_append_file(statistics_t* statistics, const char* filename) {
+int statistics_enqueue_file(statistics_t* statistics, const char* filename) {
   assert(statistics);
   // Si es nulo significa que esta vacio
   // se crea un nodo vacio con calloc para q empiece en 0
@@ -197,3 +194,28 @@ int statistics_append_file(statistics_t* statistics, const char* filename) {
   } 
 }
 
+int statistics_analyze_file(statistics_t* statistics, FILE* file) {
+  assert(statistics);
+  assert(file);
+
+  double value = 0.0;
+  if (statistics->binary_file){
+    // formato del freal
+    // &value = donde escribo
+    //sizeof(double) el tamanio
+    // cuantos elementos = 1,
+    // archivo = file
+    while (fread(&value, sizeof(double),1,file) == 1) {
+      printf("value = %lf\n", value);
+
+    }
+  } else{
+    FILE* output = fopen("output001.bin", "wb");
+    while (fscanf(file,"%lf", &value) == 1){
+      printf("value = %lf\n", value);
+      fwrite(&value, sizeof(value),1, output);
+    }
+    fclose(output);
+  }
+  return EXIT_SUCCESS;
+}
