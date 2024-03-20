@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "statistics.h"
 
@@ -13,20 +14,49 @@ const char* const statistics_help =
   " -b Data is binary \n"
 ;
 
+
+// Estructura de datos cola
+typedef struct statistics_file{
+  const char* filename;
+  struct statistics_file* next;
+
+}statistics_file_t;
+
+ 
+
 // Registro privado
 typedef struct statistics {
   // atributos de la clase
   bool help_asked; 
   bool binary_file; 
+
+  // Si hago un archivo normal, es memoria continua
+  // En cambio, si lo hago con punteros es memoria discontinua
+  statistics_file_t* files_head;
+  statistics_file_t* files_tail;
+
+
+
+
 } statistics_t;
 
 int statistics_analyze_arguments(statistics_t* statistics, int argc, char* argv[]);
 
 int statistics_print_help(void);
 
+int statistics_append_file(statistics_t* statistics, const char* filename);
+
+
 
 void statistics_destroy(statistics_t* statistics) {
   assert(statistics);
+
+  for(statistics_file_t* current = statistics->files_head; current; 
+      current = statistics->files_head) {
+    statistics->files_head = current->next;
+    free(current);
+  }
+
   free(statistics);
 }
 
@@ -34,10 +64,14 @@ void statistics_destroy(statistics_t* statistics) {
 statistics_t* statistics_create(void) {
 
   statistics_t* statistics = (statistics_t*) 
+    // calloc inicializa la memoria en 0
+    // practicamente hace que todo nuestro if sea inutil xd
     calloc(1, sizeof(statistics_t) );
     if (statistics){
       statistics->help_asked = false;
       statistics->binary_file = false;
+      statistics->files_head = NULL;
+      statistics->files_tail = NULL;
     }
     
   return statistics;
@@ -50,7 +84,24 @@ int statistics_run(statistics_t* statistics, int argc, char* argv[]) {
     if (statistics->help_asked) {
       return statistics_print_help();
     }
+
+    for(statistics_file_t* current = statistics->files_head; current; 
+      current = current->next) {
+        const char* filename = current->filename;
+        printf("Processing... %s\n", filename);
+    }
+
+    
   }
+
+
+  
+
+
+
+
+
+
 
   return error; 
 }  
@@ -62,18 +113,30 @@ int statistics_analyze_arguments(statistics_t* statistics, int argc
   // el nombre del programa
   for (int index = 1; index < argc; index++) {
  
-    printf("argv[%d] == [%s]\n", index, argv[index]);
 
     // Si es == 0, es que son iguales
-    if ( strcmp(argv[index], "--help") == 0) {
+    if ( strcmp(argv[index], "--help") == 0 ) {
       statistics->help_asked = true;
       break;
     } 
 
     // Comparacion de archivos binarios
-    if ( strcmp(argv[index], "-b") == 0) {
+    if ( strcmp(argv[index], "-b") == 0 ) {
+      printf("argv[%d] == [%s]\n", index, argv[index]);
       statistics->binary_file = true;
     }
+
+    // el puntero es una desreferenciacion, basicamnete es como
+    // hacer *argv[index] == argv[index][0]
+    if ( *argv[index] == '-') { // argv[index][0]
+      fprintf(stderr, "error: unknow option: %s\n", argv[index]);
+      return  EXIT_FAILURE;
+    } else {
+      statistics_append_file(statistics, argv[index]);
+    }
+    
+
+
   }
 
   return EXIT_SUCCESS;
@@ -84,3 +147,31 @@ int statistics_print_help(void) {
   printf("%s", statistics_help);
   return EXIT_SUCCESS;
 }
+
+
+int statistics_append_file(statistics_t* statistics, const char* filename) {
+  assert(statistics);
+  // Si es nulo significa que esta vacio
+  // se crea un nodo vacio con calloc para q empiece en 0
+  statistics_file_t* node =(statistics_file_t*) 
+    calloc(1, sizeof(statistics_file_t));
+
+  if (node) {
+    node->filename = filename;
+    
+    // Si la cola esta vacia 
+    if (statistics->files_head == NULL) {
+      statistics->files_head = node; 
+      statistics->files_tail = node;
+    } else {
+      // de lo contrario, es que si hay elementos
+      statistics->files_tail->next = node;
+      statistics->files_tail = statistics->files_tail->next;
+    }
+    return EXIT_SUCCESS;
+  } else{
+      fprintf(stderr, "error: couldnt create node ");
+      return EXIT_FAILURE;
+  } 
+}
+
