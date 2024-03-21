@@ -120,7 +120,7 @@ Corre codigo de cualquier programa, solo se necesita el ejecutable
 valgrind --leak-check=full ./prueba
 
 
-# Sanitazers: Necesitan codigo fuente
+## Sanitazers: Necesitan codigo fuente
 ## Asan 
 Invalid access and memory leaks
 ## msan
