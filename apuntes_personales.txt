@@ -14,3 +14,31 @@ numeros y otra para
 
 
 <stdint.h>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Test que hay que correr
+- make memcheck
+
+## Sanitazers: Necesitan codigo fuente
+## Asan 
+Invalid access and memory leaks
+## msan
+Unintialized memory
+## tsan
+Thread sanitazer
+## ubsan
+Undefined behavior
