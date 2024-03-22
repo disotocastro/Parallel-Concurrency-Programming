@@ -42,3 +42,13 @@ Unintialized memory
 Thread sanitazer
 ## ubsan
 Undefined behavior
+
+
+
+
+Debugear con gdb:
+
+
+abrir gdb, darle a run
+y poner "bt" de backttrace, dice lo ultimo que habia en la pila antes
+de que el programa diera segmetation fault
