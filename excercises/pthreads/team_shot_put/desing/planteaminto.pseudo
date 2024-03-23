@@ -1,0 +1,55 @@
+// Aclaro que esto no es una solucion como tal, sino una lluvia de ideas
+// para comprender mejor el problema.
+
+
+
+
+
+struct equipo(cantidad_atletas){
+  cantidad_atletas;
+  // tienen que ser impares
+  int puntos;
+
+  
+}
+struct atleta{
+  // int tiros
+  double distancia_mas_larga
+
+
+
+  
+  
+  
+  
+  
+main(){
+
+  atletas = print("Ingresar la cantidad de atletas")
+  if (atletas % 2 != 0){
+
+  }else{
+    print(error);
+  }
+
+  hilo1 -> crear equipo(atletas);
+  hilo2 -> crear equipo(atletas);
+
+}
+
+
+shot_put(
+
+  distnacia de la bala es de 0.0 y 25.0 metros
+
+
+  for de 0 hasta 2{
+    lanzar_bala() y escoger la mas grande
+    imprimir(lanzar_bala)
+  }
+
+)
+
+lanzar_bala(
+
+)
