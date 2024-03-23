@@ -109,6 +109,16 @@ y el otro espera. Se definirará mejor más adelante.
 
 
 # Otras definiciones importantes:
+
+## Record
+Registro de memoria, region de la memoria de archivos del mismo tipo
+cuyo valor de cada dato puede variar -> [64bits, 32bits, 32bits, , 64its]
+## Malloc 
+Inicializa el espacio en memoria, pero no le pone nada, es mas rapido
+Reserva 20 megas de memoria y lo deja ahi, siempre tiene basura
+## Calloc 
+Inicializa el espacio en memoria y ademas la inicializa en 0, mas lento
+Se utiliza para hacer vectores
 ## HPC
   High Performance Computers  
 ## Linter o Lint

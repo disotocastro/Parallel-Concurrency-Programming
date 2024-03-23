@@ -40,6 +40,19 @@ int main(int argc, char* argv[]) {
   }
 
   error = create_threads(thread_count);
+
+
+
+
+
+
+
+
+
+
+
+
+  
   return error;
 }  // end procedure
 
@@ -85,6 +98,13 @@ int create_threads(uint64_t thread_count) {
    
   return error;
 }
+
+
+
+
+
+
+
 
 // procedure greet:
 void* greet(void* data) {
