@@ -3,29 +3,9 @@
 
 
 
-
-
-struct equipo(cantidad_atletas){
-  cantidad_atletas;
-  // tienen que ser impares
-  int puntos;
-
-  
-}
-struct atleta{
-  // int tiros
-  double distancia_mas_larga
-
-
-
-  
-  
-  
-  
-  
+    
 main(){
 
-  atletas = print("Ingresar la cantidad de atletas")
   if (atletas % 2 != 0){
 
   }else{
