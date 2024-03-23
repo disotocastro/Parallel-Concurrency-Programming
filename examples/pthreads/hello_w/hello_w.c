@@ -27,6 +27,9 @@ int main(int argc, char* argv[]) {
   int error = EXIT_SUCCESS;
   // create thread_count as result of converting argv[1] to integer
   // thread_count := integer(argv[1])
+  
+  //esto se utiliza para trabajar con la cantidad de hilos disponibles
+  //ahorita mismo en el sistema operativo
   uint64_t thread_count = sysconf(_SC_NPROCESSORS_ONLN);
   if (argc == 2) {
     if (sscanf(argv[1], "%" SCNu64, &thread_count) == 1) {
