@@ -1,36 +1,7 @@
-#include <assert.h>
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-// Cambios en las bibliotecas
-#include <thread>
-#include <iostream>
-#include <sstream>
-#include <cstdlib>
-#include <vector>
-#include<exception>
-#include <cstdint>
-#include <mutex> 
-
-
+#include "hello_iw_shr.hpp"
 
 using namespace std;
 mutex print_mutex;
-
-typedef struct shared_data {
-  uint64_t thread_count;
-} shared_data_t;
-
-
-typedef struct private_data {
-  uint64_t thread_number;  // rank
-  shared_data_t* shared_data;
-} private_data_t;
-
-void* greet(void* data);
-int create_threads(shared_data_t* shared_data);
 
 int main(int argc, char* argv[]) {
   int error = EXIT_SUCCESS;
@@ -54,28 +25,27 @@ int main(int argc, char* argv[]) {
       return 11;
     }
   }
-
   shared_data_t* shared_data = (shared_data_t*)calloc(1, sizeof(shared_data_t));
-  
+
   try {
     shared_data->thread_count = thread_count;
-    struct timespec start_time, finish_time;
-    clock_gettime(CLOCK_MONOTONIC, &start_time);
+    const auto start = chrono::high_resolution_clock::now();
     error = create_threads(shared_data);
-    clock_gettime(CLOCK_MONOTONIC, &finish_time);
-    double elapsed_time = finish_time.tv_sec - start_time.tv_sec +
-      (finish_time.tv_nsec - start_time.tv_nsec) * 1e-9;
-    // printf("Execution time: %.9lfs\n", elapsed_time);
-    std::cout << "Execution time:" << elapsed_time<<std::endl;
+    const auto end = chrono::high_resolution_clock::now();
+    const chrono::duration<double> diff = end - start;
+
+    cout << "Execution time:" << diff.count() << "s\n";
     free(shared_data);
   }
-  catch(const std::exception& e) {
-    std::cerr << " Error: could not allocate shared data\n " << e.what() << '\n';
-    return EXIT_FAILURE;
+  catch(const exception& e) {
+    cerr << "Error: could not allocate shared data: " << e.what() << endl;
+    throw;
   }
+
   
   return error;
-}  
+}
+
 
 int create_threads(shared_data_t* shared_data) {
 
@@ -136,7 +106,7 @@ int create_threads(shared_data_t* shared_data) {
   }
  catch(const std::exception& e) {
   std::cerr << e.what() << '\n';
-  return EXIT_FAILURE;
+  throw;
  }
  
 }
@@ -157,23 +127,7 @@ void* greet(void* data) {
   }
   catch(const std::exception& e) {
     std::cerr << "Error: Could not create threads "<< e.what() << '\n';
-    return;
+    throw;
   }
 
 } 
-
-
-/***
- * 1. Listo
- * 2 Listo
- * 3 Listo
- * 4 ..
- * 5 ..
- * 6. LISTO
- * 7. LISTO
- * 8. LISTO
- * 
- * 10. LISTO
- * 
- * 
-*/
