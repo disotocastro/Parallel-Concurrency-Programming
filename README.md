@@ -71,6 +71,9 @@ serial.
  
 
 ## Memoria privada y compartida:
+### Privada
+Memoria que un hilo tiene y otro hilo no, esta no se altea por los cambios
+que yo le haga a la memoria de otro hilo, se crea haciendo un struct.
 
 ## Espera activa:
 
