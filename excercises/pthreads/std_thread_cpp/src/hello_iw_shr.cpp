@@ -1,11 +1,32 @@
 #include <assert.h>
 #include <inttypes.h>
-#include <pthread.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <unistd.h>
+// Cambios en las bibliotecas
+#include <thread>
+#include <iostream>
+#include <cstdlib>
+#include <vector>
+
+
+
+
+/**
+ * 1. Cambiar nombre y extension: LISTO
+ * 
+ * 2. Obtenga la cantidad de CPUs disponibles en el sistema usando 
+ * funcionalidad de la clase std::thread en lugar de POSIX. LISTO
+ * 
+ * 3. Vectores. LISTO
+ * 
+ * 4. Ultimo
+ * 
+ * 
+ * 
+ * 
+*/
 
 // thread_shared_data_t
 typedef struct shared_data {
@@ -17,19 +38,23 @@ typedef struct private_data {
   uint64_t thread_number;  // rank
   shared_data_t* shared_data;
 } private_data_t;
+using namespace std; 
 
-/**
- * @brief ...
- */
 void* greet(void* data);
 int create_threads(shared_data_t* shared_data);
 
-// procedure main(argc, argv[])
 int main(int argc, char* argv[]) {
   int error = EXIT_SUCCESS;
-  // create thread_count as result of converting argv[1] to integer
-  // thread_count := integer(argv[1])
-  uint64_t thread_count = sysconf(_SC_NPROCESSORS_ONLN);
+  
+  /**
+   * 2. 
+   * 
+   * Obtenga la cantidad de CPUs disponibles en el sistema usando funcionalidad 
+   * de la clase std::thread en lugar de POSIX.
+  */
+
+  uint64_t thread_count = std::thread::hardware_concurrency();
+
   if (argc == 2) {
     if (sscanf(argv[1], "%" SCNu64, &thread_count) == 1) {
     } else {
@@ -38,7 +63,17 @@ int main(int argc, char* argv[]) {
     }
   }
 
+  /**
+   * 5. 
+   * 
+   * Use manejo de memoria dinámica de C++ (new) para los datos compartidos 
+   * de los hilos. Es recomendable usar un puntero inteligente 
+   * (std::shared_ptr<>) para este fin.
+  */
+
   shared_data_t* shared_data = (shared_data_t*)calloc(1, sizeof(shared_data_t));
+
+
   if (shared_data) {
     shared_data->thread_count = thread_count;
 
@@ -63,43 +98,52 @@ int main(int argc, char* argv[]) {
 
 int create_threads(shared_data_t* shared_data) {
   int error = EXIT_SUCCESS;
-  // for thread_number := 0 to thread_count do
-  pthread_t* threads = (pthread_t*)
-    malloc(shared_data->thread_count * sizeof(pthread_t));
-  private_data_t* private_data = (private_data_t*)
-    calloc(shared_data->thread_count, sizeof(private_data_t));
-  if (threads && private_data) {
-    for (uint64_t thread_number = 0; thread_number < shared_data->thread_count
-        ; ++thread_number) {
-      private_data[thread_number].thread_number = thread_number;
-      private_data[thread_number].shared_data = shared_data;
-      // create_thread(greet, thread_number)
-      error = pthread_create(&threads[thread_number], /*attr*/ NULL, greet
-        , /*arg*/ &private_data[thread_number]);
-      if (error == EXIT_SUCCESS) {
-      } else {
-        fprintf(stderr, "Error: could not create secondary thread\n");
-        error = 21;
-        break;
-      }
-    }
+/**
+   * 3.
+   *  
+   * Use un arreglo dinámico para almacenar los objetos que controlan los hilos
+   * de ejecución. Dado que estos objetos deben recibir en su constructor la 
+   * rutina que se va a ejecutar en un hilo aparte, agréguelos al vector con el 
+   * método emplace_back()
+   * 
+  */
 
-    // print "Hello from main thread"
-    printf("Hello from main thread\n");
+  // pthread_t* threads = (pthread_t*)
+  //   malloc(shared_data->thread_count * sizeof(pthread_t));
+  // private_data_t* private_data = (private_data_t*)
+  //   calloc(shared_data->thread_count, sizeof(private_data_t));
+
+  vector<thread> threads;
+  vector<private_data_t> private_data;
+  // Reservar el espacio para los vectores
+  threads.reserve(shared_data->thread_count);
+  private_data.reserve(shared_data->thread_count);
 
     for (uint64_t thread_number = 0; thread_number < shared_data->thread_count
         ; ++thread_number) {
-      pthread_join(threads[thread_number], /*value_ptr*/ NULL);
+
+      // private_data[thread_number].thread_number = thread_number;
+      // private_data[thread_number].shared_data = shared_data;
+      private_data.emplace_back();
+      private_data.back().thread_number = thread_number;
+      private_data.back().shared_data = shared_data;
+      threads.emplace_back(greet, &private_data.back());
+
+      // print "Hello from main thread"
+      printf("Hello from main thread\n");
+
+    }
+    // for (int i = 0; i < threads.size(); ++i) {
+    //   threads[i].join();
+    // }
+
+    for (thread& thread : threads) {
+      thread.join();
     }
 
-    free(private_data);
-    free(threads);
-  } else {
-    fprintf(stderr, "Error: could not allocate %" PRIu64 " threads\n"
-      , shared_data->thread_count);
-    error = 22;
-  }
-
+    threads.clear();
+    private_data.clear();
+  
   return error;
 }
 
