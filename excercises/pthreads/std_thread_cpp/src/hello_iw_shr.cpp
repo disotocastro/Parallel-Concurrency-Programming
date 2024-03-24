@@ -17,6 +17,9 @@ int main(int argc, char* argv[]) {
    * LISTO.
   */
 
+
+  // 8. Use std::istringstream en lugar de sscanf().
+
   if (argc == 2) {
     istringstream iss(argv[1]);
     if (iss >> thread_count) {
@@ -25,7 +28,16 @@ int main(int argc, char* argv[]) {
       return 11;
     }
   }
+
   shared_data_t* shared_data = (shared_data_t*)calloc(1, sizeof(shared_data_t));
+
+
+  /**
+   * 4. 
+   * 
+   * Mida la duración de ejecución con funcionalidad estándar como 
+   * std::chrono::high_resolution_clock::now() en lugar de POSIX (clock_gettime)
+  */
 
   try {
     shared_data->thread_count = thread_count;
@@ -41,7 +53,6 @@ int main(int argc, char* argv[]) {
     cerr << "Error: could not allocate shared data: " << e.what() << endl;
     throw;
   }
-
   
   return error;
 }
