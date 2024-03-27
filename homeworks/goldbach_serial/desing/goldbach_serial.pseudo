@@ -1,3 +1,16 @@
 // Debe al menos tener las subrutinas de lectura, cálculo de sumas de Goldbach, 
 // impresión, y subrutina principal. La del cálculo de las sumas probablemente 
 // necesitará subdividirla. 
+
+
+int main () {
+  input_numeros = Leer(input.txt)
+  input_mas_grande = Obtener_input_mas_grande(&archivo)
+  Sieve_of_eratosthenes(&array_primos, &input_mas_grande)
+  // Este calcula la cantidad de sumas
+  Goldbach(&input_numeros, &array_primos)
+
+  // Estos 2 se encargan de conseguir las distintas combinatorias
+  Goldbach_par(&input_numeros, &array_primos)
+  Goldbach_impar(&input_numeros, &array_primos)
+}
