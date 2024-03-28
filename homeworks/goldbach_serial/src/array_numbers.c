@@ -5,13 +5,14 @@
  * de los videos "Taller de C++ a C"
 */
 
-#include <array_numbers.h>
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+
+#include "array_numbers.h"
 
 /**
  * @brief Se utiliza realloc, para incrementar la capacidad del array
