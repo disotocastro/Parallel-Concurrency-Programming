@@ -13,8 +13,14 @@
 #include "file_read_out.h"
 #include "array_numbers.h"
 
+/**
+ * @brief Busca y retorna el número más grande del array
+ * 
+ * @param arr_input_stdin: Array de números enteros (int64)
+*/
+int64_t largest_element_arr(array_numbers_t* arr_input_stdin);
+
 int trial_division(array_numbers_t* arr_prime_numbers, int64_t largest_element);
-int64_t largest_element_arr();
 
 
-#endif // GOLDBACH_H
+#endif  // GOLDBACH_H

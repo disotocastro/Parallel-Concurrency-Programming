@@ -37,25 +37,23 @@ void array_destroy(array_numbers_t* array) {
 }
 
 int array_append(array_numbers_t* array, int64_t element) {
-  assert(array);
-  
   if (array->count == array->capacity) {
-    if (array_increase_capacity(array) != EXIT_SUCCESS ) {
+    if ( array_increase_capacity(array) != EXIT_SUCCESS ) {
       return EXIT_FAILURE;
     }
   }
-  
-  array->elements[array->count++] = element; 
+
+  array->elements[array->count++] = element;
   return EXIT_SUCCESS;
 }
 
-int array_increase_capacity(array_numbers_t* array){
+int array_increase_capacity(array_numbers_t* array) {
   size_t new_capacity = 10 * (array->capacity ? array->capacity : 1);
-  int64_t* new_elements = (int64_t*) 
+  int64_t* new_elements = (int64_t*)
     realloc(array->elements, new_capacity * sizeof(int64_t));
 
   if (new_elements) {
-    array->capacity = new_capacity; 
+    array->capacity = new_capacity;
     array->elements = new_elements;
     return EXIT_SUCCESS;
 

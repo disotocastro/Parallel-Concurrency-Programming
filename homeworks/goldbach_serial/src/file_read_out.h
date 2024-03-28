@@ -22,4 +22,4 @@
 int read_file(FILE * input, array_numbers_t* array_input_stdin);
 
 
-#endif // FILE_READ_OUT_H
+#endif  // FILE_READ_OUT_H
