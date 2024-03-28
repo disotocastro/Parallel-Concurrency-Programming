@@ -5,8 +5,12 @@
 
 int main () {
   input_numeros = Leer(input.txt)
-  input_mas_grande = Obtener_input_mas_grande(&archivo)
-  Sieve_of_eratosthenes(&array_primos, &input_mas_grande)
+
+
+  input_mas_grande = largest_element_arr(&archivo)
+  trial_division(&array_primos, &input_mas_grande)
+
+
   // Este calcula la cantidad de sumas
   Goldbach(&input_numeros, &array_primos)
 

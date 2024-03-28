@@ -1,4 +1,4 @@
-//Copyright 2024 Diego Soto <juan.sotocastro@ucr.ac.cr>
+// Copyright 2024 Diego Soto <juan.sotocastro@ucr.ac.cr>
 
 #ifndef FILE_READ_OUT_H
 #define FILE_READ_OUT_H
@@ -22,4 +22,4 @@
 int read_file(FILE * input, array_numbers_t* array_input_stdin);
 
 
-#endif // FILE_READ_OUT_H 
+#endif // FILE_READ_OUT_H
