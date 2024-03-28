@@ -1,3 +1,5 @@
+// Copyright 2024 Diego Soto <juan.sotocastro@ucr.ac.cr>
+
 #ifndef GOLDBACH_H
 #define GOLDBACH_H
 

@@ -9,6 +9,7 @@
 
 #include "file_read_out.h"
 #include "array_numbers.h"
+#include "goldbach.h"
 
 int main() {
   FILE* input = stdin;
