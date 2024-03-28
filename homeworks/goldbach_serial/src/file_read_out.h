@@ -12,7 +12,14 @@
 
 #include "array_numbers.h"
 
-int read_file(FILE * input, array_numbers_t* input_file);
+/**
+ * @brief Lee un archivo introducido en la entrada estandar por el usuario
+ * 
+ * @param input: Archivo recibido de la entrada estandar
+ * @param array_input_stdin: array del input de la entrada estandar
+*/
+
+int read_file(FILE * input, array_numbers_t* array_input_stdin);
 
 
 #endif // FILE_READ_OUT_H 
