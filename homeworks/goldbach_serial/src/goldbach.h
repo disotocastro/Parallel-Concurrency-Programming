@@ -37,7 +37,8 @@ int64_t largest_element_arr(array_numbers_t* arr_input_stdin);
  * se va a realizar los cálculos de los números primos.
  * @return EXIT_SUCCESS si la función se ejecuta correctamente.
  */
-int64_t trial_division(array_numbers_t* arr_prime_numbers, int64_t largest_element);
+int64_t trial_division(array_numbers_t* arr_prime_numbers,
+  int64_t largest_element);
 
 /**
  * @brief Determina si un número entero es primo.

@@ -25,7 +25,7 @@ int64_t largest_element_arr(array_numbers_t* arr_input_stdin) {
     if (current_number > current_max_number && current_number <= MAX_INT64) {
       current_max_number = current_number;
     }
-  }  
+  }
   return current_max_number;
 }
 
@@ -52,7 +52,8 @@ bool is_prime(int64_t num) {
   return true;
 }
 
-int64_t trial_division(array_numbers_t* arr_prime_numbers, int64_t largest_element) {
+int64_t trial_division(array_numbers_t* arr_prime_numbers,
+  int64_t largest_element) {
   arr_prime_numbers->count = 0;
 
   for (int64_t num = 2; num <= largest_element; num++) {
