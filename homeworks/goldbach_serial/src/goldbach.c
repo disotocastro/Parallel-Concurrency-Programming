@@ -44,8 +44,8 @@ bool is_prime(int64_t num) {
   if (num <= 3) return true;
 
   // Comprobamos si el número es divisible por algún divisor hasta su sqrt(num)
-  for (int64_t i = 2; i <= sqrt(num); i++) {
-    if (num % i == 0) {
+  for (int64_t index = 2; index <= sqrt(num); index++) {
+    if (num % index == 0) {
       return false;
     }
   }

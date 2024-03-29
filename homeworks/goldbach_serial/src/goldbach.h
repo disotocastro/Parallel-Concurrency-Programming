@@ -21,13 +21,6 @@
 int64_t largest_element_arr(array_numbers_t* arr_input_stdin);
 
 /**
- * @brief Busca y retorna el número más grande del array
- * 
- * @param arr_input_stdin: Array de números enteros (int64)
-*/
-
-
-/**
  * @brief Realiza la "trial division" metodo para encontrar todos los números 
  * primos hasta el número más grande dado y los almacena en un arreglo dinámico.
  * 
