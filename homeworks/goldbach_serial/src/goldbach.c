@@ -30,7 +30,7 @@ int64_t largest_element_arr(array_numbers_t* arr_input_stdin) {
 }
 
 
-/**
+/**  
  * Trial_Division y is_prime, es una versión adaptada del código de:
  * https://literateprograms.org/trial_division__c_.html
  * 
@@ -61,5 +61,43 @@ int64_t trial_division(array_numbers_t* arr_prime_numbers,
       array_append(arr_prime_numbers, num);
     }
   }
+  return EXIT_SUCCESS;
+}
+
+int64_t goldbach(array_numbers_t* arr_input_stdin,
+  array_numbers_t* arr_prime_numbers) {
+  
+  if (arr_input_stdin && arr_prime_numbers) {
+    int64_t counter = (int) arr_input_stdin->count; // int64_t? cast
+    int64_t sums_counter = 0;
+    
+    for (int64_t index = 0; index < counter; index++) {
+      array_numbers_t arr_goldbach;
+      array_init(&arr_goldbach);
+
+      
+      int64_t current_num = llabs(arr_input_stdin->elements[index]);
+      printf("%ld:", current_num);
+
+      // 5 < current_num < MAX_INT64
+      if (5 < current_num && current_num < MAX_INT64) {
+        // Caso pares
+        if (current_num % 2 == 0) {
+          goldbach_even();
+        } else {
+          goldbach_odd();
+        }
+              
+      } else {
+        printf(" NA \n ");
+      }
+    }
+        
+  } else {
+    fprintf(stderr, "Error: Could not find a correct input");
+    return EXIT_FAILURE;
+  }
+  
+
   return EXIT_SUCCESS;
 }

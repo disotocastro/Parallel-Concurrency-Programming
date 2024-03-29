@@ -14,13 +14,6 @@
 
 #include "array_numbers.h"
 
-/**
- * @brief Se utiliza realloc, para incrementar la capacidad del array
- * 
- * @param array: Array de números enteros (int64) que se espera incrementar
-*/
-int array_increase_capacity(array_numbers_t* array);
-
 int array_init(array_numbers_t* array) {
   assert(array);
   array->capacity = 0;
@@ -39,7 +32,7 @@ void array_destroy(array_numbers_t* array) {
 int array_append(array_numbers_t* array, int64_t element) {
   if (array->count == array->capacity) {
     if ( array_increase_capacity(array) != EXIT_SUCCESS ) {
-      return EXIT_FAILURE;
+      return  ;
     }
   }
 

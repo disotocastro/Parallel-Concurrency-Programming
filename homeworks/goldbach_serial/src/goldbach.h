@@ -41,4 +41,19 @@ int64_t trial_division(array_numbers_t* arr_prime_numbers,
  */
 bool is_prime(int64_t num);
 
+
+/**
+ * @brief Se encarga de dividir el trabajo en 2, uno para la conjetura fuerte
+ * y otro para la conjetura débil, dependiendo de que número sea, se llamará
+ * a al conjetura que corresponda.
+ * 
+ * @param arr_input_stdin array de datos ingresado por el usuario
+ * @param arr_prime_numbers array de numeros primos, de los numeros ingresados
+ * por el usuario
+ * @return EXIT_SUCCESS si la función se ejecuta correctamente.
+
+ */
+int64_t goldbach(array_numbers_t* arr_input_stdin,
+  array_numbers_t* arr_prime_numbers);
+
 #endif  // GOLDBACH_H
