@@ -76,12 +76,12 @@ int64_t goldbach(array_numbers_t* arr_input_stdin,
       array_numbers_t arr_goldbach;
       array_init(&arr_goldbach);
 
-      int64_t current_num = llabs(arr_input_stdin->elements[main_index]);
+      int64_t current_num = arr_input_stdin->elements[main_index];
       printf("%ld:", current_num);
 
       // 5 < current_num < MAX_INT64
-      if (5 < current_num && current_num < MAX_INT64) {
-        if (current_num % 2 == 0) {
+      if (5 < llabs(current_num) && llabs(current_num) < MAX_INT64) {
+        if (llabs(current_num) % 2 == 0) {
           goldbach_even(arr_input_stdin, arr_prime_numbers, &arr_goldbach, 
           main_index, goldbach_index, sums_counter);
         } else {
