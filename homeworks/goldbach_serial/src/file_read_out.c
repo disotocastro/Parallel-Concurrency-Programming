@@ -23,9 +23,11 @@ int read_file(FILE * input, array_numbers_t* input_file) {
   printf("=== Golbach Serial === \nIf you're ready, press: CTRL + D\n");
   printf("For more info, enter: ./golbach_serial --help\n");
   printf("Numbers to test: \n");
-  // falta agregar correcion de erorres
+
   while (fscanf(input, "%ld", &value) == 1) {
-    array_append(input_file, value);
+    if (array_append(input_file, value) != EXIT_SUCCESS) {
+      return EXIT_FAILURE;
+    }
   }
   printf("\n");
   return EXIT_SUCCESS;
