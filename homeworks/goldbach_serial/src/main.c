@@ -28,9 +28,9 @@ int main() {
   
   trial_division(&arr_prime_num, largest_element);
 
-  for (size_t i = 0; i < arr_prime_num.count; i++) {
-    printf("NUMEROS PRIMOS ENCONTRADOS %" PRId64 "\n", arr_prime_num.elements[i]);
-  }
+  // for (size_t i = 0; i < arr_prime_num.count; i++) {
+  //   printf("NUMEROS PRIMOS ENCONTRADOS %" PRId64 "\n", arr_prime_num.elements[i]);
+  // }
   
   goldbach(&arr_input_stdin, &arr_prime_num);
 

@@ -35,7 +35,7 @@ int array_append(array_numbers_t* array, int64_t element) {
       return EXIT_FAILURE;
     }
   }
-  
+
   array->elements[array->count++] = element;
   return EXIT_SUCCESS;
 }
