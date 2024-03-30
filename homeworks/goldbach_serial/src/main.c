@@ -1,19 +1,15 @@
 // Copyright 2024 Diego Soto <juan.sotocastro@ucr.ac.cr>
-
-#include <assert.h>
-#include <stdbool.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include <inttypes.h>
 
 #include "file_read_out.h"
 #include "array_numbers.h"
 #include "goldbach.h"
 
 int main(int argc, char* argv[]) {
-
   int error = EXIT_SUCCESS;
   analyze_arguments(argc, argv);
   FILE* input = stdin;

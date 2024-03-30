@@ -20,9 +20,20 @@
 */
 int read_file(FILE * input, array_numbers_t* array_input_stdin);
 
+
+/**
+ * @brief Imprime ayuda para el usuario cuando se ingresa --help
+ * 
+ * @param void
+*/
 int print_help(void);
+
+/**
+ * @brief Se encarga de analizar argumentos si el usuario dió alguno
+ * 
+ * @param argc: argc dado por el usuario
+ * @param argv: argv dado por el usuario
+*/
 int analyze_arguments(int argc, char* argv[]);
-
-
 
 #endif  // FILE_READ_OUT_H

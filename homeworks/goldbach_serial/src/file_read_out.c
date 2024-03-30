@@ -44,8 +44,7 @@ int analyze_arguments(int argc, char* argv[]) {
     } 
 
     else if (*argv[index] == '-'){
-      fprintf(stderr, "error: unknow option: %s\n", argv[index]);
-      return  EXIT_FAILURE;
+      fprintf(stderr, "Unknow argument option: %s\n", argv[index]);
     }
   }
   return EXIT_SUCCESS;
