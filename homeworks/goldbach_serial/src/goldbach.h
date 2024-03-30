@@ -25,8 +25,8 @@ int64_t largest_element_arr(array_numbers_t* arr_input_stdin);
   
  * @param num El número entero que se va a verificar.
  * @return true si el número es primo, false si no lo es.
- */
- bool is_prime(int64_t num);
+*/
+bool is_prime(int64_t num);
 
 /**
  * @brief Realiza la "trial division" metodo para encontrar todos los números 
@@ -37,8 +37,8 @@ int64_t largest_element_arr(array_numbers_t* arr_input_stdin);
  * @param largest_element Número más grande dado por usuario, hasta este número
  * se va a realizar los cálculos de los números primos.
  * @return EXIT_SUCCESS si la función se ejecuta correctamente.
- */
- int64_t trial_division(array_numbers_t* arr_prime_numbers,
+*/
+int64_t trial_division(array_numbers_t* arr_prime_numbers,
   int64_t largest_element);
 
 /**
@@ -50,8 +50,7 @@ int64_t largest_element_arr(array_numbers_t* arr_input_stdin);
  * @param arr_prime_numbers array de numeros primos, de los numeros ingresados
  * por el usuario
  * @return EXIT_SUCCESS si la función se ejecuta correctamente.
-
- */
+*/
 int64_t goldbach(array_numbers_t* arr_input_stdin,
   array_numbers_t* arr_prime_numbers);
 
@@ -70,8 +69,8 @@ int64_t goldbach(array_numbers_t* arr_input_stdin,
  * @param sums_counter Contador de las sumas encontradas.
  * @return EXIT_SUCCESS si la función se ejecuta correctamente.
  */
-int64_t goldbach_even(array_numbers_t* arr_input_stdin, 
-  array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach, 
+int64_t goldbach_even(array_numbers_t* arr_input_stdin,
+  array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach,
   int64_t main_index, int64_t goldbach_index, int64_t sums_counter);
 
 
@@ -90,8 +89,8 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
  * @param sums_counter Contador de las sumas encontradas.
  * @return EXIT_SUCCESS si la función se ejecuta correctamente.
  */
-int64_t goldbach_odd(array_numbers_t* arr_input_stdin, 
-  array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach, 
+int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
+  array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach,
   int64_t main_index, int64_t goldbach_index, int64_t sums_counter);
 
 #endif  // GOLDBACH_H

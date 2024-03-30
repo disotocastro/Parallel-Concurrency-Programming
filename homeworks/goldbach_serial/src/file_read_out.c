@@ -12,7 +12,7 @@
 const char* const goldbach_help =
   "Goldbach v1.0.0 by Diego Soto\n"
   "Usage 1: ./goldbach_serial < [input_files.txt] \n"
-  "Usage 2: ./goldbach_serial, enter the numbers, when you ready press CTRL + D \n"
+  "Usage 2: ./goldbach_serial, enter the numbers, when you ready press CTRL+D\n"
   "Options:\n"
   " '-'Number, is for show the sums \n"
   " Example: -8 = 3+5 \n\n";
@@ -41,9 +41,7 @@ int analyze_arguments(int argc, char* argv[]) {
     if ( strcmp(argv[index], "--help") == 0 ) {
       print_help();
       break;
-    } 
-
-    else if (*argv[index] == '-'){
+    } else if (*argv[index] == '-') {
       fprintf(stderr, "Unknow argument option: %s\n", argv[index]);
     }
   }

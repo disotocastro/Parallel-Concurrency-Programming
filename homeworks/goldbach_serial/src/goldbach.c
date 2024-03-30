@@ -15,8 +15,7 @@ const int64_t MAX_INT64 = INT64_MAX;
 // https://www.geeksforgeeks.org/program-to-find-largest-element-in-an-array/
 
 int64_t largest_element_arr(array_numbers_t* arr_input_stdin) {
-  if (arr_input_stdin){
-
+  if (arr_input_stdin) {
   } else {
     fprintf(stderr, "Error: Could not read input numbers");
     return EXIT_FAILURE;
@@ -59,7 +58,7 @@ bool is_prime(int64_t num) {
 
 int64_t trial_division(array_numbers_t* arr_prime_numbers,
   int64_t largest_element) {
-  //arr_prime_numbers->count = 0;
+  // arr_prime_numbers->count = 0;
 
   for (int64_t num = 2; num <= largest_element; num++) {
     if (is_prime(num)) {
@@ -71,12 +70,11 @@ int64_t trial_division(array_numbers_t* arr_prime_numbers,
 
 int64_t goldbach(array_numbers_t* arr_input_stdin,
   array_numbers_t* arr_prime_numbers) {
-  
   if (arr_input_stdin && arr_prime_numbers) {
-    int64_t counter = (int64_t) arr_input_stdin->count; // int64_t? cast
+    int64_t counter = (int64_t) arr_input_stdin->count;  // int64_t? cast
     int64_t sums_counter = 0;
     int64_t goldbach_index = 0;
-    
+
     for (int64_t main_index = 0; main_index < counter; main_index++) {
       array_numbers_t arr_goldbach;
       array_init(&arr_goldbach);
@@ -87,10 +85,10 @@ int64_t goldbach(array_numbers_t* arr_input_stdin,
       // 5 < current_num < MAX_INT64
       if (5 < llabs(current_num) && llabs(current_num) < MAX_INT64) {
         if (llabs(current_num) % 2 == 0) {
-          goldbach_even(arr_input_stdin, arr_prime_numbers, &arr_goldbach, 
+          goldbach_even(arr_input_stdin, arr_prime_numbers, &arr_goldbach,
           main_index, goldbach_index, sums_counter);
         } else {
-          goldbach_odd(arr_input_stdin, arr_prime_numbers, &arr_goldbach, 
+          goldbach_odd(arr_input_stdin, arr_prime_numbers, &arr_goldbach,
           main_index, goldbach_index, sums_counter);
         }
       } else {
@@ -98,30 +96,29 @@ int64_t goldbach(array_numbers_t* arr_input_stdin,
       }
       array_destroy(&arr_goldbach);
     }
-  } 
+  }
   // else {
   //   fprintf(stderr, "Error: Could not find a correct input");
   //   return EXIT_FAILURE;
   // }
-  
   return EXIT_SUCCESS;
 }
 
-int64_t goldbach_even(array_numbers_t* arr_input_stdin, 
+int64_t goldbach_even(array_numbers_t* arr_input_stdin,
   array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach,
   int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
-
-  int64_t count = (int)arr_prime_numbers->count;  
+  int64_t count = (int)arr_prime_numbers->count;
   int64_t this_prime = 0;
   int64_t next_prime = 0;
 
   for (int64_t index_1 = 0; index_1 < count; index_1++) {
     for (int64_t index_2 = index_1; index_2 < count; index_2++) {
-      this_prime =  arr_prime_numbers->elements[index_1]; 
-      next_prime =  arr_prime_numbers->elements[index_2]; 
+      this_prime =  arr_prime_numbers->elements[index_1];
+      next_prime =  arr_prime_numbers->elements[index_2];
 
       if (this_prime != 0 && next_prime != 0) {
-        if ((this_prime + next_prime) == llabs(arr_input_stdin->elements[main_index])) { 
+        if ((this_prime + next_prime) ==
+                                llabs(arr_input_stdin->elements[main_index])) {
           if (arr_input_stdin->elements[main_index] < 0) {
             array_append(arr_goldbach, this_prime);
             array_append(arr_goldbach, next_prime);
@@ -129,7 +126,7 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
           }
           sums_counter++;
         }
-      } 
+      }
       // else {
       //   fprintf(stderr, "Error: 0 is not a valid number. ");
       //   return EXIT_FAILURE;
@@ -149,7 +146,7 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
       if (i > 0) {
           printf(", ");
       }
-      printf("%ld + %ld", arr_goldbach->elements[goldbach_index], 
+      printf("%ld + %ld", arr_goldbach->elements[goldbach_index],
         arr_goldbach->elements[goldbach_index + 1]);
       goldbach_index += 2;
     }
@@ -158,25 +155,24 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
   return EXIT_SUCCESS;
 }
 
-int64_t goldbach_odd(array_numbers_t* arr_input_stdin, 
-  array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach, 
+int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
+  array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach,
   int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
-
   int64_t count = (int64_t) arr_prime_numbers->count;
-  int64_t prime_1 =0;
-  int64_t prime_2 =0;
-  int64_t prime_3 =0;
+  int64_t prime_1 = 0;
+  int64_t prime_2 = 0;
+  int64_t prime_3 = 0;
 
   for (int64_t index_1 = 0; index_1 < count; index_1++) {
     for (int64_t index_2 = index_1; index_2 < count; index_2++) {
       for (int64_t index_3 = index_2; index_3 < count; index_3++) {
-
-        prime_1 = (arr_prime_numbers->elements[index_1]); 
-        prime_2 = (arr_prime_numbers->elements[index_2]); 
-        prime_3 = (arr_prime_numbers->elements[index_3]); 
+        prime_1 = (arr_prime_numbers->elements[index_1]);
+        prime_2 = (arr_prime_numbers->elements[index_2]);
+        prime_3 = (arr_prime_numbers->elements[index_3]);
 
         if (prime_1 != 0 && prime_2 != 0 && prime_3 != 0) {
-          if (prime_1 + prime_2 + prime_3 == llabs(arr_input_stdin->elements[main_index])) {
+          if (prime_1 + prime_2 + prime_3 ==
+                                llabs(arr_input_stdin->elements[main_index])) {
             if (arr_input_stdin->elements[main_index] < 0) {
               array_append(arr_goldbach, arr_prime_numbers->elements[index_1]);
               array_append(arr_goldbach, arr_prime_numbers->elements[index_2]);
@@ -201,8 +197,8 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
     if (i > 0) {
         printf(", ");
     }
-      printf("%ld + %ld + %ld", arr_goldbach->elements[goldbach_index], 
-        arr_goldbach->elements[goldbach_index+1], 
+      printf("%ld + %ld + %ld", arr_goldbach->elements[goldbach_index],
+        arr_goldbach->elements[goldbach_index+1],
         arr_goldbach->elements[goldbach_index+2]);
       goldbach_index += 3;
     }
