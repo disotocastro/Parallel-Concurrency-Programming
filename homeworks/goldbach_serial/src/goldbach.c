@@ -20,12 +20,13 @@ int64_t largest_element_arr(array_numbers_t* arr_input_stdin) {
     fprintf(stderr, "Error: Could not read input numbers");
     return EXIT_FAILURE;
   }
-
   int64_t current_max_number = 0;
+  int64_t current_number = 0;
   for (int64_t index = 0; index < (int)arr_input_stdin->count; index++) {
     // se utiliza el valor absoluto porque los números pueden ser introducidos
     // como un -, ej: -8 para mostrar las sumas
-    int64_t current_number = llabs(arr_input_stdin->elements[index]);
+    current_number = llabs(arr_input_stdin->elements[index]);
+    // if (numero_actual > numero_mas_grande y numero_actual <= MAXINT64)
     if (current_number > current_max_number && current_number <= MAX_INT64) {
       current_max_number = current_number;
     }
@@ -71,10 +72,9 @@ int64_t trial_division(array_numbers_t* arr_prime_numbers,
 int64_t goldbach(array_numbers_t* arr_input_stdin,
   array_numbers_t* arr_prime_numbers) {
   if (arr_input_stdin && arr_prime_numbers) {
-    int64_t counter = (int64_t) arr_input_stdin->count;  // int64_t? cast
+    int64_t counter = (int64_t) arr_input_stdin->count;
     int64_t sums_counter = 0;
     int64_t goldbach_index = 0;
-
 
     for (int64_t main_index = 0; main_index < counter; main_index++) {
       array_numbers_t arr_goldbach;
@@ -84,14 +84,17 @@ int64_t goldbach(array_numbers_t* arr_input_stdin,
 
       // 5 < current_num < MAX_INT64
       if (5 < llabs(current_num) && llabs(current_num) < MAX_INT64) {
+        // Si el número es par, conjetura fuerte:
         if (llabs(current_num) % 2 == 0) {
           goldbach_even(arr_input_stdin, arr_prime_numbers, &arr_goldbach,
           main_index, goldbach_index, sums_counter);
         } else {
+          // Como no es par, conjetura débil:
           goldbach_odd(arr_input_stdin, arr_prime_numbers, &arr_goldbach,
           main_index, goldbach_index, sums_counter);
         }
       } else {
+        // Par casos como <= 5
         printf(" NA\n");
       }
       array_destroy(&arr_goldbach);
@@ -111,14 +114,25 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
   int64_t this_prime = 0;
   int64_t next_prime = 0;
 
+  // for (i = 0; i < array_usuario.lenght(); i++)
+  // for (j = i; j < array_usuario.lenght(); j++)
   for (int64_t index_1 = 0; index_1 < count; index_1++) {
     for (int64_t index_2 = index_1; index_2 < count; index_2++) {
       this_prime =  arr_prime_numbers->elements[index_1];
       next_prime =  arr_prime_numbers->elements[index_2];
 
+      // if (primo_1 != 0 and primo_2 != 0)
       if (this_prime != 0 && next_prime != 0) {
+        // if (primo_1 + primo_2 == numero_acutal)
         if ((this_prime + next_prime) ==
-                                llabs(arr_input_stdin->elements[main_index])) {
+          llabs(arr_input_stdin->elements[main_index])) {
+          /**
+           * Caso impresion de sumas
+           * if (numero_acutal < 0) {
+           *  array.push(primo_1)
+           *  array.push(primo_2)
+           * }
+          */
           if (arr_input_stdin->elements[main_index] < 0) {
             array_append(arr_goldbach, this_prime);
             array_append(arr_goldbach, next_prime);
@@ -147,6 +161,10 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
   int64_t prime_2 = 0;
   int64_t prime_3 = 0;
 
+
+  // for (i = 0; i < array_usuario.lenght(); i++)
+  //  for (j = i; j < array_usuario.lenght(); j++)
+  //    for (k = j; k < array_usuario.lenght(); k++)
   for (int64_t index_1 = 0; index_1 < count; index_1++) {
     for (int64_t index_2 = index_1; index_2 < count; index_2++) {
       for (int64_t index_3 = index_2; index_3 < count; index_3++) {
@@ -154,9 +172,19 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
         prime_2 = (arr_prime_numbers->elements[index_2]);
         prime_3 = (arr_prime_numbers->elements[index_3]);
 
+        // if (primo_1 != 0 and primo_2 != 0 and primo_3 != 0)
         if (prime_1 != 0 && prime_2 != 0 && prime_3 != 0) {
+          // if (primo_1 + primo_2 + primo_3 == numero_acutal)
           if (prime_1 + prime_2 + prime_3 ==
-                                llabs(arr_input_stdin->elements[main_index])) {
+            llabs(arr_input_stdin->elements[main_index])) {
+            /**
+             * Caso impresion de sumas
+             * if (numero_acutal < 0) {
+             *  array.push(primo_1)
+             *  array.push(primo_2)
+             *  array.push(primo_3)
+             * }
+            */
             if (arr_input_stdin->elements[main_index] < 0) {
               array_append(arr_goldbach, prime_1);
               array_append(arr_goldbach, prime_2);
