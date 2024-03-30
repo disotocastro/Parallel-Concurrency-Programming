@@ -16,8 +16,14 @@ const int64_t MAX_INT64 = INT64_MAX;
 // https://www.geeksforgeeks.org/program-to-find-largest-element-in-an-array/
 
 int64_t largest_element_arr(array_numbers_t* arr_input_stdin) {
-  int64_t current_max_number = 0;
+  if (arr_input_stdin){
 
+  } else {
+    fprintf(stderr, "Error: Could not read input numbers");
+    return EXIT_FAILURE;
+  }
+
+  int64_t current_max_number = 0;
   for (int64_t index = 0; index < (int)arr_input_stdin->count; index++) {
     // se utiliza el valor absoluto porque los números pueden ser introducidos
     // como un -, ej: -8 para mostrar las sumas
@@ -26,9 +32,9 @@ int64_t largest_element_arr(array_numbers_t* arr_input_stdin) {
       current_max_number = current_number;
     }
   }
+
   return current_max_number;
 }
-
 
 /**  
  * Trial_Division y is_prime, es una versión adaptada del código de:
@@ -91,6 +97,7 @@ int64_t goldbach(array_numbers_t* arr_input_stdin,
       } else {
         printf(" NA\n");
       }
+      array_destroy(&arr_goldbach);
     }
   } 
   // else {

@@ -20,4 +20,9 @@
 */
 int read_file(FILE * input, array_numbers_t* array_input_stdin);
 
+int print_help(void);
+int analyze_arguments(int argc, char* argv[]);
+
+
+
 #endif  // FILE_READ_OUT_H
