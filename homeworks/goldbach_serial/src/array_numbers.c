@@ -32,10 +32,10 @@ void array_destroy(array_numbers_t* array) {
 int array_append(array_numbers_t* array, int64_t element) {
   if (array->count == array->capacity) {
     if ( array_increase_capacity(array) != EXIT_SUCCESS ) {
-      return  EXIT_FAILURE;
+      return EXIT_FAILURE;
     }
   }
-
+  
   array->elements[array->count++] = element;
   return EXIT_SUCCESS;
 }

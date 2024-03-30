@@ -112,7 +112,7 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
       int64_t next_prime =  llabs(arr_prime_numbers->elements[index_2]); 
 
       if (this_prime != 0 && next_prime != 0) {
-        if ((this_prime + next_prime) == llabs(arr_input_stdin->elements[main_index])) {
+        if ((this_prime + next_prime) == llabs(arr_input_stdin->elements[main_index])) { 
           if (arr_input_stdin->elements[main_index] < 0) {
             array_append(arr_goldbach, this_prime);
             array_append(arr_goldbach, next_prime);
@@ -121,7 +121,9 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
           sums_counter++;
         }
       } else {
-        // error
+        fprintf(stderr, "Error: 0 is not a valid number. ");
+        break;
+        return EXIT_FAILURE;
       }
     }
   }
