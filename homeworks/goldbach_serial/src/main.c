@@ -37,13 +37,11 @@ int main(int argc, char* argv[]) {
    * }
    *
   */
-  
   // goldbach(array_usuario, array_numeros_primos)
   goldbach(arr_input_stdin, arr_prime_num);
   array_destroy(arr_prime_num);
   array_destroy(arr_input_stdin);
   free(arr_prime_num);
   free(arr_input_stdin);
-    
   return EXIT_SUCCESS;
 }

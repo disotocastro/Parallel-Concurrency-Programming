@@ -133,8 +133,8 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
       // }
     }
   }
-  // Subrutina de impresión 
-  print_even(arr_input_stdin, arr_goldbach,main_index, goldbach_index, 
+  // Subrutina de impresión
+  print_even(arr_input_stdin, arr_goldbach, main_index, goldbach_index,
     sums_counter);
   return EXIT_SUCCESS;
 }
@@ -171,8 +171,8 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
       }
     }
   }
-  // Subrutina de impresión 
-  print_odd(arr_input_stdin, arr_goldbach, main_index, goldbach_index, 
+  // Subrutina de impresión
+  print_odd(arr_input_stdin, arr_goldbach, main_index, goldbach_index,
     sums_counter);
   return EXIT_SUCCESS;
 }
