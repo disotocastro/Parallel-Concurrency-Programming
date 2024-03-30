@@ -75,10 +75,10 @@ int64_t goldbach(array_numbers_t* arr_input_stdin,
     int64_t sums_counter = 0;
     int64_t goldbach_index = 0;
 
+
     for (int64_t main_index = 0; main_index < counter; main_index++) {
       array_numbers_t arr_goldbach;
       array_init(&arr_goldbach);
-
       int64_t current_num = arr_input_stdin->elements[main_index];
       printf("%ld:", current_num);
 
@@ -133,8 +133,9 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
       // }
     }
   }
-
-  print_even(arr_input_stdin, arr_goldbach,main_index, goldbach_index, sums_counter);
+  // Subrutina de impresión 
+  print_even(arr_input_stdin, arr_goldbach,main_index, goldbach_index, 
+    sums_counter);
   return EXIT_SUCCESS;
 }
 
@@ -157,9 +158,9 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
           if (prime_1 + prime_2 + prime_3 ==
                                 llabs(arr_input_stdin->elements[main_index])) {
             if (arr_input_stdin->elements[main_index] < 0) {
-              array_append(arr_goldbach, arr_prime_numbers->elements[index_1]);
-              array_append(arr_goldbach, arr_prime_numbers->elements[index_2]);
-              array_append(arr_goldbach, arr_prime_numbers->elements[index_3]);
+              array_append(arr_goldbach, prime_1);
+              array_append(arr_goldbach, prime_2);
+              array_append(arr_goldbach, prime_3);
               goldbach_index += 3;
             }
             sums_counter++;
@@ -172,6 +173,6 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
   }
   // Subrutina de impresión 
   print_odd(arr_input_stdin, arr_goldbach, main_index, goldbach_index, 
-  sums_counter);
+    sums_counter);
   return EXIT_SUCCESS;
 }
