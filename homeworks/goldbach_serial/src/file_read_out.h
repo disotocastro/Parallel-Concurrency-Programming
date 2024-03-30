@@ -39,8 +39,40 @@ int analyze_arguments(int argc, char* argv[]);
 #endif  // FILE_READ_OUT_H
 
 
-int print_odd(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
-  int64_t main_index, int64_t goldbach_index, int64_t sums_counter);
+
+
+/**
+ * @brief Imprime de la manera indicada, para numeros pares.
+ *
+ * Esta función busca las sumas de números primos para un número par dado en
+ * una lista de números primos.
+ *
+ * @param arr_input_stdin ptr* array de datos ingresado por el usuario
+ * @param arr_goldbach ptr* al array que contiene las sumas de números primos.
+ * @param main_index index del número par en la lista arr_input_stdin
+ * @param goldbach_index index actual de las sumas de números primos en 
+ *  arr_goldbach.
+ * @param sums_counter Contador de las sumas encontradas.
+ * @return EXIT_SUCCESS si la función se ejecuta correctamente.
+ */
 
 int print_even(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
   int64_t main_index, int64_t goldbach_index, int64_t sums_counter);
+
+/**
+ * @brief Imprime de la manera indicada, para numeros impares.
+ *
+ * Esta función busca las sumas de números primos para un número par dado en
+ * una lista de números primos.
+ *
+ * @param arr_input_stdin ptr* array de datos ingresado por el usuario
+ * @param arr_goldbach ptr* al array que contiene las sumas de números primos.
+ * @param main_index index del número par en la lista arr_input_stdin
+ * @param goldbach_index index actual de las sumas de números primos en 
+ *  arr_goldbach.
+ * @param sums_counter Contador de las sumas encontradas.
+ * @return EXIT_SUCCESS si la función se ejecuta correctamente.
+ */
+int print_odd(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
+  int64_t main_index, int64_t goldbach_index, int64_t sums_counter);
+

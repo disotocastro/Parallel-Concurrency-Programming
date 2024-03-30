@@ -17,7 +17,6 @@ const char* const goldbach_help =
   " '-'Number, is for show the sums \n"
   " Example: -8 = 3+5 \n\n";
 
-// Se encarga de leer el archivo
 int read_file(FILE * input, array_numbers_t* input_file) {
   int64_t value = 0ll;
   printf("=== Golbach Serial === \nIf you're ready, press: CTRL + D\n");
@@ -32,7 +31,7 @@ int read_file(FILE * input, array_numbers_t* input_file) {
   printf("\n");
   return EXIT_SUCCESS;
 }
-
+// Rutina de impresión de ayuda del comando --help
 int print_help(void) {
   printf("%s", goldbach_help);
   return EXIT_SUCCESS;
@@ -49,7 +48,7 @@ int analyze_arguments(int argc, char* argv[]) {
   }
   return EXIT_SUCCESS;
 }
-
+// 
 int print_odd(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
   int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
 
