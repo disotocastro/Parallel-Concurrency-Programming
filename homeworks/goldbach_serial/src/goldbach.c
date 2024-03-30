@@ -54,10 +54,10 @@ bool is_prime(int64_t num) {
 
 int64_t trial_division(array_numbers_t* arr_prime_numbers,
   int64_t largest_element) {
-  arr_prime_numbers->count = 0;
+  //arr_prime_numbers->count = 0;
 
   for (int64_t num = 2; num <= largest_element; num++) {
-    if ((num)) {
+    if (is_prime(num)) {
       array_append(arr_prime_numbers, num);
     }
   }
@@ -68,36 +68,81 @@ int64_t goldbach(array_numbers_t* arr_input_stdin,
   array_numbers_t* arr_prime_numbers) {
   
   if (arr_input_stdin && arr_prime_numbers) {
-    int64_t counter = (int) arr_input_stdin->count; // int64_t? cast
+    int64_t counter = (int64_t) arr_input_stdin->count; // int64_t? cast
     int64_t sums_counter = 0;
+    int64_t goldbach_index = 0;
     
-    for (int64_t index = 0; index < counter; index++) {
+    for (int64_t main_index = 0; main_index < counter; main_index++) {
       array_numbers_t arr_goldbach;
       array_init(&arr_goldbach);
 
-      
-      int64_t current_num = llabs(arr_input_stdin->elements[index]);
+      int64_t current_num = llabs(arr_input_stdin->elements[main_index]);
       printf("%ld:", current_num);
 
       // 5 < current_num < MAX_INT64
       if (5 < current_num && current_num < MAX_INT64) {
-        // Caso pares
         if (current_num % 2 == 0) {
-          goldbach_even();
+          goldbach_even(arr_input_stdin, arr_prime_numbers, &arr_goldbach, 
+          main_index, goldbach_index, sums_counter);
         } else {
-          goldbach_odd();
+          // goldbach_even(arr_input_stdin, arr_prime_numbers, &arr_goldbach, 
+          // main_index, goldbach_index, sums_counter);
         }
-              
       } else {
-        printf(" NA \n ");
+        printf(" NA\n");
       }
     }
-        
   } else {
     fprintf(stderr, "Error: Could not find a correct input");
     return EXIT_FAILURE;
   }
   
+  return EXIT_SUCCESS;
+}
 
+int64_t goldbach_even(array_numbers_t* arr_input_stdin, 
+  array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach,
+  int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
+
+  int64_t count = (int)arr_prime_numbers->count;  
+
+  for (int64_t index_1 = 0; index_1 < count; index_1++) {
+    for (int64_t index_2 = index_1; index_2 < count; index_2++) {
+      int64_t this_prime =  llabs(arr_prime_numbers->elements[index_1]); 
+      int64_t next_prime =  llabs(arr_prime_numbers->elements[index_2]); 
+
+      if (this_prime != 0 && next_prime != 0) {
+        if ((this_prime + next_prime) == llabs(arr_input_stdin->elements[main_index])) {
+          if (arr_input_stdin->elements[main_index] < 0) {
+            array_append(arr_goldbach, this_prime);
+            array_append(arr_goldbach, next_prime);
+            goldbach_index += 2;
+          }
+          sums_counter++;
+        }
+      } else {
+        // error
+      }
+    }
+  }
+
+  // Impresion
+  printf(" %ld sums", sums_counter);
+  if (arr_input_stdin->elements[main_index] < 0) {
+    printf(": ");
+
+    int64_t print_counter = goldbach_index;
+    goldbach_index = 0;
+
+    for (int i = 0; goldbach_index < print_counter; i++) {
+      if (i > 0) {
+          printf(", ");
+      }
+      printf("%ld+%ld", arr_goldbach->elements[goldbach_index], 
+        arr_goldbach->elements[goldbach_index + 1]);
+      goldbach_index += 2;
+    }
+  }
+    printf("\n");
   return EXIT_SUCCESS;
 }

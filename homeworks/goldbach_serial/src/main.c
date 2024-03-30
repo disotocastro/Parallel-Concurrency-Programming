@@ -25,16 +25,17 @@ int main() {
 
   array_numbers_t arr_prime_num;
   array_init(&arr_prime_num);
+  
   trial_division(&arr_prime_num, largest_element);
 
-  printf("Array elements:\n");
-
   for (size_t i = 0; i < arr_prime_num.count; i++) {
-    printf("%" PRId64 "\n", arr_prime_num.elements[i]);
+    printf("NUMEROS PRIMOS ENCONTRADOS %" PRId64 "\n", arr_prime_num.elements[i]);
   }
+  
+  goldbach(&arr_input_stdin, &arr_prime_num);
 
-  array_destroy(&arr_prime_num);
   array_destroy(&arr_input_stdin);
+  array_destroy(&arr_prime_num);
 
   return 0;
 }

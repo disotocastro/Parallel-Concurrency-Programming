@@ -30,7 +30,7 @@ int64_t largest_element_arr(array_numbers_t* arr_input_stdin);
  * se va a realizar los cálculos de los números primos.
  * @return EXIT_SUCCESS si la función se ejecuta correctamente.
  */
-int64_t trial_division(array_numbers_t* arr_prime_numbers,
+ int64_t trial_division(array_numbers_t* arr_prime_numbers,
   int64_t largest_element);
 
 /**
@@ -39,7 +39,7 @@ int64_t trial_division(array_numbers_t* arr_prime_numbers,
  * @param num El número entero que se va a verificar.
  * @return true si el número es primo, false si no lo es.
  */
-bool is_prime(int64_t num);
+ bool is_prime(int64_t num);
 
 
 /**
@@ -55,5 +55,10 @@ bool is_prime(int64_t num);
  */
 int64_t goldbach(array_numbers_t* arr_input_stdin,
   array_numbers_t* arr_prime_numbers);
+
+
+int64_t goldbach_even(array_numbers_t* arr_input_stdin, 
+  array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach, 
+  int64_t main_index, int64_t goldbach_index, int64_t sums_counter);
 
 #endif  // GOLDBACH_H
