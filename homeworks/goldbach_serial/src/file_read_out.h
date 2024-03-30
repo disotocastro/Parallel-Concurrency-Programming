@@ -37,3 +37,10 @@ int print_help(void);
 int analyze_arguments(int argc, char* argv[]);
 
 #endif  // FILE_READ_OUT_H
+
+
+int print_odd(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
+  int64_t main_index, int64_t goldbach_index, int64_t sums_counter);
+
+int print_even(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
+  int64_t main_index, int64_t goldbach_index, int64_t sums_counter);

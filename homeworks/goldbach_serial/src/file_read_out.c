@@ -49,3 +49,50 @@ int analyze_arguments(int argc, char* argv[]) {
   }
   return EXIT_SUCCESS;
 }
+
+int print_odd(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
+  int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
+
+  printf(" %ld sums", sums_counter);
+  if (arr_input_stdin->elements[main_index] < 0) {
+    printf(": ");
+    int64_t print_counter = goldbach_index;
+    goldbach_index = 0;
+    for (int i = 0; goldbach_index < print_counter; i++) {
+    if (i > 0) {
+        printf(", ");
+    }
+      printf("%ld + %ld + %ld", arr_goldbach->elements[goldbach_index],
+        arr_goldbach->elements[goldbach_index+1],
+        arr_goldbach->elements[goldbach_index+2]);
+      goldbach_index += 3;
+    }
+  }
+  printf("\n");
+  return EXIT_SUCCESS;
+}
+
+int print_even(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
+int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
+
+  // Impresion
+  printf(" %ld sums", sums_counter);
+  if (arr_input_stdin->elements[main_index] < 0) {
+    printf(": ");
+
+    int64_t print_counter = goldbach_index;
+    goldbach_index = 0;
+
+    for (int i = 0; goldbach_index < print_counter; i++) {
+      if (i > 0) {
+          printf(", ");
+      }
+      printf("%ld + %ld", arr_goldbach->elements[goldbach_index],
+        arr_goldbach->elements[goldbach_index + 1]);
+      goldbach_index += 2;
+    }
+  }
+  printf("\n");
+
+  return EXIT_SUCCESS;
+}
