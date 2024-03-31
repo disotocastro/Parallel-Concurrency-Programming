@@ -18,11 +18,8 @@ const char* const goldbach_help =
   " Example: -8 = 3+5 \n\n";
 
 int read_file(FILE * input, array_numbers_t* input_file) {
+  printf("Your input numbers to test: \n");
   int64_t value = 0ll;
-  printf("=== Golbach Serial === \nIf you're ready, press: CTRL + D\n");
-  printf("For more info, enter: ./golbach_serial --help\n");
-  printf("Numbers to test: \n");
-
   while (fscanf(input, "%ld", &value) == 1) {
     if (array_append(input_file, value) != EXIT_SUCCESS) {
       return EXIT_FAILURE;
@@ -36,7 +33,7 @@ int print_help(void) {
   printf("%s", goldbach_help);
   return EXIT_SUCCESS;
 }
-
+// Versión modificada vista en Taller de C++ a C de Jeisson Hidalgo
 int analyze_arguments(int argc, char* argv[]) {
   for (int index = 1; index < argc; index++) {
     if ( strcmp(argv[index], "--help") == 0 ) {
@@ -52,13 +49,16 @@ int analyze_arguments(int argc, char* argv[]) {
 int print_odd(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
   int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
   printf(" %ld sums", sums_counter);
+
   if (arr_input_stdin->elements[main_index] < 0) {
     printf(": ");
+
     int64_t print_counter = goldbach_index;
     goldbach_index = 0;
+
     for (int i = 0; goldbach_index < print_counter; i++) {
     if (i > 0) {
-        printf(", ");
+      printf(", ");
     }
       printf("%ld + %ld + %ld", arr_goldbach->elements[goldbach_index],
         arr_goldbach->elements[goldbach_index+1],
@@ -81,7 +81,7 @@ int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
 
     for (int index = 0; goldbach_index < print_counter; index++) {
       if (index > 0) {
-          printf(", ");
+        printf(", ");
       }
       printf("%ld + %ld", arr_goldbach->elements[goldbach_index],
         arr_goldbach->elements[goldbach_index + 1]);
