@@ -60,9 +60,10 @@ int print_odd(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
     if (i > 0) {
       printf(", ");
     }
-      printf("%ld + %ld + %ld", arr_goldbach->elements[goldbach_index],
-        arr_goldbach->elements[goldbach_index+1],
-        arr_goldbach->elements[goldbach_index+2]);
+      printf("%ld + %ld + %ld",
+        arr_goldbach->elements[goldbach_index],
+        arr_goldbach->elements[goldbach_index + 1],
+        arr_goldbach->elements[goldbach_index + 2]);
       goldbach_index += 3;
     }
   }
@@ -83,7 +84,8 @@ int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
       if (index > 0) {
         printf(", ");
       }
-      printf("%ld + %ld", arr_goldbach->elements[goldbach_index],
+      printf("%ld + %ld", 
+        arr_goldbach->elements[goldbach_index],
         arr_goldbach->elements[goldbach_index + 1]);
       goldbach_index += 2;
     }
