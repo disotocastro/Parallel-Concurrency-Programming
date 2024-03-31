@@ -37,6 +37,6 @@ Furthermore, when computing Goldbach's sums, the task will be divided into two f
 ## Credits
 - In this section, I would like to acknowledge that Jeisson Hidalgo's videos were instrumental in adding robustness to my program. The implementation of arrays was made possible thanks to the tutorials from "Taller de C++ a C". https://jeisson.ecci.ucr.ac.cr/concurrente/2022b/#c_workshop. 
 
-- I would also like to thank Professor Alberto Rojas' videos on "Arrays of Arrays." While I didn't use this type of implementation in my case, the videos helped me understand the creation of UML diagrams for this project. :)
+- I would also like to thank Professor Alberto Rojas' videos on "Arrays of Arrays." the videos helped me understand the creation of UML diagrams for this project. :)
 
 - I would also like to bookmark and recommend this webpage about Trial Division. It provides various ways to implement this method and helped me program this algorithm. It would also be useful for a more efficient implementation in the future. https://literateprograms.org/trial_division__c_.html
