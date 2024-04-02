@@ -22,6 +22,7 @@ int read_file(FILE * input, array_numbers_t* input_file) {
   int64_t value = 0ll;
   while (fscanf(input, "%ld", &value) == 1) {
     if (array_append(input_file, value) != EXIT_SUCCESS) {
+      fprintf(stderr, "Error: Could not read input");
       return EXIT_FAILURE;
     }
   }
@@ -49,7 +50,6 @@ int analyze_arguments(int argc, char* argv[]) {
 int print_odd(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
   int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
   printf(" %ld sums", sums_counter);
-
   if (arr_input_stdin->elements[main_index] < 0) {
     printf(": ");
 
@@ -84,7 +84,7 @@ int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
       if (index > 0) {
         printf(", ");
       }
-      printf("%ld + %ld", 
+      printf("%ld + %ld",
         arr_goldbach->elements[goldbach_index],
         arr_goldbach->elements[goldbach_index + 1]);
       goldbach_index += 2;
