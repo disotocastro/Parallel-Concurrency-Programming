@@ -76,6 +76,8 @@ Memoria que un hilo tiene y otro hilo no, esta no se altea por los cambios
 que yo le haga a la memoria de otro hilo, se crea haciendo un struct.
 
 ## Espera activa:
+La espera activa (busy waiting) es un ciclo que hace a un hilo de ejecución 
+esperar repetitivamente hasta que una condición se haga falsa
 
 ## Condición de carrera:
 Es cuando dos hilos están peleando por un mismo recurso
