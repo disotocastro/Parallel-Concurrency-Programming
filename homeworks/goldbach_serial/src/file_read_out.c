@@ -91,6 +91,5 @@ int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
     }
   }
   printf("\n");
-
   return EXIT_SUCCESS;
 }

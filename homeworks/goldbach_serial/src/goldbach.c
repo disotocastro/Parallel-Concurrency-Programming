@@ -86,20 +86,19 @@ int64_t goldbach(array_numbers_t* arr_input_stdin,
       if (5 < llabs(current_num) && llabs(current_num) < MAX_INT64) {
         // Si el número es par, conjetura fuerte:
         if (llabs(current_num) % 2 == 0) {
-
-          if (goldbach_even(arr_input_stdin, arr_prime_numbers, 
-                            &arr_goldbach,main_index, goldbach_index, 
+          if (goldbach_even(arr_input_stdin, arr_prime_numbers,
+                            &arr_goldbach, main_index, goldbach_index,
                             sums_counter) != EXIT_SUCCESS) {
             fprintf(stderr, "Error: Could calculate even goldbach sums\n");
-            return EXIT_FAILURE;                    
+            return EXIT_FAILURE;
           }
         } else {
           // Como no es par, conjetura débil:
-          if (goldbach_odd(arr_input_stdin, arr_prime_numbers, 
-                            &arr_goldbach,main_index, goldbach_index, 
+          if (goldbach_odd(arr_input_stdin, arr_prime_numbers,
+                            &arr_goldbach, main_index, goldbach_index,
                             sums_counter) != EXIT_SUCCESS) {
             fprintf(stderr, "Error: Could calculate odd goldbach sums\n");
-            return EXIT_FAILURE;                    
+            return EXIT_FAILURE;
           }
           }
       } else {
@@ -201,11 +200,11 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
             if (array_append(arr_goldbach, prime_2) != EXIT_SUCCESS) {
               fprintf(stderr, "Error: Could not add golbach sums\n");
               return EXIT_FAILURE;
-            }            
+            }
             if (array_append(arr_goldbach, prime_3) != EXIT_SUCCESS) {
               fprintf(stderr, "Error: Could not add golbach sums\n");
               return EXIT_FAILURE;
-            }            
+            }
               goldbach_index += 3;
             }
             sums_counter++;
