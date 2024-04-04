@@ -1,4 +1,4 @@
-// Copyright 2024 Jeisson Hidalgo <juan.sotocastro@ucr.ac.cr>
+// Copyright 2021 Jeisson Hidalgo <jeisson.hidalgo@ucr.ac.cr> CC-BY 4.0
 
 #include <assert.h>
 #include <inttypes.h>
@@ -14,6 +14,7 @@ typedef struct shared_data {
   uint64_t position;
   pthread_mutex_t can_access_position;
   uint64_t thread_count;
+  uint64_t pinata_count; // Contador de golpes de la pinata
 } shared_data_t;
 
 // thread_private_data_t
@@ -34,12 +35,22 @@ int main(int argc, char* argv[]) {
   // create thread_count as result of converting argv[1] to integer
   // thread_count := integer(argv[1])
   uint64_t thread_count = sysconf(_SC_NPROCESSORS_ONLN);
-  if (argc == 2) {
+  uint64_t pinata_count = 0;
+
+  if (argc == 3) {
     if (sscanf(argv[1], "%" SCNu64, &thread_count) == 1) {
     } else {
       fprintf(stderr, "Error: invalid thread count\n");
       return 11;
     }
+
+    if (sscanf(argv[2], "%" SCNu64, &pinata_count) == 1) {
+    } else {
+      fprintf(stderr, "Error: invalid thread count\n");
+      return 11;
+    }
+    printf("Pinata hits: %ld\n", pinata_count);
+
   }
 
   shared_data_t* shared_data = (shared_data_t*)calloc(1, sizeof(shared_data_t));
@@ -48,6 +59,8 @@ int main(int argc, char* argv[]) {
     error = pthread_mutex_init(&shared_data->can_access_position, /*attr*/NULL);
     if (error == EXIT_SUCCESS) {
       shared_data->thread_count = thread_count;
+      // Se agrega contador de pinata al shared data
+      shared_data->pinata_count = pinata_count;
 
       struct timespec start_time, finish_time;
       clock_gettime(CLOCK_MONOTONIC, &start_time);
@@ -96,9 +109,6 @@ int create_threads(shared_data_t* shared_data) {
         break;
       }
     }
-
-    // print "Hello from main thread"
-    printf("Hello from main thread\n");
 
     for (uint64_t thread_number = 0; thread_number < shared_data->thread_count
         ; ++thread_number) {
