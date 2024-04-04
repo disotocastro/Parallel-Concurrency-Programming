@@ -14,13 +14,14 @@ typedef struct shared_data {
   uint64_t position;
   pthread_mutex_t can_access_position;
   uint64_t thread_count;
-  uint64_t pinata_count; // Contador de golpes de la pinata
+  uint64_t pinata_count; // Contador de maximo de golpes
 } shared_data_t;
 
 // thread_private_data_t
 typedef struct private_data {
   uint64_t thread_number;  // rank
   shared_data_t* shared_data;
+  uint64_t thread_int_counter; // Contador individual de cada hilo
 } private_data_t;
 
 /**
