@@ -23,9 +23,8 @@ procedure race(thread_number)
     } else {
       print "Thread: ", thread_number, "/", thread_count ": My hit num: ",
         private hit_count;
+        private hit_count++;
     }
   }
-
-
   unlock(can_access_position)
 end procedure

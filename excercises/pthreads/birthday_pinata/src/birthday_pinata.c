@@ -21,7 +21,7 @@ typedef struct shared_data {
 typedef struct private_data {
   uint64_t thread_number;  // rank
   shared_data_t* shared_data;
-  uint64_t thread_int_counter; // Contador individual de cada hilo
+  uint64_t thread_hit_counter; // Contador individual de cada hilo
 } private_data_t;
 
 /**
@@ -135,17 +135,30 @@ void* race(void* data) {
 
   // lock(can_access_position)
   pthread_mutex_lock(&shared_data->can_access_position);
-  // race condition/data race/condiciÃ³n de carrera:
-  // modificaciÃ³n concurrente de memoria compartida
-  // position := position + 1
-  ++shared_data->position;
-  // my_position := position
-  uint64_t my_position = shared_data->position;
-  // print "Hello from secondary thread"
-  printf("Thread %" PRIu64 "/%" PRIu64 ": I arrived at position %" PRIu64 "\n"
-    , private_data->thread_number, shared_data->thread_count, my_position);
+    // race condition/data race/condiciÃ³n de carrera:
+    // modificaciÃ³n concurrente de memoria compartida
+    // position := position + 1
+    ++shared_data->position;
+    // my_position := position
+    // uint64_t my_position = shared_data->position;
+    uint64_t pinata_counter = shared_data->pinata_count;
+    
+    for (size_t index = 0; index <= pinata_counter; index++) {
+      if (index == pinata_counter) {
+        printf("Thread %" PRIu64 "/%" PRIu64 ": My hit num:  %" PRIu64 
+        " I broke the pinata :D" "\n"
+        , private_data->thread_number, shared_data->thread_count
+        , private_data->thread_hit_counter);
+      } else {  
+      // print "Hello from secondary thread"
+      printf("Thread %" PRIu64 "/%" PRIu64 ": My hit num:  %" PRIu64 "\n"
+      , private_data->thread_number, shared_data->thread_count
+      , private_data->thread_hit_counter);
 
-  // unlock(can_access_position)
+      private_data->thread_hit_counter++;
+      }
+    }
+    
   pthread_mutex_unlock(&shared_data->can_access_position);
   return NULL;
 }  // end procedure
