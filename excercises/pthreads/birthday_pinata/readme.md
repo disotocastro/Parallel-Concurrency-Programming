@@ -1,36 +1,29 @@
-# Enunciado 
-Una adorable abuelita juega todos los domingos lotería. Como es peligroso que 
-ella salga de casa, envía a sus dos nietos a comprar un par de pedacitos a 
-vendedores diferentes para incrementar la suerte. Ella siempre juega a 
-"gallo tapado", es decir, sin saber el número que le venden. Sin embargo, cuando
- sus nietos llegan a la casa, por su cansado estado de la  vista ella les tiene
-  que preguntar el número que los vendedores le dieron a cada uno.
+Implemente la siguiente simulación. Los hilos de ejecución están celebrando el 
+cumpleaños de uno de ellos y van a romper la piñata. Todos los hilos son muy 
+algorítmicos y todos le pegan con la misma fuerza a la piñata. El usuario 
+confeccionó la piñata y sabe cuántos de estos golpes puede soportar el material, 
+y lo indica como segundo argumento de línea de comandos. El primer argumento es 
+la cantidad de hilos que invitó a la fiesta.
 
-Modele la situación anterior, con la abuela como el hilo principal, y los dos 
-nietos como dos hilos secundarios. Los nietos generan un número pseudoaleatorio 
-para representar la compra de la fracción de lotería. La espera de la abuela del
- regreso a casa de los dos nietos es representado por su join. Los nietos 
- comunican a la abuela los números obtenidos a través del valor de retorno de la
-  rutina secundaria. Indague en la documentación de Pthreads cómo este valor es 
-  recuperado por pthread_join(). Implemente dos variantes en que los nietos 
-  comunican este valor a la abuela:
+Por más que ha intentado, el usuario no ha logrado educar a los hilos en 
+etiqueta de piñatas. Cuando la piñata hace su aparición, todos los hilos le entran 
+a golpes simultáneamente y se podría pensar que en un instante la rompen y se 
+lanzan a recoger los confites, pero no siempre pasa eso. Raras veces se quedan 
+casi infinitamente dándole palo a la piñata rota. Su simulación debe evitar 
+este extraño y vergonzoso fenómeno.
 
-Retornan la dirección de memoria de la variable que tiene el número comprado.
+En su simulación, para mantenerles la emoción, permita que los hilos golpeen la 
+piñata como a ellos le gusta: en cualquier orden. Pero sí imponga la restricción
+ de que sólo un hilo a la vez puede golpearla. La piñata revienta cuando su 
+ contador de golpes llega a cero. Cada hilo lleva el conteo de cuántos golpes 
+ pudo darle a la piñata. Los hilos reportan en la salida estándar cuántos golpes 
+ pudo darle a la piñata y quién logró romperla. El siguiente podría ser un 
+ ejemplo hipotético de ejecución.
 
-Retornan el número comprado como una falsa dirección de memoria.
+bin/birthday_pinata 3 10
+Thread 2/10: 5 hits, I broke the pinata
+Thread 0/10: 1 hits
+Thread 1/10: 4 hits
 
-Utilice las herramientas de análisis dinámico de código para determinar cuál de 
-las dos variantes anteriores produce el resultado correcto.
-
-Recuerde revisar que su solución no haga mal uso de la memoria ni la 
-concurrencia, y de apegarse a la covención de estilos. Si usa rand(), el linter 
-advertirá de que este procedimiento no es reentrante. Puede usar el 
-procedimiento rand_r() cuya documentación puede obtener en la línea de 
-comandos con man rand_r.
-
-## Solucion:
-La solucion correcta es el numero 1, ya que esta permite que se pueda liberar
-la memoria, utilizando el free del malloc/calloc
-
-De la otra manera, enviandola como una falsa direccion de memoria, no permite
-su eliminacion.
+Recuerde como siempre verificar la calidad del código fuente y ejecutable. 
+Su solución no debe producir conduciones de carrera.
