@@ -76,11 +76,12 @@ Memoria que un hilo tiene y otro hilo no, esta no se altea por los cambios
 que yo le haga a la memoria de otro hilo, se crea haciendo un struct.
 
 ## Espera activa:
-La espera activa (busy waiting) es un ciclo que hace a un hilo de ejecución 
+La espera activa (busy waiting) es un ciclo que hace a un hilo de ejecución
 esperar repetitivamente hasta que una condición se haga falsa
 
 ## Condición de carrera:
-Es cuando dos hilos están peleando por un mismo recurso
+Es cuando dos hilos están peleando por un mismo recurso. Modicación concurrente
+de memoria compartida. 
 
 ## Control de concurrencia:
 Si dos hilos intentan escribir en el mismo archivo, el primero que llegó escribe
@@ -91,6 +92,10 @@ y el otro espera. Se definirará mejor más adelante.
 ## Exclusión mutua:
 
 ## Semáforo:
+
+Metafora del semaforo: https://jeisson.ecci.ucr.ac.cr/concurrente/2021b/
+  lecciones/0909-mutex/semaphor_metaphor.mp4
+
 
 ## Barrera:
 

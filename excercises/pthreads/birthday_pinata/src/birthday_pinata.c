@@ -1,13 +1,15 @@
-// Copyright 2021 Jeisson Hidalgo <jeisson.hidalgo@ucr.ac.cr> CC-BY 4.0
+// Copyright 2024 Diego Soto <juan.sotocastro.@ucr.ac.cr> CC-BY 4.0
 
 #include <assert.h>
 #include <inttypes.h>
 #include <pthread.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
+
 
 // thread_shared_data_t
 typedef struct shared_data {
@@ -21,13 +23,13 @@ typedef struct shared_data {
 typedef struct private_data {
   uint64_t thread_number;  // rank
   shared_data_t* shared_data;
+  bool winner; // para saber quien rompio la pinata
   uint64_t thread_hit_counter; // Contador individual de cada hilo
+  uint64_t pinata_count_priv; // Contador de maximo de golpes
 } private_data_t;
 
-/**
- * @brief ...
- */
-void* race(void* data);
+
+void* attack(void* data);
 int create_threads(shared_data_t* shared_data);
 
 // procedure main(argc, argv[])
@@ -100,8 +102,13 @@ int create_threads(shared_data_t* shared_data) {
         ; ++thread_number) {
       private_data[thread_number].thread_number = thread_number;
       private_data[thread_number].shared_data = shared_data;
+      private_data[thread_number].thread_hit_counter = 0;
+      private_data[thread_number].winner = false; 
+      private_data[thread_number].pinata_count_priv = shared_data->pinata_count;
+
+    
       // create_thread(greet, thread_number)
-      error = pthread_create(&threads[thread_number], /*attr*/ NULL, race
+      error = pthread_create(&threads[thread_number], /*attr*/ NULL, attack
         , /*arg*/ &private_data[thread_number]);
       if (error == EXIT_SUCCESS) {
       } else {
@@ -127,38 +134,44 @@ int create_threads(shared_data_t* shared_data) {
   return error;
 }
 
-// procedure greet:
-void* race(void* data) {
+void* attack(void* data) {
   assert(data);
   private_data_t* private_data = (private_data_t*) data;
   shared_data_t* shared_data = private_data->shared_data;
 
-  // lock(can_access_position)
-  pthread_mutex_lock(&shared_data->can_access_position);
-    // race condition/data race/condiciÃ³n de carrera:
-    // modificaciÃ³n concurrente de memoria compartida
-    // position := position + 1
-    ++shared_data->position;
-    // my_position := position
-    // uint64_t my_position = shared_data->position;
-    uint64_t pinata_counter = shared_data->pinata_count;
-    
-    for (size_t index = 0; index <= pinata_counter; index++) {
-      if (index == pinata_counter) {
-        printf("Thread %" PRIu64 "/%" PRIu64 ": My hit num:  %" PRIu64 
-        " I broke the pinata :D" "\n"
-        , private_data->thread_number, shared_data->thread_count
-        , private_data->thread_hit_counter);
-      } else {  
-      // print "Hello from secondary thread"
-      printf("Thread %" PRIu64 "/%" PRIu64 ": My hit num:  %" PRIu64 "\n"
-      , private_data->thread_number, shared_data->thread_count
-      , private_data->thread_hit_counter);
+  int64_t pinata_print_cont = shared_data->pinata_count;
+  // Pinata count es el valor del input del usuario
 
-      private_data->thread_hit_counter++;
-      }
+  while (true) {
+    pthread_mutex_lock(&shared_data->can_access_position);
+    if ( shared_data->pinata_count > 0 ) {
+        // Si es el turno de este hilo para golpear la piñata
+        shared_data->pinata_count--;
+        // printf("%ld \n", shared_data->pinata_count);
+        private_data->thread_hit_counter++;
+
+        // Verificar si este hilo ha roto la piñata
+        if ( shared_data->pinata_count == 0 ) {
+          private_data->winner = true;
+        }
+      pthread_mutex_unlock(&shared_data->can_access_position);
+    } else {
+      // Si la piñata ya no puede recibir más golpes
+      pthread_mutex_unlock(&shared_data->can_access_position);
+        if (private_data->winner) {
+          printf("Thread %ld / %ld: My hit num: %ld, I broke the pinata !! \n",
+          private_data->thread_number, 
+          pinata_print_cont,
+          private_data->thread_hit_counter);
+        } else {
+          printf("Thread %ld / %ld: My hit num: %ld \n", 
+          private_data->thread_number, 
+          pinata_print_cont,
+          private_data->thread_hit_counter);
+        }
+      break;
     }
-    
-  pthread_mutex_unlock(&shared_data->can_access_position);
+  }
+
   return NULL;
-}  // end procedure
+}
