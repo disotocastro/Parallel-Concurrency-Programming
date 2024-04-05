@@ -30,7 +30,7 @@ typedef struct private_data {
 
 
 void* attack(void* data);
-int create_threads(shared_data_t* shared_data);
+int create_threads(shared_data_t* shared_data, int64_t pinata_count);
 
 // procedure main(argc, argv[])
 int main(int argc, char* argv[]) {
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
       struct timespec start_time, finish_time;
       clock_gettime(CLOCK_MONOTONIC, &start_time);
 
-      error = create_threads(shared_data);
+      error = create_threads(shared_data, pinata_count);
 
       clock_gettime(CLOCK_MONOTONIC, &finish_time);
       double elapsed_time = finish_time.tv_sec - start_time.tv_sec +
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
 }  // end procedure
 
 
-int create_threads(shared_data_t* shared_data) {
+int create_threads(shared_data_t* shared_data, int64_t pinata_count) {
   int error = EXIT_SUCCESS;
   // for thread_number := 0 to thread_count do
   pthread_t* threads = (pthread_t*)
@@ -104,7 +104,7 @@ int create_threads(shared_data_t* shared_data) {
       private_data[thread_number].shared_data = shared_data;
       private_data[thread_number].thread_hit_counter = 0;
       private_data[thread_number].winner = false; 
-      private_data[thread_number].pinata_count_priv = shared_data->pinata_count;
+      private_data[thread_number].pinata_count_priv = pinata_count;
 
     
       // create_thread(greet, thread_number)
@@ -139,9 +139,6 @@ void* attack(void* data) {
   private_data_t* private_data = (private_data_t*) data;
   shared_data_t* shared_data = private_data->shared_data;
 
-  int64_t pinata_print_cont = shared_data->pinata_count;
-  // Pinata count es el valor del input del usuario
-
   while (true) {
     pthread_mutex_lock(&shared_data->can_access_position);
     if ( shared_data->pinata_count > 0 ) {
@@ -154,19 +151,19 @@ void* attack(void* data) {
         if ( shared_data->pinata_count == 0 ) {
           private_data->winner = true;
         }
-      pthread_mutex_unlock(&shared_data->can_access_position);
+    pthread_mutex_unlock(&shared_data->can_access_position);
     } else {
       // Si la piñata ya no puede recibir más golpes
       pthread_mutex_unlock(&shared_data->can_access_position);
         if (private_data->winner) {
           printf("Thread %ld / %ld: My hit num: %ld, I broke the pinata !! \n",
           private_data->thread_number, 
-          pinata_print_cont,
+          private_data[0].pinata_count_priv,
           private_data->thread_hit_counter);
         } else {
           printf("Thread %ld / %ld: My hit num: %ld \n", 
           private_data->thread_number, 
-          pinata_print_cont,
+          private_data[0].pinata_count_priv,
           private_data->thread_hit_counter);
         }
       break;
