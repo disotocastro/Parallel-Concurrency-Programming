@@ -88,11 +88,13 @@ Si dos hilos intentan escribir en el mismo archivo, el primero que llegó escrib
 y el otro espera. Se definirará mejor más adelante.
 
 ## Seguridad condicional:
+Darle a un solo hilo el trabajo de impresión, mientras que el resto de hilos
+se encargan del resto del trabajo computacional, permitiendo un orden en la 
+salida
 
 ## Exclusión mutua:
 
 ## Semáforo:
-
 Metafora del semaforo: https://jeisson.ecci.ucr.ac.cr/concurrente/2021b/
   lecciones/0909-mutex/semaphor_metaphor.mp4
 
