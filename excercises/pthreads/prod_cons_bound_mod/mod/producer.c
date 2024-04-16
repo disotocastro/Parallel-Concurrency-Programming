@@ -1,3 +1,8 @@
+#include <stdio.h>
+
+#include "common.h"
+#include "producer.h"
+
 void* produce(void* data) {
   // const private_data_t* private_data = (private_data_t*)data;
   shared_data_t* shared_data = (shared_data_t*)data;
@@ -18,4 +23,4 @@ void* produce(void* data) {
   }
 
   return NULL;
-}
+} 
