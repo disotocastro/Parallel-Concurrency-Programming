@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-
 enum {
   ERR_NOMEM_SHARED = EXIT_FAILURE + 1,
   ERR_NOMEM_BUFFER,
@@ -41,3 +40,4 @@ typedef struct {
 useconds_t random_between(useconds_t min, useconds_t max);
 
 #endif  // COMMON_H
+`
