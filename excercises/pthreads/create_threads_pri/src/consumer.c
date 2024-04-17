@@ -9,6 +9,10 @@
 void* consume(void* data) {
   simulation_t* simulation = (simulation_t*)data;
 
+
+
+
+
   while (simulation->consumed_count < simulation->unit_count) {
     ++simulation->consumed_count;
     size_t value = 0;
