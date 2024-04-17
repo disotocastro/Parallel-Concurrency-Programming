@@ -14,7 +14,7 @@
 
 int analyze_arguments(simulation_t* simulation, int argc, char* argv[]);
 int create_consumers_producers(simulation_t* simulation);
-int join_threads(size_t count, pthread_t* threads);
+int join_threads(size_t count, private_memory_t* thread_memory);
 
 simulation_t* simulation_create() {
   simulation_t* simulation = (simulation_t*) calloc(1, sizeof(simulation_t));
@@ -109,7 +109,7 @@ int analyze_arguments(simulation_t* simulation, int argc, char* argv[]) {
 
 // Modifique la subrutina create_threads() para que cree en la memoria dinámica
 // e inicialice un arreglo de registros de datos privados.
-pthread_t* create_threads(size_t count, void*(*subroutine)(void*), void* data) {
+private_memory_t* create_threads(size_t count, void*(*subroutine)(void*), void* data) {
   simulation_t* simulation = (simulation_t*) data;
   private_memory_t* thread_memory = (private_memory_t*) 
                                         calloc(count, sizeof(private_memory_t));
@@ -120,11 +120,10 @@ pthread_t* create_threads(size_t count, void*(*subroutine)(void*), void* data) {
       thread_memory[index].thread_id = index;
       thread_memory[index].thread_count = count;
       thread_memory[index].simulation = simulation;
-      if (pthread_create(&threads[index], NULL, subroutine, data) 
-                                                              == EXIT_SUCCESS) {
+      if (pthread_create(&threads[index], NULL, subroutine, 
+                         &thread_memory[index]) == EXIT_SUCCESS) {
       } else {
         fprintf(stderr, "error: could not create thread %zu\n", index);
-        join_threads(index, threads);
         return NULL;
       }
     }
@@ -133,13 +132,12 @@ pthread_t* create_threads(size_t count, void*(*subroutine)(void*), void* data) {
   return thread_memory;
 }
 
-int join_threads(size_t count, pthread_t* threads) {
+int join_threads(size_t count, private_memory_t* thread_memory) {
   int error = EXIT_SUCCESS;
   for (size_t index = 0; index < count; ++index) {
-    // todo: sum could not be right
-    error += pthread_join(threads[index], /*value_ptr*/ NULL);
+    error += pthread_join(thread_memory[index].thread, /*value_ptr*/ NULL);
   }
-  free(threads);
+  free(thread_memory);
   return error;
 }
 
@@ -147,11 +145,10 @@ int create_consumers_producers(simulation_t* simulation) {
   assert(simulation);
   int error = EXIT_SUCCESS;
 
-  pthread_t* producers = create_threads(simulation->producer_count, produce
-    , simulation);
-  pthread_t* consumers = create_threads(simulation->consumer_count, consume
-    , simulation);
-
+  private_memory_t* producers = create_threads(simulation->producer_count, 
+                                                produce, simulation);
+  private_memory_t* consumers = create_threads(simulation->consumer_count, 
+                                                consume, simulation);
   if (producers && consumers) {
     join_threads(simulation->producer_count, producers);
     join_threads(simulation->consumer_count, consumers);
