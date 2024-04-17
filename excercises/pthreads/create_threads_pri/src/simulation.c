@@ -27,14 +27,22 @@ simulation_t* simulation_create() {
     simulation->consumer_min_delay = 0;
     simulation->consumer_max_delay = 0;
     queue_init(&simulation->queue);
+    pthread_mutex_init(&simulation->mutex_next_unit, NULL); // Mutex next unit
     simulation->next_unit = 0;
+    sem_init(&simulation->can_consume, 0, 0);
+    // mutex en consumed count
+    pthread_mutex_init(&simulation->mutex_consumed_count, NULL); 
     simulation->consumed_count = 0;
   }
   return simulation;
 }
 
 void simulation_destroy(simulation_t* simulation) {
+  // Se eliminan los mutex
   assert(simulation);
+  pthread_mutex_destroy(&simulation->mutex_next_unit);
+  sem_destroy(&simulation->can_consume);
+  pthread_mutex_destroy(&simulation->mutex_consumed_count); 
   queue_destroy(&simulation->queue);
   free(simulation);
 }
@@ -98,12 +106,22 @@ int analyze_arguments(simulation_t* simulation, int argc, char* argv[]) {
   return error;
 }
 
+
+// Modifique la subrutina create_threads() para que cree en la memoria dinámica
+// e inicialice un arreglo de registros de datos privados.
 pthread_t* create_threads(size_t count, void*(*subroutine)(void*), void* data) {
+  simulation_t* simulation = (simulation_t*) data;
+  private_memory_t* thread_memory = (private_memory_t*) 
+                                        calloc(count, sizeof(private_memory_t));
   pthread_t* threads = (pthread_t*) calloc(count, sizeof(pthread_t));
+  
   if (threads) {
     for (size_t index = 0; index < count; ++index) {
-      if (pthread_create(&threads[index], /*attr*/ NULL, subroutine, data)
-         == EXIT_SUCCESS) {
+      thread_memory[index].thread_id = index;
+      thread_memory[index].thread_count = count;
+      thread_memory[index].simulation = simulation;
+      if (pthread_create(&threads[index], NULL, subroutine, data) 
+                                                              == EXIT_SUCCESS) {
       } else {
         fprintf(stderr, "error: could not create thread %zu\n", index);
         join_threads(index, threads);
@@ -111,7 +129,8 @@ pthread_t* create_threads(size_t count, void*(*subroutine)(void*), void* data) {
       }
     }
   }
-  return threads;
+  free(threads);
+  return thread_memory;
 }
 
 int join_threads(size_t count, pthread_t* threads) {

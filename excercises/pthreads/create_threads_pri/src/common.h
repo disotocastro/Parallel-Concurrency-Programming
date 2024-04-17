@@ -32,10 +32,21 @@ typedef struct simulation {
   useconds_t consumer_min_delay;
   useconds_t consumer_max_delay;
 
+  pthread_mutex_t mutex_next_unit; 
+  pthread_mutex_t mutex_consumed_count;
+  sem_t can_consume; 
   queue_t queue;
   size_t next_unit;
   size_t consumed_count;
 } simulation_t;
+
+typedef struct private_memory {
+  size_t thread_id;
+  size_t thread_count;
+  pthread_t thread;
+  simulation_t *simulation;
+} private_memory_t;
+
 
 useconds_t random_between(useconds_t min, useconds_t max);
 
