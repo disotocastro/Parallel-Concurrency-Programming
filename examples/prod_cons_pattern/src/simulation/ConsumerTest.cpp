@@ -24,3 +24,4 @@ void ConsumerTest::consume(NetworkMessage data) {
   (void)data;
   ++this->receivedMessages;
 }
+ 

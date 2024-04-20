@@ -35,12 +35,24 @@ int ProducerConsumerTest::start(int argc, char* argv[]) {
   }
 
   // Create objects for the simulation
+  /**
+   * eL productolr necesita para funcionar el numero de paqwuetes
+   * el delay y los consumidores, estos se le envian
+  */
   this->producer = new ProducerTest(this->packageCount, this->productorDelay
     , this->consumerCount);
+    // Esto es un repartidor y necesita el delay
   this->dispatcher = new DispatcherTest(this->dispatcherDelay);
+  // Se crea el su propia cola 
   this->dispatcher->createOwnQueue();
   // Create each producer
+  // Se crean N punteros
   this->consumers.resize(this->consumerCount);
+  /**
+   * Como es un vecor de punteros se va por cada uno
+   * crando su un consumer test y crean propia cola 
+   * 
+  */
   for ( size_t index = 0; index < this->consumerCount; ++index ) {
     this->consumers[index] = new ConsumerTest(this->consumerDelay);
     assert(this->consumers[index]);
@@ -56,6 +68,11 @@ int ProducerConsumerTest::start(int argc, char* argv[]) {
       , this->consumers[index]->getConsumingQueue());
   }
 
+  /**
+   * Creacion de hilos   
+   * 
+   * 
+  */
   // Start the simulation
   this->producer->startThread();
   this->dispatcher->startThread();

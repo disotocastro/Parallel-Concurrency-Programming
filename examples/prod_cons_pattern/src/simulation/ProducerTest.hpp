@@ -12,6 +12,8 @@
  * @brief A productor class example
  * Produces network messages and push them to the queue
  */
+
+// Productor de mensajes de red
 class ProducerTest : public Producer<NetworkMessage> {
   DISABLE_COPY(ProducerTest);
 
