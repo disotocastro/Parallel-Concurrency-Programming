@@ -50,6 +50,20 @@ int analyze_arguments(int argc, char* argv[]) {
   return EXIT_SUCCESS;
 }
 
+
+int get_thread_count(int argc, char* argv[]) {
+  uint64_t thread_count = sysconf(_SC_NPROCESSORS_ONLN);
+  if (argc == 2) {
+    if (sscanf(argv[1], "%" SCNu64, &thread_count) == 1) {
+    } else {
+      fprintf(stderr, "Error: invalid thread count\n");
+      return EXIT_FAILURE;
+    }
+  }
+
+  return thread_count;
+}
+
 int print_odd(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
   int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
   printf(" %ld sums", sums_counter);

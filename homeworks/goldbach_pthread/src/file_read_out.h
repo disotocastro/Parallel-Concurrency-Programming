@@ -36,9 +36,13 @@ int print_help(void);
 */
 int analyze_arguments(int argc, char* argv[]);
 
-#endif  // FILE_READ_OUT_H
-
-
+/**
+ * @brief Se encarga de analizar los threads del usuario;
+ * 
+ * @param argc: argc dado por el usuario
+ * @param argv: argv dado por el usuario
+*/
+int get_thread_count(int argc, char* argv[]);
 
 
 /**
@@ -76,3 +80,5 @@ int print_even(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
 int print_odd(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
   int64_t main_index, int64_t goldbach_index, int64_t sums_counter);
 
+
+#endif  // FILE_READ_OUT_H

@@ -18,10 +18,17 @@
 #include <time.h>
 #include <unistd.h>
 
+
+#include "array_numbers.h"
+
+
 // thread_shared_data_t
 typedef struct shared_data {
-  sem_t* can_print;
   uint64_t thread_count;
+  uint64_t this_thread_position;
+  array_numbers_t arr_input;
+  array_numbers_t arr_prime_num;
+  sem_t* can_print;
 } shared_data_t;
 
 // thread_private_data_t
