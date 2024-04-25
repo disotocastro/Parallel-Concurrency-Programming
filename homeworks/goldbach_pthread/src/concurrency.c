@@ -24,7 +24,6 @@ int golbach_concurrency(int argc, char* argv[]) {
     shared_data->thread_count = get_thread_count(argc, argv);
     fprintf("Num of threds%ld", shared_data->thread_count);
     shared_data->this_thread_position = 0;
-
     // analizar_argumentos(argc, argv);
     // array_usuario = leer_input_usuario(input_usuario);
     analyze_arguments(argc, argv);
@@ -34,9 +33,8 @@ int golbach_concurrency(int argc, char* argv[]) {
     int64_t largest_element = largest_element_arr(&shared_data->arr_input);
     array_init(&shared_data->arr_prime_num);
     trial_division(&shared_data->arr_prime_num, largest_element);
-
-    shared_data->can_print = (sem_t*) calloc(shared_data->arr_input.count, 
-                                                                 sizeof(sem_t));
+    shared_data->can_print = (sem_t*) calloc
+                                (shared_data->arr_input.count, sizeof(sem_t));
     if (shared_data->can_print) {
       create_threads(shared_data);
       free(shared_data->can_print);
@@ -46,11 +44,11 @@ int golbach_concurrency(int argc, char* argv[]) {
     }
     array_destroy(&shared_data->arr_prime_num);
     array_destroy(&shared_data->arr_input);
-    free(shared_data);                                                                
+    free(shared_data);
   }
   else{
     fprintf(stderr, "Error: Could not create dynamic memory\n");
-    error = EXIT_FAILURE;    
+    error = EXIT_FAILURE;
   }
   return error;
 }
@@ -58,14 +56,12 @@ int golbach_concurrency(int argc, char* argv[]) {
 int create_threads(shared_data_t* shared_data) {
   if (sem_init(&shared_data->sem,0, 1)) {
     // Camino feliz
-
     pthread_t* threads = (pthread_t*) calloc
                                  (shared_data->thread_count, sizeof(pthread_t));
     private_data_t* private_data = (private_data_t*) calloc
                             (shared_data->thread_count, sizeof(private_data_t));
 
     if (threads && private_data) {
-
       // Crear semaforos
       for (uint64_t sem_index = 0; sem_index < shared_data->arr_input.count; 
         sem_index++) {
@@ -76,11 +72,10 @@ int create_threads(shared_data_t* shared_data) {
           return EXIT_FAILURE;
         }
       }
-
+      // Crear los hilos[i] y mem priv
       for (uint64_t i = 0; i < shared_data->thread_count; i++) {
         private_data[i].thread_number = i;
         private_data[i].shared_data = shared_data;
-
         if (pthread_create(&threads[i], NULL, run, &private_data[i]) == 0) {
           
         } else {
@@ -90,7 +85,7 @@ int create_threads(shared_data_t* shared_data) {
           break;
         }
       }
-      
+      // Limpiar mem
       for (uint64_t i = 0; i < shared_data->thread_count; ++i) {
         pthread_join(threads[i], NULL);
         sem_destroy(&shared_data->can_print[i]);
@@ -101,8 +96,6 @@ int create_threads(shared_data_t* shared_data) {
       // Implementar error aqui
       return EXIT_FAILURE;
     }
-                            
-
   } else {
     fprintf(stderr, "Error: Could not create sems memory\n");
     return EXIT_FAILURE;
@@ -110,5 +103,5 @@ int create_threads(shared_data_t* shared_data) {
 }
 
 void* run(void* data) {
-
+  
 }
