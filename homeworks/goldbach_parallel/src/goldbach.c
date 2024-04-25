@@ -118,35 +118,32 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
   int64_t this_prime = 0;
   int64_t next_prime = 0;
 
-  // for (i = 0; i < array_usuario.lenght(); i++)
-  // for (j = i; j < array_usuario.lenght(); j++)
+  //for (i = 0; i < array_usuario.lenght(); i++) {
+  //for (j = i; j < array_usuario.lenght(); j++) {
   for (int64_t index_1 = 0; index_1 < count; index_1++) {
     for (int64_t index_2 = index_1; index_2 < count; index_2++) {
       this_prime =  arr_prime_numbers->elements[index_1];
       next_prime =  arr_prime_numbers->elements[index_2];
 
-      // if (primo_1 != 0 and primo_2 != 0)
+      //if (primo_1 != 0 and primo_2 != 0) {
+      // if (primo_1 + primo_2 == numero_acutal) {
       if (this_prime != 0 && next_prime != 0) {
-        // if (primo_1 + primo_2 == numero_acutal)
         if ((this_prime + next_prime) ==
           llabs(arr_input_stdin->elements[main_index])) {
-          /**
-           * Caso impresion de sumas
-           * if (numero_acutal < 0) {
-           *  array.push(primo_1)
-           *  array.push(primo_2)
-           * }
-          */
+
+          // if (numero_acutal < 0) {
+          //   array.push(primo_1)
+          //   array.push(primo_2)
+          // }
           if (arr_input_stdin->elements[main_index] < 0) {
             if (array_append(arr_goldbach, this_prime) != EXIT_SUCCESS) {
-              fprintf(stderr, "Error: Could not add golbach sums\n");
+              fprintf(stderr, "Error: Could not add goldbach sums\n");
               return EXIT_FAILURE;
             }
             if (array_append(arr_goldbach, next_prime) != EXIT_SUCCESS) {
-              fprintf(stderr, "Error: Could not add golbach sums\n");
+              fprintf(stderr, "Error: Could not add goldbach sums\n");
               return EXIT_FAILURE;
             }
-            array_append(arr_goldbach, next_prime);
             goldbach_index += 2;
           }
           sums_counter++;
@@ -154,12 +151,15 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
       }
     }
   }
-  // Subrutina de impresión
   print_even(arr_input_stdin, arr_goldbach, main_index, goldbach_index,
     sums_counter);
   return EXIT_SUCCESS;
 }
 
+
+// for (i = 0; i < array_usuario.lenght(); i++)
+//  for (j = i; j < array_usuario.lenght(); j++)
+//    for (k = j; k < array_usuario.lenght(); k++)
 int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
   array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach,
   int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
@@ -168,10 +168,6 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
   int64_t prime_2 = 0;
   int64_t prime_3 = 0;
 
-
-  // for (i = 0; i < array_usuario.lenght(); i++)
-  //  for (j = i; j < array_usuario.lenght(); j++)
-  //    for (k = j; k < array_usuario.lenght(); k++)
   for (int64_t index_1 = 0; index_1 < count; index_1++) {
     for (int64_t index_2 = index_1; index_2 < count; index_2++) {
       for (int64_t index_3 = index_2; index_3 < count; index_3++) {
@@ -193,24 +189,22 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
              * }
             */
             if (arr_input_stdin->elements[main_index] < 0) {
-            if (array_append(arr_goldbach, prime_1) != EXIT_SUCCESS) {
-              fprintf(stderr, "Error: Could not add golbach sums\n");
-              return EXIT_FAILURE;
-            }
-            if (array_append(arr_goldbach, prime_2) != EXIT_SUCCESS) {
-              fprintf(stderr, "Error: Could not add golbach sums\n");
-              return EXIT_FAILURE;
-            }
-            if (array_append(arr_goldbach, prime_3) != EXIT_SUCCESS) {
-              fprintf(stderr, "Error: Could not add golbach sums\n");
-              return EXIT_FAILURE;
-            }
+              if (array_append(arr_goldbach, prime_1) != EXIT_SUCCESS) {
+                fprintf(stderr, "Error: Could not add goldbach sums\n");
+                return EXIT_FAILURE;
+              }
+              if (array_append(arr_goldbach, prime_2) != EXIT_SUCCESS) {
+                fprintf(stderr, "Error: Could not add goldbach sums\n");
+                return EXIT_FAILURE;
+              }
+              if (array_append(arr_goldbach, prime_3) != EXIT_SUCCESS) {
+                fprintf(stderr, "Error: Could not add goldbach sums\n");
+                return EXIT_FAILURE;
+              }
               goldbach_index += 3;
             }
             sums_counter++;
           }
-        } else {
-          // error
         }
       }
     }
