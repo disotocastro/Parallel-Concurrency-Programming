@@ -74,7 +74,7 @@ int64_t goldbach(size_t index, array_numbers_t* arr_input_stdin,
   if (arr_input_stdin && arr_prime_numbers) {
     
     int64_t sums_counter = 0;
-    int64_t counter = (int64_t) arr_input_stdin->count;
+    //int64_t counter = (int64_t) arr_input_stdin->count;
     int64_t goldbach_index = 0;
 
     array_numbers_t arr_goldbach;
@@ -95,8 +95,9 @@ int64_t goldbach(size_t index, array_numbers_t* arr_input_stdin,
         }
       } else {
         // Como no es par, conjetura débil:
-        if (goldbach_odd(arr_input_stdin, arr_prime_numbers, 
-            &arr_goldbach, index, goldbach_index,sums_counter) != EXIT_SUCCESS) {
+        if(goldbach_odd(arr_input_stdin, arr_prime_numbers, &arr_goldbach, 
+          index, goldbach_index,sums_counter, can_print, next_thread) 
+            != EXIT_SUCCESS) {
           fprintf(stderr, "Error: Could calculate odd goldbach sums\n");
           return EXIT_FAILURE;
         }
@@ -113,12 +114,10 @@ int64_t goldbach(size_t index, array_numbers_t* arr_input_stdin,
   return EXIT_SUCCESS;
 }
 
-
 int64_t goldbach_even(array_numbers_t* arr_input_stdin,
   array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach,
   int64_t main_index, int64_t goldbach_index, int64_t sums_counter, 
-  sem_t* can_print,sem_t* next_thread ) {
-
+  sem_t* can_print, sem_t* next_thread ) {
 
   int64_t count = (int)arr_prime_numbers->count;
   int64_t this_prime = 0;
@@ -157,8 +156,10 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
       }
     }
   }
-  print_even(arr_input_stdin, arr_goldbach, main_index, goldbach_index,
-    sums_counter);
+  sem_wait(can_print);
+  print_even(arr_input_stdin, arr_goldbach, main_index, 
+             goldbach_index, sums_counter);
+  sem_wait(next_thread);
   return EXIT_SUCCESS;
 }
 
@@ -219,7 +220,9 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
     }
   }
   // Subrutina de impresión
-  print_odd(arr_input_stdin, arr_goldbach, main_index, goldbach_index,
-    sums_counter);
+  sem_wait(can_print);
+  print_odd(arr_input_stdin, arr_goldbach, main_index, 
+            goldbach_index, sums_counter);
+  sem_wait(next_thread);
   return EXIT_SUCCESS;
 }

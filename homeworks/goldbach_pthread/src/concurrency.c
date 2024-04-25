@@ -8,11 +8,10 @@
 #include <time.h>
 #include <unistd.h>
 
-
 #include "array_numbers.h"
 #include "file_read_out.h"
 #include "concurrency.h"
-
+#include "goldbach.h"
 
 // Este codigo funciona de manera muy similar al antiguo main
 int golbach_concurrency(int argc, char* argv[]) {
@@ -22,7 +21,7 @@ int golbach_concurrency(int argc, char* argv[]) {
 
   if (shared_data) {
     shared_data->thread_count = get_thread_count(argc, argv);
-    fprintf("Num of threds%ld", shared_data->thread_count);
+    printf("Num of threds%ld", shared_data->thread_count);
     shared_data->this_thread_position = 0;
     // analizar_argumentos(argc, argv);
     // array_usuario = leer_input_usuario(input_usuario);
@@ -54,8 +53,8 @@ int golbach_concurrency(int argc, char* argv[]) {
 }
 
 int create_threads(shared_data_t* shared_data) {
-  if (sem_init(&shared_data->sem,0, 1)) {
-    // Camino feliz
+    sem_init(&shared_data->sem, 0, 1);
+  // if (sem_init(&shared_data->sem, 0, 1)) {
     pthread_t* threads = (pthread_t*) calloc
                                  (shared_data->thread_count, sizeof(pthread_t));
     private_data_t* private_data = (private_data_t*) calloc
@@ -65,23 +64,18 @@ int create_threads(shared_data_t* shared_data) {
       // Crear semaforos
       for (uint64_t sem_index = 0; sem_index < shared_data->arr_input.count; 
         sem_index++) {
-        
-        if (sem_init(&shared_data->can_print[sem_index], 0, !sem_index)) {
-          
-        } else {
-          return EXIT_FAILURE;
-        }
+        sem_init(&shared_data->can_print[sem_index], 0, !sem_index);
       }
       // Crear los hilos[i] y mem priv
       for (uint64_t i = 0; i < shared_data->thread_count; i++) {
         private_data[i].thread_number = i;
         private_data[i].shared_data = shared_data;
+        
         if (pthread_create(&threads[i], NULL, run, &private_data[i]) == 0) {
           
         } else {
+          fprintf(stderr, "Error: Could not create threads private memory\n");
           shared_data->thread_count = i;
-          // implementar codigo de error
-          return EXIT_FAILURE;
           break;
         }
       }
@@ -93,13 +87,10 @@ int create_threads(shared_data_t* shared_data) {
       free(threads);
       free(private_data);
     } else{
-      // Implementar error aqui
+      fprintf(stderr, "Error: Could not create sems memory \n");
       return EXIT_FAILURE;
     }
-  } else {
-    fprintf(stderr, "Error: Could not create sems memory\n");
-    return EXIT_FAILURE;
-  }
+  return EXIT_SUCCESS;
 }
 
 void* run(void* data) {
@@ -111,11 +102,12 @@ void* run(void* data) {
     sem_wait(&shared_data->sem);
     if (shared_data->this_thread_position < shared_data->arr_input.count) {
       thread_index = shared_data->this_thread_position;
+
       shared_data->this_thread_position++;
 
       sem_post(&shared_data->sem);
       // Formula para calcular donde tiene que trabajar cada hilo
-      uint64_t next_thread = (&shared_data->can_print [thread_index + 1 %
+      sem_t* next_thread = (&shared_data->can_print [thread_index + 1 %
         shared_data->arr_input.count]);
 
       goldbach(thread_index, &shared_data->arr_input,
@@ -125,5 +117,6 @@ void* run(void* data) {
     sem_post(&shared_data->sem);
   }
   
+}
   return NULL;
 }

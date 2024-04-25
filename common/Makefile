@@ -16,7 +16,7 @@ LIBS=#= Libraries to be linked, e.g: LIBS=-lm
 LINTF=-build/header_guard,-build/include_subdir,-runtime/int
 LINTC=$(LINTF),-readability/casting
 LINTX=$(LINTF),-build/c++11,-runtime/references
-ARGS=5 2 3 0 100 0 750#= Execution arguments, e.g: 'ARGS=100 "a text"'
+ARGS=#= Execution arguments, e.g: 'ARGS=100 "a text"'
 ARGSJR=-ea
 GITUSER=$(shell getent passwd "$USER" | cut -d: -f5 | cut -d, -f1)#= Your full name e.g: "Ana Soto"
 GITEMAIL=
