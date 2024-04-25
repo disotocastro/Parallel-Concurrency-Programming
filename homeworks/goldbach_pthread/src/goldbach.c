@@ -70,7 +70,9 @@ int64_t trial_division(array_numbers_t* arr_prime_numbers,
 }
 
 int64_t goldbach(array_numbers_t* arr_input_stdin,
-  array_numbers_t* arr_prime_numbers) {
+  array_numbers_t* arr_prime_numbers, size_t index, sem_t* can_print,  
+  sem_t* next_thread){
+    
   if (arr_input_stdin && arr_prime_numbers) {
     int64_t counter = (int64_t) arr_input_stdin->count;
     int64_t sums_counter = 0;

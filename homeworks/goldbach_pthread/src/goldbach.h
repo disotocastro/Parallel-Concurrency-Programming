@@ -12,6 +12,7 @@
 
 #include "file_read_out.h"
 #include "array_numbers.h"
+#include "concurrency.h"
 
 /**
  * @brief Busca y retorna el número más grande del array
@@ -50,9 +51,10 @@ int64_t trial_division(array_numbers_t* arr_prime_numbers,
  * @param arr_prime_numbers array de numeros primos, de los numeros ingresados
  * por el usuario
  * @return EXIT_SUCCESS si la función se ejecuta correctamente.
+ * TODO: comentar
 */
-int64_t goldbach(array_numbers_t* arr_input_stdin,
-  array_numbers_t* arr_prime_numbers);
+int64_t goldbach(size_t index, array_numbers_t* arr_input_stdin,
+  array_numbers_t* arr_prime_numbers, sem_t* can_print,sem_t* next_thread);
 
 /**
  * @brief Encuentra las sumas de números primos para un número par dado.
