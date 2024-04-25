@@ -103,23 +103,28 @@ int create_threads(shared_data_t* shared_data) {
 }
 
 void* run(void* data) {
-  size_t this_thread = 0;
+
+  size_t thread_index = 0;
   private_data_t* private_data = (private_data_t*) data;
   shared_data_t* shared_data = private_data->shared_data;
 
   while (shared_data->this_thread_position < shared_data->arr_input.count) {
     sem_wait(&shared_data->sem);
-
     if (shared_data->this_thread_position < shared_data->arr_input.count) {
-      this_thread = shared_data->this_thread_position;
+      thread_index = shared_data->this_thread_position;
       shared_data->this_thread_position++;
+
       sem_post(&shared_data->sem);
-      
-    goldbach(size_t index, array_numbers_t* arr_input_stdin,
-      array_numbers_t* arr_prime_numbers, sem_t* can_print,sem_t* next_thread);
-    
+      // Formula para calcular donde tiene que trabajar cada hilo
+      uint64_t next_thread = (&shared_data->can_print [thread_index + 1 % 
+        shared_data->arr_input.count]);
+
+      goldbach(thread_index, &shared_data->arr_input, 
+               &shared_data->arr_prime_num,
+               &shared_data->can_print[thread_index], next_thread);
+  } else {
+    sem_post(&shared_data->sem);
   }
   
-
-
+  return NULL;
 }
