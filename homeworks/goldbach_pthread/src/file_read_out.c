@@ -1,11 +1,14 @@
 // Copyright 2024 Diego Soto <juan.sotocastro@ucr.ac.cr>
 
 #include <assert.h>
+#include <inttypes.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <unistd.h>
+
 
 #include "file_read_out.h"
 
