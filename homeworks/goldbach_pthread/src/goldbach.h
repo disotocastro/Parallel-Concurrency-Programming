@@ -73,8 +73,8 @@ int64_t goldbach(size_t index, array_numbers_t* arr_input_stdin,
  */
 int64_t goldbach_even(array_numbers_t* arr_input_stdin,
   array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach,
-  int64_t main_index, int64_t goldbach_index, int64_t sums_counter);
-
+  int64_t main_index, int64_t goldbach_index, int64_t sums_counter, 
+  sem_t* can_print,sem_t* next_thread );
 
 /**
  * @brief Encuentra las sumas de números primos para un número impar dado.
@@ -91,8 +91,10 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
  * @param sums_counter Contador de las sumas encontradas.
  * @return EXIT_SUCCESS si la función se ejecuta correctamente.
  */
+
 int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
   array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach,
-  int64_t main_index, int64_t goldbach_index, int64_t sums_counter);
+  int64_t main_index, int64_t goldbach_index, int64_t sums_counter, 
+  sem_t* can_print,sem_t* next_thread );
 
 #endif  // GOLDBACH_H

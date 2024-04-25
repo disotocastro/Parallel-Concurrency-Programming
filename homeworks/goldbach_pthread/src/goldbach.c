@@ -69,53 +69,57 @@ int64_t trial_division(array_numbers_t* arr_prime_numbers,
   return EXIT_SUCCESS;
 }
 
-int64_t goldbach(array_numbers_t* arr_input_stdin,
-  array_numbers_t* arr_prime_numbers, size_t index, sem_t* can_print,  
-  sem_t* next_thread){
-    
+int64_t goldbach(size_t index, array_numbers_t* arr_input_stdin,
+  array_numbers_t* arr_prime_numbers, sem_t* can_print,sem_t* next_thread) {
   if (arr_input_stdin && arr_prime_numbers) {
-    int64_t counter = (int64_t) arr_input_stdin->count;
+    
     int64_t sums_counter = 0;
+    int64_t counter = (int64_t) arr_input_stdin->count;
     int64_t goldbach_index = 0;
 
-    for (int64_t main_index = 0; main_index < counter; main_index++) {
-      array_numbers_t arr_goldbach;
-      array_init(&arr_goldbach);
-      int64_t current_num = arr_input_stdin->elements[main_index];
-      printf("%ld:", current_num);
+    array_numbers_t arr_goldbach;
+    array_init(&arr_goldbach);
+    int64_t current_num = arr_input_stdin->elements[index];
+    // Imprimir numero actual, ej: X:
+    printf("%ld:", current_num);
 
-      // 5 < current_num < MAX_INT64
-      if (5 < llabs(current_num) && llabs(current_num) < MAX_INT64) {
-        // Si el número es par, conjetura fuerte:
-        if (llabs(current_num) % 2 == 0) {
-          if (goldbach_even(arr_input_stdin, arr_prime_numbers,
-                            &arr_goldbach, main_index, goldbach_index,
-                            sums_counter) != EXIT_SUCCESS) {
-            fprintf(stderr, "Error: Could calculate even goldbach sums\n");
-            return EXIT_FAILURE;
-          }
-        } else {
-          // Como no es par, conjetura débil:
-          if (goldbach_odd(arr_input_stdin, arr_prime_numbers,
-                            &arr_goldbach, main_index, goldbach_index,
-                            sums_counter) != EXIT_SUCCESS) {
-            fprintf(stderr, "Error: Could calculate odd goldbach sums\n");
-            return EXIT_FAILURE;
-          }
-          }
+    // 5 < current_num < MAX_INT64
+    if (5 < llabs(current_num) && llabs(current_num) < MAX_INT64) {
+      // Si el número es par, conjetura fuerte:
+      if (llabs(current_num) % 2 == 0) {
+        if(goldbach_even(arr_input_stdin, arr_prime_numbers, &arr_goldbach, 
+          index, goldbach_index,sums_counter, can_print, next_thread) 
+            != EXIT_SUCCESS) {
+          fprintf(stderr, "Error: Could calculate even goldbach sums\n");
+          return EXIT_FAILURE;
+        }
       } else {
-        // Par casos como <= 5
-        printf(" NA\n");
-      }
-      array_destroy(&arr_goldbach);
+        // Como no es par, conjetura débil:
+        if (goldbach_odd(arr_input_stdin, arr_prime_numbers, 
+            &arr_goldbach, index, goldbach_index,sums_counter) != EXIT_SUCCESS) {
+          fprintf(stderr, "Error: Could calculate odd goldbach sums\n");
+          return EXIT_FAILURE;
+        }
+        }
+    } else {
+      // Par casos como <= 5
+      sem_wait(can_print);
+      printf(" NA\n");
+      sem_post(next_thread);
     }
+    array_destroy(&arr_goldbach);
+    
   }
   return EXIT_SUCCESS;
 }
 
+
 int64_t goldbach_even(array_numbers_t* arr_input_stdin,
   array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach,
-  int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
+  int64_t main_index, int64_t goldbach_index, int64_t sums_counter, 
+  sem_t* can_print,sem_t* next_thread ) {
+
+
   int64_t count = (int)arr_prime_numbers->count;
   int64_t this_prime = 0;
   int64_t next_prime = 0;
@@ -162,9 +166,12 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
 // for (i = 0; i < array_usuario.lenght(); i++)
 //  for (j = i; j < array_usuario.lenght(); j++)
 //    for (k = j; k < array_usuario.lenght(); k++)
+
 int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
   array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach,
-  int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
+  int64_t main_index, int64_t goldbach_index, int64_t sums_counter, 
+  sem_t* can_print,sem_t* next_thread ) {
+
   int64_t count = (int64_t) arr_prime_numbers->count;
   int64_t prime_1 = 0;
   int64_t prime_2 = 0;

@@ -103,7 +103,6 @@ int create_threads(shared_data_t* shared_data) {
 }
 
 void* run(void* data) {
-
   size_t thread_index = 0;
   private_data_t* private_data = (private_data_t*) data;
   shared_data_t* shared_data = private_data->shared_data;
@@ -116,10 +115,10 @@ void* run(void* data) {
 
       sem_post(&shared_data->sem);
       // Formula para calcular donde tiene que trabajar cada hilo
-      uint64_t next_thread = (&shared_data->can_print [thread_index + 1 % 
+      uint64_t next_thread = (&shared_data->can_print [thread_index + 1 %
         shared_data->arr_input.count]);
 
-      goldbach(thread_index, &shared_data->arr_input, 
+      goldbach(thread_index, &shared_data->arr_input,
                &shared_data->arr_prime_num,
                &shared_data->can_print[thread_index], next_thread);
   } else {
