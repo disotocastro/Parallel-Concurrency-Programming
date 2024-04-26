@@ -66,6 +66,8 @@ int get_thread_count(int argc, char* argv[]) {
 
 int print_odd(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
   int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
+
+  printf("%ld:", (arr_input_stdin->elements[main_index]));
   printf(" %ld sums", sums_counter);
   if (arr_input_stdin->elements[main_index] < 0) {
     printf(": ");
@@ -90,6 +92,7 @@ int print_odd(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
 
 int print_even(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
 int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
+  printf("%ld:", (arr_input_stdin->elements[main_index]));
   printf(" %ld sums", sums_counter);
   if (arr_input_stdin->elements[main_index] < 0) {
     printf(": ");

@@ -70,40 +70,38 @@ int64_t trial_division(array_numbers_t* arr_prime_numbers,
 }
 
 int64_t goldbach(array_numbers_t* arr_input_stdin,
-  array_numbers_t* arr_prime_numbers) {
+                 array_numbers_t* arr_prime_numbers) {
   if (arr_input_stdin && arr_prime_numbers) {
-    int64_t counter = (int64_t) arr_input_stdin->count;
-    int64_t sums_counter = 0;
-    int64_t goldbach_index = 0;
+    int64_t sumsCount = 0;
+    int64_t addendsIndex = 0;
+    int64_t addendsCount = 0;
+    int64_t modulo = 0;
 
-    for (int64_t main_index = 0; main_index < counter; main_index++) {
+    for (int64_t inputNumbersIndex = 0;
+         inputNumbersIndex < arr_input_stdin->count; inputNumbersIndex++) {
       array_numbers_t arr_goldbach;
       array_init(&arr_goldbach);
-      int64_t current_num = arr_input_stdin->elements[main_index];
+      int64_t current_num = arr_input_stdin->elements[inputNumbersIndex];
       printf("%ld:", current_num);
 
-      // 5 < current_num < MAX_INT64
-      if (5 < llabs(current_num) && llabs(current_num) < MAX_INT64) {
-        // Si el número es par, conjetura fuerte:
-        if (llabs(current_num) % 2 == 0) {
-          if (goldbach_even(arr_input_stdin, arr_prime_numbers,
-                            &arr_goldbach, main_index, goldbach_index,
-                            sums_counter) != EXIT_SUCCESS) {
+      if (llabs(current_num) <= 5 || llabs(current_num) > (9223372036854775807)) {
+        printf(" NA\n");
+      } else {
+        modulo = llabs(current_num) % 2;
+
+        if (modulo == 0) {
+          if (goldbach_even(arr_input_stdin, arr_prime_numbers, &arr_goldbach,
+                            inputNumbersIndex, addendsIndex, sumsCount) != EXIT_SUCCESS) {
             fprintf(stderr, "Error: Could calculate even goldbach sums\n");
             return EXIT_FAILURE;
           }
         } else {
-          // Como no es par, conjetura débil:
-          if (goldbach_odd(arr_input_stdin, arr_prime_numbers,
-                            &arr_goldbach, main_index, goldbach_index,
-                            sums_counter) != EXIT_SUCCESS) {
+          if (goldbach_odd(arr_input_stdin, arr_prime_numbers, &arr_goldbach,
+                           inputNumbersIndex, addendsIndex, sumsCount) != EXIT_SUCCESS) {
             fprintf(stderr, "Error: Could calculate odd goldbach sums\n");
             return EXIT_FAILURE;
           }
-          }
-      } else {
-        // Par casos como <= 5
-        printf(" NA\n");
+        }
       }
       array_destroy(&arr_goldbach);
     }

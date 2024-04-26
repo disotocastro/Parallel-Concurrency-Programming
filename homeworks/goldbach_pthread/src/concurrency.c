@@ -1,3 +1,10 @@
+/**
+ * Copyright 2024 Diego Soto <juan.sotocastro@ucr.ac.cr>
+ * 
+ * Créditos: Versión modificada del código de Jeisson Hidalgo, extraído 
+ * de los videos "Hello_Order_Semaphor.c"
+*/
+
 #include <assert.h>
 #include <inttypes.h>
 #include <pthread.h>
@@ -18,10 +25,8 @@ int golbach_concurrency(int argc, char* argv[]) {
   FILE* input = stdin;
   int error = EXIT_SUCCESS;
   shared_data_t* shared_data = (shared_data_t*)calloc(1, sizeof(shared_data_t));
-
   if (shared_data) {
     shared_data->thread_count = get_thread_count(argc, argv);
-    printf("Num of threds%ld", shared_data->thread_count);
     shared_data->this_thread_position = 0;
     // analizar_argumentos(argc, argv);
     // array_usuario = leer_input_usuario(input_usuario);
@@ -38,8 +43,8 @@ int golbach_concurrency(int argc, char* argv[]) {
       create_threads(shared_data);
       free(shared_data->can_print);
     } else {
-      fprintf(stderr, "Error: Could not allocate semaphores\n");
-      error = EXIT_FAILURE;
+        fprintf(stderr, "Error: Could not allocate semaphores\n");
+        error = EXIT_FAILURE;
     }
     array_destroy(&shared_data->arr_prime_num);
     array_destroy(&shared_data->arr_input);
@@ -98,8 +103,8 @@ void* run(void* data) {
   private_data_t* private_data = (private_data_t*) data;
   shared_data_t* shared_data = private_data->shared_data;
 
+  sem_wait(&shared_data->sem);
   while (shared_data->this_thread_position < shared_data->arr_input.count) {
-    sem_wait(&shared_data->sem);
     if (shared_data->this_thread_position < shared_data->arr_input.count) {
       thread_index = shared_data->this_thread_position;
 
