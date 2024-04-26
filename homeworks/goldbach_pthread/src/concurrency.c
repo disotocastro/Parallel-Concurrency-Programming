@@ -32,8 +32,7 @@ int golbach_concurrency(int argc, char* argv[]) {
     // array_usuario = leer_input_usuario(input_usuario);
     analyze_arguments(argc, argv);
     array_init(&shared_data->arr_input);
-    read_file(input, &shared_data->arr_input);    
-
+    read_file(input, &shared_data->arr_input);
     int64_t largest_element = largest_element_arr(&shared_data->arr_input);
     array_init(&shared_data->arr_prime_num);
     trial_division(&shared_data->arr_prime_num, largest_element);
@@ -49,10 +48,9 @@ int golbach_concurrency(int argc, char* argv[]) {
     array_destroy(&shared_data->arr_prime_num);
     array_destroy(&shared_data->arr_input);
     free(shared_data);
-  }
-  else{
-    fprintf(stderr, "Error: Could not create dynamic memory\n");
-    error = EXIT_FAILURE;
+  } else {
+      fprintf(stderr, "Error: Could not create dynamic memory\n");
+      error = EXIT_FAILURE;
   }
   return error;
 }
@@ -67,7 +65,7 @@ int create_threads(shared_data_t* shared_data) {
 
     if (threads && private_data) {
       // Crear semaforos
-      for (uint64_t sem_index = 0; sem_index < shared_data->arr_input.count; 
+      for (uint64_t sem_index = 0; sem_index < shared_data->arr_input.count;
         sem_index++) {
         sem_init(&shared_data->can_print[sem_index], 0, !sem_index);
       }
@@ -75,9 +73,7 @@ int create_threads(shared_data_t* shared_data) {
       for (uint64_t i = 0; i < shared_data->thread_count; i++) {
         private_data[i].thread_number = i;
         private_data[i].shared_data = shared_data;
-        
         if (pthread_create(&threads[i], NULL, run, &private_data[i]) == 0) {
-          
         } else {
           fprintf(stderr, "Error: Could not create threads private memory\n");
           shared_data->thread_count = i;
@@ -91,7 +87,7 @@ int create_threads(shared_data_t* shared_data) {
       }
       free(threads);
       free(private_data);
-    } else{
+    } else {
       fprintf(stderr, "Error: Could not create sems memory \n");
       return EXIT_FAILURE;
     }
@@ -112,7 +108,7 @@ void* run(void* data) {
 
       sem_post(&shared_data->sem);
       // Formula para calcular donde tiene que trabajar cada hilo
-      sem_t* next_thread = (&shared_data->can_print [thread_index + 1 %
+      sem_t* next_thread = (&shared_data->can_print[thread_index + 1 %
         shared_data->arr_input.count]);
 
       goldbach(thread_index, &shared_data->arr_input,
@@ -121,7 +117,6 @@ void* run(void* data) {
   } else {
     sem_post(&shared_data->sem);
   }
-  
 }
   return NULL;
 }

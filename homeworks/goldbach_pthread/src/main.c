@@ -11,8 +11,6 @@
 #include "concurrency.h"
 
 int main(int argc, char* argv[]) {
-
   golbach_concurrency(argc, argv);
-  
   return EXIT_SUCCESS;
 }
