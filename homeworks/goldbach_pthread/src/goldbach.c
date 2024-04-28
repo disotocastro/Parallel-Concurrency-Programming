@@ -16,7 +16,7 @@ const int64_t MAX_INT64 = INT64_MAX;
 
 int64_t largest_element_arr(array_numbers_t* arr_input_stdin) {
   if (!arr_input_stdin || arr_input_stdin->count == 0) {
-    fprintf(stderr, "Error: Could not read input numbers or the array is empty");
+    fprintf(stderr, "Error: Could not read input numbers");
     return EXIT_FAILURE;
   }
 

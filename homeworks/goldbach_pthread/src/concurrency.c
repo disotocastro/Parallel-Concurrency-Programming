@@ -61,30 +61,26 @@ int create_threads(shared_data_t* shared_data) {
 }
 
 void* run(void* data) {
-  size_t thread_index = 0;
   private_data_t* private_data = (private_data_t*) data;
   shared_data_t* shared_data = private_data->shared_data;
+  size_t thread_index = 0;
 
-  pthread_mutex_lock(&shared_data->mutex);
-  // sem_wait(&shared_data->sem);
-  while (shared_data->this_thread_position < shared_data->arr_input.count) {
-      thread_index = shared_data->this_thread_position;
+  while (1) {
+    pthread_mutex_lock(&shared_data->mutex);
+    thread_index = shared_data->this_thread_position;
+    shared_data->this_thread_position++;
+    pthread_mutex_unlock(&shared_data->mutex);
 
-      shared_data->this_thread_position++;
-      pthread_mutex_unlock(&shared_data->mutex);
-      // sem_post(&shared_data->sem);
+    // Condicion de parada
+    if (thread_index >= shared_data->arr_input.count) {
+        break;
+    }
 
-      // Formula para calcular donde tiene que trabajar cada hilo
-      // sem_t* next_thread = (&shared_data->can_print[thread_index + 1 %
-      //   shared_data->arr_input.count]);
-
-      goldbach(thread_index, &shared_data->arr_input,
-               &shared_data->arr_prime_num,
-               &shared_data->can_print[thread_index],
-               (&shared_data->can_print[thread_index + 1 %
-        shared_data->arr_input.count]));
-      pthread_mutex_lock(&shared_data->mutex);
+    goldbach(thread_index, &shared_data->arr_input,
+            &shared_data->arr_prime_num,
+            &shared_data->can_print[thread_index],
+            &shared_data->can_print[(thread_index + 1) %
+            shared_data->arr_input.count]);
   }
-  pthread_mutex_unlock(&shared_data->mutex);
   return NULL;
 }
