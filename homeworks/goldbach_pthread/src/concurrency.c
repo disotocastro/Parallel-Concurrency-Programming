@@ -22,7 +22,7 @@
 
 int create_threads(shared_data_t* shared_data) {
     sem_init(&shared_data->sem, 0, 1);
-  // if (sem_init(&shared_data->sem, 0, 1)) {
+
     pthread_t* threads = (pthread_t*) calloc
                                  (shared_data->thread_count, sizeof(pthread_t));
     private_data_t* private_data = (private_data_t*) calloc
@@ -38,6 +38,7 @@ int create_threads(shared_data_t* shared_data) {
       for (uint64_t i = 0; i < shared_data->thread_count; i++) {
         private_data[i].thread_number = i;
         private_data[i].shared_data = shared_data;
+
         if (pthread_create(&threads[i], NULL, run, &private_data[i]) == 0) {
         } else {
           fprintf(stderr, "Error: Could not create threads private memory\n");
@@ -72,6 +73,7 @@ void* run(void* data) {
       shared_data->this_thread_position++;
       pthread_mutex_unlock(&shared_data->mutex);
       // sem_post(&shared_data->sem);
+
       // Formula para calcular donde tiene que trabajar cada hilo
       // sem_t* next_thread = (&shared_data->can_print[thread_index + 1 %
       //   shared_data->arr_input.count]);
@@ -81,7 +83,7 @@ void* run(void* data) {
                &shared_data->can_print[thread_index],
                (&shared_data->can_print[thread_index + 1 %
         shared_data->arr_input.count]));
-    pthread_mutex_lock(&shared_data->mutex);
+      pthread_mutex_lock(&shared_data->mutex);
   }
   pthread_mutex_unlock(&shared_data->mutex);
   return NULL;
