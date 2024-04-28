@@ -99,24 +99,28 @@ void* run(void* data) {
   private_data_t* private_data = (private_data_t*) data;
   shared_data_t* shared_data = private_data->shared_data;
 
-  sem_wait(&shared_data->sem);
+  pthread_mutex_lock(&shared_data->mutex);
+  //sem_wait(&shared_data->sem);
   while (shared_data->this_thread_position < shared_data->arr_input.count) {
-    if (shared_data->this_thread_position < shared_data->arr_input.count) {
       thread_index = shared_data->this_thread_position;
 
       shared_data->this_thread_position++;
-
-      sem_post(&shared_data->sem);
+      pthread_mutex_unlock(&shared_data->mutex);
+      // sem_post(&shared_data->sem);
       // Formula para calcular donde tiene que trabajar cada hilo
-      sem_t* next_thread = (&shared_data->can_print[thread_index + 1 %
-        shared_data->arr_input.count]);
+      // sem_t* next_thread = (&shared_data->can_print[thread_index + 1 %
+      //   shared_data->arr_input.count]);
 
       goldbach(thread_index, &shared_data->arr_input,
                &shared_data->arr_prime_num,
-               &shared_data->can_print[thread_index], next_thread);
-  } else {
-    sem_post(&shared_data->sem);
-  }
-}
+               &shared_data->can_print[thread_index], 
+               (&shared_data->can_print[thread_index + 1 %
+        shared_data->arr_input.count]));
+
+
+    pthread_mutex_lock(&shared_data->mutex);
+    
+  } 
+  pthread_mutex_unlock(&shared_data->mutex);
   return NULL;
 }

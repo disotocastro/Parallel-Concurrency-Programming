@@ -30,7 +30,7 @@ typedef struct shared_data {
     array_numbers_t arr_prime_num;
     sem_t* can_print;
     sem_t sem;
-    // pthread_mutex_t mutex;   // Mutex para sincronización
+    pthread_mutex_t mutex;   // Mutex para sincronización
 } shared_data_t;
 
 // thread_private_data_t
