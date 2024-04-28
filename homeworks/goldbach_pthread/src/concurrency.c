@@ -100,7 +100,7 @@ void* run(void* data) {
   shared_data_t* shared_data = private_data->shared_data;
 
   pthread_mutex_lock(&shared_data->mutex);
-  //sem_wait(&shared_data->sem);
+  // sem_wait(&shared_data->sem);
   while (shared_data->this_thread_position < shared_data->arr_input.count) {
       thread_index = shared_data->this_thread_position;
 
@@ -113,14 +113,11 @@ void* run(void* data) {
 
       goldbach(thread_index, &shared_data->arr_input,
                &shared_data->arr_prime_num,
-               &shared_data->can_print[thread_index], 
+               &shared_data->can_print[thread_index],
                (&shared_data->can_print[thread_index + 1 %
         shared_data->arr_input.count]));
-
-
     pthread_mutex_lock(&shared_data->mutex);
-    
-  } 
+  }
   pthread_mutex_unlock(&shared_data->mutex);
   return NULL;
 }
