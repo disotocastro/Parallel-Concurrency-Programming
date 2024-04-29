@@ -18,6 +18,8 @@ const char* const usage =
   "  prod_delay  delay of producer to create a package\n"
   "  disp_delay  delay of dispatcher to dispatch a package\n"
   "  cons_delay  delay of consumer to consume a package\n"
+  "  packet_loss percentage of probability of losing a package [ 0.1 - 1 ]\n"
+  
   "\n"
   "Delays are in millisenconds, negatives are maximums for random delays\n";
 
@@ -40,6 +42,9 @@ int ProducerConsumerTest::start(int argc, char* argv[]) {
   this->dispatcher = new DispatcherTest(this->dispatcherDelay);
   this->dispatcher->createOwnQueue();
   // Create each producer
+  
+  // Implemente un hilo ensamblador que es uno de los destinos del repartidor
+  
   this->consumers.resize(this->consumerCount);
   for ( size_t index = 0; index < this->consumerCount; ++index ) {
     this->consumers[index] = new ConsumerTest(this->consumerDelay);
@@ -76,17 +81,18 @@ int ProducerConsumerTest::start(int argc, char* argv[]) {
 
 int ProducerConsumerTest::analyzeArguments(int argc, char* argv[]) {
   // 5 + 1 arguments are mandatory
-  if ( argc != 6 ) {
+  if ( argc != 7 ) {
     std::cout << usage;
     return EXIT_FAILURE;
   }
 
   int index = 1;
-  this->packageCount = std::strtoull(argv[index++], nullptr, 10);
+  this->packageCount = std::strtoull(argv[index++], nullptr, 10); 
   this->consumerCount = std::strtoull(argv[index++], nullptr, 10);
   this->productorDelay = std::atoi(argv[index++]);
   this->dispatcherDelay = std::atoi(argv[index++]);
   this->consumerDelay = std::atoi(argv[index++]);
+  this->packetLoss = std::atoi(argv[index++]);
 
   // todo: Validate that given arguments are fine
   return EXIT_SUCCESS;

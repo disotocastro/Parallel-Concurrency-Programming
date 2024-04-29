@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "common.hpp"
+#include <cstddef>
 
 // Forward declarations
 class ConsumerTest;
@@ -32,6 +33,8 @@ class ProducerConsumerTest {
   int dispatcherDelay = 0;
   /// Delay of consumer to consume a package, negative for max random
   int consumerDelay = 0;
+  /// Percentage of probability of losing a package
+  float packetLoss = 0;
 
  private:
   /// Producer of the simulated network messages
