@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "common.hpp"
+#include <cstddef>
 
 // Forward declarations
 class ConsumerTest;

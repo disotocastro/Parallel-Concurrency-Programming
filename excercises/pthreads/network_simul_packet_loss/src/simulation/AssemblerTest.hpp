@@ -30,17 +30,24 @@ class AssemblerTest : public Assembler<NetworkMessage, NetworkMessage> {
   /// Number of messages received
   size_t receivedMessages = 0;
   // Perdida de paquetes
-  float packetLoss = 0.0;
+  int packetLoss = 0;
+  int consumerDelay = 0;
+  int packetID = 0;
 
  public:
   /// Constructor
-  explicit AssemblerTest(float packetLoss, size_t consumerCount) : Assembler(){
+  explicit AssemblerTest(int packetLoss, size_t consumerCount, 
+                         int consumerDelay, int packetID) : Assembler() {
     this->packetLoss = packetLoss;
-    this->packetLoss = consumerCount;
+    this->consumerCount = consumerCount;
+    this->consumerDelay = consumerDelay;
+    this->packetID = packetID;
   }
 
   int run() override;
   void consume(NetworkMessage data) override;
+
+  NetworkMessage modifyPacket();
 };
 
 #endif  // ASSEMBLERTEST_H
