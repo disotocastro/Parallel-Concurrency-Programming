@@ -5,6 +5,7 @@
 #include "AssemblerTest.hpp"
 #include "Log.hpp"
 #include "Util.hpp"
+#include "Queue.hpp"
 #include <random>
 
 int AssemblerTest::run() {
@@ -38,14 +39,42 @@ void AssemblerTest::consume(NetworkMessage data) {
     // entre el productor y el repartidor.
     Util::sleepFor(this->consumerDelay);
     produce(modifyPacket());
+    std::cout << "Mensaje perdido... prueba" << std::endl;
   }
   
 }
 
+// struct NetworkMessage {
+//  public:
+//   /// The target consumer
+//   uint16_t target = 0;
+//   /// The source producer
+//   uint16_t source = 0;
 
+
+// modifica al azar el destino del paquete
 NetworkMessage AssemblerTest::modifyPacket() {
+  uint16_t source = this->packetID;
+  uint16_t source_packet = this->packetID;
 
+  /**
+   * Mientras que el ID del paquete y el source sean iguales:
+   *  Se genera un paquete random
+   * 
+   * Despues, se envia un paquete
+   * 
+  */
+  while (source == packetID) {
+    source_packet =  1 + (rand() % this->consumerCount);
+  }
+
+  uint16_t target = source_packet;
+
+  return NetworkMessage(target, source);
 }
 
-
+//  lo pone de regreso en la cola entre el productor y el repartidor.
+Queue<NetworkMessage>*  AssemblerTest::getQueue() {
+  return this->consumingQueue;
+}
 
