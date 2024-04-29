@@ -7,27 +7,39 @@
 
 #include "Assembler.hpp"
 #include "Consumer.hpp"
+#include "Queue.hpp"
 #include "NetworkMessage.hpp"
 
 /**
  * @brief A AssemblerTest class example
+ * 
+ * Por cada paquete que este hilo ensamblador recibe, se genera un número 
+ * flotante pseudoaleatorio entre 0 y 100. 
+ * Si este número generado es menor que la probabilidad de pérdida de paquetes, 
+ * el hilo descarta el paquete, de lo contrario, 
+ * modifica al azar el destino del paquete, y lo pone de regreso en la cola 
+ * entre el productor y el repartidor.
+ * 
  */
 
 class AssemblerTest : public Assembler<NetworkMessage, NetworkMessage> {
   DISABLE_COPY(AssemblerTest);
-
  protected:
-  /// Delay of Assembler to consume a package, negative for max random
-  int consumerDelay = 0;
+  /// Paquete que este hilo ensamblador recibe
+  size_t consumerCount = 0;
   /// Number of messages received
   size_t receivedMessages = 0;
+  // Perdida de paquetes
+  float packetLoss = 0.0;
 
  public:
   /// Constructor
-  //explicit AssemblerTest(int consumerDelay);
-  /// Consume the messages in its own execution thread
+  explicit AssemblerTest(float packetLoss, size_t consumerCount) : Assembler(){
+    this->packetLoss = packetLoss;
+    this->packetLoss = consumerCount;
+  }
+
   int run() override;
-  /// Override this method to process any data extracted from the queue
   void consume(NetworkMessage data) override;
 };
 
