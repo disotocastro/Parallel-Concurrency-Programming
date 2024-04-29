@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "common.hpp"
+#include "AssemblerTest.hpp"
 #include <cstddef>
 
 // Forward declarations
@@ -41,6 +42,11 @@ class ProducerConsumerTest {
   ProducerTest* producer = nullptr;
   /// A dispatcher of the of the simulated network messages
   DispatcherTest* dispatcher = nullptr;
+  /// Assembler practica
+  AssemblerTest* assembler = nullptr;
+
+
+
   /// Consumers of the simulated network messages
   std::vector<ConsumerTest*> consumers;
 

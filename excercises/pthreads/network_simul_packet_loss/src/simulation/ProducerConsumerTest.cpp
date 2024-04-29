@@ -44,7 +44,9 @@ int ProducerConsumerTest::start(int argc, char* argv[]) {
   // Create each producer
   
   // Implemente un hilo ensamblador que es uno de los destinos del repartidor
-  
+  this->assembler = new AssemblerTest(this->packetLoss, this->consumerCount,
+    this->consumerDelay, 1 );
+
   this->consumers.resize(this->consumerCount);
   for ( size_t index = 0; index < this->consumerCount; ++index ) {
     this->consumers[index] = new ConsumerTest(this->consumerDelay);
