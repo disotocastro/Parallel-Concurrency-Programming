@@ -10,10 +10,14 @@
 #include "DispatcherTest.hpp"
 #include "ProducerTest.hpp"
 
+// Modifique la simulación de red para recibir la cantidad de productores 
+// en el segundo argumento de línea de comandos. 
+
 const char* const usage =
   "Usage: prodcons packages consumers prod_delay disp_delay cons_delay\n"
   "\n"
   "  packages    number of packages to be produced\n"
+  "  producers   number of producers\n"
   "  consumers   number of consumer threads\n"
   "  prod_delay  delay of producer to create a package\n"
   "  disp_delay  delay of dispatcher to dispatch a package\n"
@@ -22,7 +26,9 @@ const char* const usage =
   "Delays are in millisenconds, negatives are maximums for random delays\n";
 
 ProducerConsumerTest::~ProducerConsumerTest() {
-  delete this->producer;
+  for (ProducerTest* producer : producers) {
+    delete this->producer;
+  }
   delete this->dispatcher;
   for ( ConsumerTest* consumer : this->consumers )
     delete consumer;
@@ -82,6 +88,7 @@ int ProducerConsumerTest::analyzeArguments(int argc, char* argv[]) {
   }
 
   int index = 1;
+  this->packageCount = std::strtoull(argv[index++], nullptr, 10);
   this->packageCount = std::strtoull(argv[index++], nullptr, 10);
   this->consumerCount = std::strtoull(argv[index++], nullptr, 10);
   this->productorDelay = std::atoi(argv[index++]);

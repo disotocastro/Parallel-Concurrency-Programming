@@ -24,6 +24,8 @@ class ProducerConsumerTest {
  private:
   /// Number of packages to be produced
   size_t packageCount = 0;
+  /// Number of producers threads
+  size_t producersCount = 0;
   /// Number of consumer threads
   size_t consumerCount = 0;
   /// Delay of producer to create a package, negative for max random
@@ -33,6 +35,13 @@ class ProducerConsumerTest {
   /// Delay of consumer to consume a package, negative for max random
   int consumerDelay = 0;
 
+  /// Vector de productores
+  std::vector<ProducerTest*> producers;
+  /// Vector de consumidores
+  std::vector<ConsumerTest*> consumers;
+
+  DispatcherTest* dispatcher = nullptr;
+
  private:
   /// Producer of the simulated network messages
   ProducerTest* producer = nullptr;
@@ -40,6 +49,9 @@ class ProducerConsumerTest {
   DispatcherTest* dispatcher = nullptr;
   /// Consumers of the simulated network messages
   std::vector<ConsumerTest*> consumers;
+
+  sem_t queueSemaphore; // Semaforo control de concurrencia
+
 
  public:
   /// Constructor
