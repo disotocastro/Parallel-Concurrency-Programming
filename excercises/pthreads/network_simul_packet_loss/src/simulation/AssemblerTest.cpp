@@ -11,7 +11,7 @@
 int AssemblerTest::run() {
   // Start the forever loop to consume all the messages that arrive
   this->consumeForever();
-  return EXIT_SUCCESS;
+  return EXIT_FAILURE;
 }
 
 /**
@@ -31,10 +31,9 @@ void AssemblerTest::consume(NetworkMessage data) {
   ++this->receivedMessages;
 
   // flotante pseudoaleatorio entre 0 y 100.
-  double random_number = 1 + (rand() % 100);
-
+  double random_number =  1 + Util::random(0, 100);
  // Si este número generado es mayor que la probabilidad de pérdida de paquetes, 
-  if (random_number < this->packetLoss) {
+  if (random_number > this->packetLoss) {
     // modifica al azar el destino del paquete, y lo pone de regreso en la cola
     // entre el productor y el repartidor.
     Util::sleepFor(this->consumerDelay);
@@ -56,16 +55,13 @@ void AssemblerTest::consume(NetworkMessage data) {
 NetworkMessage AssemblerTest::modifyPacket() {
   uint16_t source = this->packetID;
   uint16_t source_packet = this->packetID;
-
   /**
    * Mientras que el ID del paquete y el source sean iguales:
    *  Se genera un paquete random
-   * 
    * Despues, se envia un paquete
-   * 
   */
   while (source == packetID) {
-    source_packet =  1 + (rand() % this->consumerCount);
+    source_packet =  Util::random(1, this->consumerCount);
   }
 
   uint16_t target = source_packet;

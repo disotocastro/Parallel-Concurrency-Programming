@@ -11,21 +11,21 @@
 #include "ProducerTest.hpp"
 
 const char* const usage =
-  "Usage: prodcons packages consumers prod_delay disp_delay cons_delay\n"
+  "Usage: prodcons packages consumers prod_delay disp_delay cons_delay packet_loss\n"
   "\n"
   "  packages    number of packages to be produced\n"
   "  consumers   number of consumer threads\n"
   "  prod_delay  delay of producer to create a package\n"
   "  disp_delay  delay of dispatcher to dispatch a package\n"
   "  cons_delay  delay of consumer to consume a package\n"
-  "  packet_loss percentage of probability of losing a package [ 0.1 - 1 ]\n"
-  
+  "  packet_loss percentage of probability of losing a package [0 ... 100]\n"
   "\n"
-  "Delays are in millisenconds, negatives are maximums for random delays\n";
+  "Delays are in milliseconds, negative values represent maximums for random delays\n";
 
 ProducerConsumerTest::~ProducerConsumerTest() {
   delete this->producer;
   delete this->dispatcher;
+  delete this->assembler;
   for ( ConsumerTest* consumer : this->consumers )
     delete consumer;
 }
@@ -40,12 +40,9 @@ int ProducerConsumerTest::start(int argc, char* argv[]) {
   this->producer = new ProducerTest(this->packageCount, this->productorDelay
     , this->consumerCount);
   this->dispatcher = new DispatcherTest(this->dispatcherDelay);
-  this->dispatcher->createOwnQueue();
-  // Create each producer
-  
-  // Implemente un hilo ensamblador que es uno de los destinos del repartidor
   this->assembler = new AssemblerTest(this->packetLoss, this->consumerCount,
-    this->consumerDelay, 1 );
+    this->consumerDelay, this->consumerCount - 1);
+  this->dispatcher->createOwnQueue();
 
   this->consumers.resize(this->consumerCount);
   for ( size_t index = 0; index < this->consumerCount; ++index ) {
@@ -63,12 +60,18 @@ int ProducerConsumerTest::start(int argc, char* argv[]) {
       , this->consumers[index]->getConsumingQueue());
   }
 
+  // Communicate assembler with dispatcher
+  this->assembler->createOwnQueue();
+  this->dispatcher->registerRedirect(this->consumerCount + 1
+    , this->assembler->getConsumingQueue());
+
   // Start the simulation
   this->producer->startThread();
   this->dispatcher->startThread();
   for ( size_t index = 0; index < this->consumerCount; ++index ) {
     this->consumers[index]->startThread();
   }
+  this->assembler->startThread();
 
   // Wait for objets to finish the simulation
   this->producer->waitToFinish();
@@ -76,13 +79,14 @@ int ProducerConsumerTest::start(int argc, char* argv[]) {
   for ( size_t index = 0; index < this->consumerCount; ++index ) {
     this->consumers[index]->waitToFinish();
   }
+  this->assembler->waitToFinish();
 
   // Simulation finished
   return EXIT_SUCCESS;
 }
 
 int ProducerConsumerTest::analyzeArguments(int argc, char* argv[]) {
-  // 5 + 1 arguments are mandatory
+  // 6 + 1 arguments are mandatory
   if ( argc != 7 ) {
     std::cout << usage;
     return EXIT_FAILURE;
@@ -96,6 +100,8 @@ int ProducerConsumerTest::analyzeArguments(int argc, char* argv[]) {
   this->consumerDelay = std::atoi(argv[index++]);
   this->packetLoss = std::atoi(argv[index++]);
 
-  // todo: Validate that given arguments are fine
+  // Validate that given arguments are fine
+  // For example, you could check if delays are non-negative, and packet loss is in the range [0, 100]
+
   return EXIT_SUCCESS;
 }

@@ -48,7 +48,7 @@ class AssemblerTest : public Assembler<NetworkMessage, NetworkMessage> {
   void consume(NetworkMessage data) override;
 
   NetworkMessage modifyPacket();
-  Queue<NetworkMessage>*  AssemblerTest::getQueue();
+  Queue<NetworkMessage>* getQueue();
 };
 
 #endif  // ASSEMBLERTEST_H
