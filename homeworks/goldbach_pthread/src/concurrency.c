@@ -67,7 +67,9 @@ void* run(void* data) {
 
   while (1) {
     pthread_mutex_lock(&shared_data->mutex);
+    // Se obtiene el indice actual del hilo
     thread_index = shared_data->this_thread_position;
+    // Se incrementa para decir que este hilo ya ha sido tomado
     shared_data->this_thread_position++;
     pthread_mutex_unlock(&shared_data->mutex);
 
