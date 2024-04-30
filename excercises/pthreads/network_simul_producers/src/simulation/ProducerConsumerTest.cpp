@@ -26,9 +26,11 @@ const char* const usage =
   "Delays are in millisenconds, negatives are maximums for random delays\n";
 
 ProducerConsumerTest::~ProducerConsumerTest() {
-  for (ProducerTest* producer : producers) {
-    delete this->producer;
+
+  for (size_t i = 0; i < producersCount; i++) {
+    delete this->producers[i];
   }
+  
   delete this->dispatcher;
   for ( ConsumerTest* consumer : this->consumers )
     delete consumer;
@@ -40,9 +42,13 @@ int ProducerConsumerTest::start(int argc, char* argv[]) {
     return error;
   }
 
+  this->producerSharedData = new SharedData(this->packageCount);
+
   // Create objects for the simulation
-  this->producer = new ProducerTest(this->packageCount, this->productorDelay
-    , this->consumerCount);
+
+
+  // Se crean los producers
+  createProducers();
 
   this->dispatcher = new DispatcherTest(this->dispatcherDelay);
   this->dispatcher->createOwnQueue();
@@ -71,14 +77,20 @@ int ProducerConsumerTest::start(int argc, char* argv[]) {
   }
 
   // Start the simulation
-  this->producer->startThread();
+  for (size_t i = 0; i < producersCount; i++) {
+    this->producers[i]->startThread();
+  }
+  
   this->dispatcher->startThread();
   for ( size_t index = 0; index < this->consumerCount; ++index ) {
     this->consumers[index]->startThread();
   }
 
   // Wait for objets to finish the simulation
-  this->producer->waitToFinish();
+  for (size_t i = 0; i < producersCount; i++) {
+    this->producers[i]->waitToFinish();
+  }
+
   this->dispatcher->waitToFinish();
   for ( size_t index = 0; index < this->consumerCount; ++index ) {
     this->consumers[index]->waitToFinish();
@@ -88,9 +100,19 @@ int ProducerConsumerTest::start(int argc, char* argv[]) {
   return EXIT_SUCCESS;
 }
 
+void ProducerConsumerTest::createProducers() {
+  //this->producers.resize(this->producerCount);
+  for ( size_t index = 0; index < this->producersCount; ++index ) {
+    this->producers.push_back(new ProducerTest(this->packageCount,
+                                               this->productorDelay, 
+                                               this->consumerCount, index++, 
+                                               this->producerSharedData));
+  }
+}
+
 int ProducerConsumerTest::analyzeArguments(int argc, char* argv[]) {
   // 5 + 1 arguments are mandatory
-  if ( argc != 6 ) {
+  if ( argc != 7 ) {
     std::cout << usage;
     return EXIT_FAILURE;
   }
@@ -105,12 +127,4 @@ int ProducerConsumerTest::analyzeArguments(int argc, char* argv[]) {
 
   // todo: Validate that given arguments are fine
   return EXIT_SUCCESS;
-}
-
-void ProducerConsumerTest::createProducers() {
-  //this->producers.resize(this->producerCount);
-  for ( size_t index = 0; index < this->producersCount; ++index ) {
-    this->producers.push_back(new ProducerTest(this->packageCount,
-      this->productorDelay, this->consumerCount));
-  }
 }

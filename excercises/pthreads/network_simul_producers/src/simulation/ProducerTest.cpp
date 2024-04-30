@@ -6,21 +6,32 @@
 #include "Log.hpp"
 #include "Util.hpp"
 
-ProducerTest::ProducerTest(size_t packageCount, int productorDelay
-  , size_t consumerCount)
+  ProducerTest::ProducerTest(size_t packageCount, int productorDelay, size_t consumerCount,
+  int producerID, SharedData* producerSharedData)
   : packageCount(packageCount)
   , productorDelay(productorDelay)
-  , consumerCount(consumerCount) {
+  , consumerCount(consumerCount)
+  , producerID(producerID)
+  , producerSharedData(producerSharedData) {
 }
 
 int ProducerTest::run() {
   // Produce each asked message
-  for ( size_t index = 0; index < this->packageCount; ++index ) {
-    this->produce(this->createMessage(index));
-  }
+  size_t index = 0;
+  size_t messagesProduced = 0;
 
-  // Produce an empty message to communicate we finished
-  this->produce(NetworkMessage());
+  while (true) {
+    // Verificar si es el ultimo mensaje
+    if (index == 0) {
+      this->produce(NetworkMessage());
+      break;
+    }
+
+    index = this->producerSharedData->getIndex();
+
+    this->produce(this->createMessage(index));
+    ++messagesProduced;
+  }
 
   // Report production is done
   Log::append(Log::INFO, "Producer", std::to_string(this->packageCount)

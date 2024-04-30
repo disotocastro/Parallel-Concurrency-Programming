@@ -7,6 +7,7 @@
 
 #include "NetworkMessage.hpp"
 #include "Producer.hpp"
+#include "sharedData.hpp"
 
 /**
  * @brief A productor class example
@@ -23,9 +24,15 @@ class ProducerTest : public Producer<NetworkMessage> {
   /// Number of consumer threads
   size_t consumerCount = 0;
 
+  int producerID;
+  SharedData* producerSharedData = nullptr;
+
  public:
   /// Constructor
-  ProducerTest(size_t packageCount, int productorDelay, size_t consumerCount);
+  ProducerTest(size_t packageCount, int productorDelay, size_t consumerCount,
+  int producerID, SharedData* producerSharedData);
+
+  
   /// Do the message production in its own execution thread
   int run() override;
   /// Creates a simulation message to be sent by the network

@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "common.hpp"
+#include "sharedData.hpp"
 
 // Forward declarations
 class ConsumerTest;
@@ -41,17 +42,7 @@ class ProducerConsumerTest {
   std::vector<ConsumerTest*> consumers;
 
   DispatcherTest* dispatcher = nullptr;
-
- private:
-  /// Producer of the simulated network messages
-  ProducerTest* producer = nullptr;
-  /// A dispatcher of the of the simulated network messages
-  DispatcherTest* dispatcher = nullptr;
-  /// Consumers of the simulated network messages
-  std::vector<ConsumerTest*> consumers;
-
-  sem_t queueSemaphore; // Semaforo control de concurrencia
-
+  SharedData* producerSharedData = nullptr;
 
  public:
   /// Constructor
