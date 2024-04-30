@@ -14,8 +14,8 @@
 
 const char* const goldbach_help =
   "Goldbach v1.0.0 by Diego Soto\n"
-  "Usage 1: ./goldbach_serial < [input_files.txt] \n"
-  "Usage 2: ./goldbach_serial, enter the numbers, when you ready press CTRL+D\n"
+  "Usage 1: ./goldbach_phread < [input_files.txt] \n"
+  "Usage 2: ./goldbach_phread, enter the numbers, when you ready press CTRL+D\n"
   "Options:\n"
   " '-'Number, is for show the sums \n"
   " Example: -8 = 3+5 \n\n";
@@ -49,7 +49,6 @@ int analyze_arguments(int argc, char* argv[]) {
   }
   return EXIT_SUCCESS;
 }
-
 
 int get_thread_count(int argc, char* argv[]) {
   uint64_t thread_count = sysconf(_SC_NPROCESSORS_ONLN);

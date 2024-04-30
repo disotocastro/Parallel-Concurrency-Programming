@@ -39,23 +39,18 @@ typedef struct private_data {
   shared_data_t* shared_data;
 } private_data_t;
 
-/**
- * @brief ...
- * 
- * @param argc, argv: Argumentos dados por el usuario
- * @param argv[2]: Numero de hilos de la computadora
-*/
-int golbach_concurrency(int argc, char* argv[]);
 
 /**
- * @brief  ...
+ * @brief Se encarga de crear los threads, según el usuario o los máximos que
+ * permita el sistema.
  * 
- * @param shared_data:
+ * @param shared_data Structura de datos compartidos
 */
 int create_threads(shared_data_t* shared_data);
 
 /**
- * @brief 
+ * @brief Se encarga de llamar al metodo principal goldbach y de repartir el 
+ * trabajo para cada hilo.
  * 
  * @param data:
 */
