@@ -56,14 +56,14 @@ int ProducerConsumerTest::start(int argc, char* argv[]) {
   }
 
   // Communicate simulation objects
+  
+  // == SET PRODUCERS QUEUE ==
   // Producer push network messages to the dispatcher queue
-
-  // SET PRODUCERS QUEUE
   for (size_t i = 0; i < producersCount; i++)  {
    this->producers[i]->setProducingQueue(this->dispatcher->getConsumingQueue());
   }
   
-  // REGISTER CONSUMERS QUEUE
+  // == REGISTER CONSUMERS QUEUE ==
   // Dispatcher delivers to each consumer, and they should be registered
   for ( size_t index = 0; index < this->consumerCount; ++index ) {
     this->dispatcher->registerRedirect(index + 1
@@ -113,5 +113,4 @@ void ProducerConsumerTest::createProducers() {
     this->producers.push_back(new ProducerTest(this->packageCount,
       this->productorDelay, this->consumerCount));
   }
-
 }
