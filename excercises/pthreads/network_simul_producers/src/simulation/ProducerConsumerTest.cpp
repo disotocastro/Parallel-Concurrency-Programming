@@ -43,8 +43,10 @@ int ProducerConsumerTest::start(int argc, char* argv[]) {
   // Create objects for the simulation
   this->producer = new ProducerTest(this->packageCount, this->productorDelay
     , this->consumerCount);
+
   this->dispatcher = new DispatcherTest(this->dispatcherDelay);
   this->dispatcher->createOwnQueue();
+
   // Create each producer
   this->consumers.resize(this->consumerCount);
   for ( size_t index = 0; index < this->consumerCount; ++index ) {
@@ -55,7 +57,13 @@ int ProducerConsumerTest::start(int argc, char* argv[]) {
 
   // Communicate simulation objects
   // Producer push network messages to the dispatcher queue
-  this->producer->setProducingQueue(this->dispatcher->getConsumingQueue());
+
+  // SET PRODUCERS QUEUE
+  for (size_t i = 0; i < producersCount; i++)  {
+   this->producers[i]->setProducingQueue(this->dispatcher->getConsumingQueue());
+  }
+  
+  // REGISTER CONSUMERS QUEUE
   // Dispatcher delivers to each consumer, and they should be registered
   for ( size_t index = 0; index < this->consumerCount; ++index ) {
     this->dispatcher->registerRedirect(index + 1
@@ -89,7 +97,7 @@ int ProducerConsumerTest::analyzeArguments(int argc, char* argv[]) {
 
   int index = 1;
   this->packageCount = std::strtoull(argv[index++], nullptr, 10);
-  this->packageCount = std::strtoull(argv[index++], nullptr, 10);
+  this->producersCount = std::strtoull(argv[index++], nullptr, 10);
   this->consumerCount = std::strtoull(argv[index++], nullptr, 10);
   this->productorDelay = std::atoi(argv[index++]);
   this->dispatcherDelay = std::atoi(argv[index++]);
@@ -97,4 +105,13 @@ int ProducerConsumerTest::analyzeArguments(int argc, char* argv[]) {
 
   // todo: Validate that given arguments are fine
   return EXIT_SUCCESS;
+}
+
+void ProducerConsumerTest::createProducers() {
+  //this->producers.resize(this->producerCount);
+  for ( size_t index = 0; index < this->producersCount; ++index ) {
+    this->producers.push_back(new ProducerTest(this->packageCount,
+      this->productorDelay, this->consumerCount));
+  }
+
 }

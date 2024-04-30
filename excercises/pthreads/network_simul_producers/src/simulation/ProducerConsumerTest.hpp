@@ -64,6 +64,8 @@ class ProducerConsumerTest {
  private:
   /// Analyze the command line arguments
   int analyzeArguments(int argc, char* argv[]);
+
+  void createProducers();
 };
 
 #endif  // PRODUCERCONSUMERTEST_HPP
