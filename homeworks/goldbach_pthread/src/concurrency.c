@@ -74,8 +74,9 @@ void* run(void* data) {
     pthread_mutex_unlock(&shared_data->mutex);
 
     // Condicion de parada
+    // Si el índice del hilo supera o es igual al número total de tareas 
     if (thread_index >= shared_data->arr_input.count) {
-        break;
+      break;
     }
 
     goldbach(thread_index, &shared_data->arr_input,

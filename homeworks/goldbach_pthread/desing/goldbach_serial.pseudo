@@ -1,18 +1,50 @@
-// Debe al menos tener las subrutinas de lectura, cálculo de sumas de Goldbach, 
-// impresión, y subrutina principal. La del cálculo de las sumas probablemente 
-// necesitará subdividirla. 
-
-
 int main (argc, argv) {
   analizar_argumentos(argc, argv);
 
+  datos_compartidos = crear_datos_compartidos();
   array_usuario = leer_input_usuario(input_usuario);
 
   input_mas_grande = elemento_mas_grande_array(array_usuario)
   array_numeros_primos = trial_division(array_usuario, input_mas_grande)
 
+  crear_hilos(datos_compartidos)
   Goldbach(array_usuario, array_numeros_primos)
 
+}
+
+crear_hilos(datos_compartidos) {
+  sem_init;
+  datos_privados = crear_datos_privados();
+  
+  for (i = 0; i < numero_hilos.lenght(); i++) {
+    crear_hilos_phread(threads[i], datos_privados[i]);
+  }
+}
+
+run() {
+  thread_index = 0;
+
+  while (1) {
+    mutex_lock(mutex);
+      // Se obtiene el indice actual del hilo
+      thread_index = posicion_del_hilo;
+      // Se incrementa para decir que este hilo ya ha sido tomado
+      posicion_del_hilo++;
+    mutex_unlock;
+
+    // Condicion de parada
+    // Si el índice del hilo supera o es igual al número total de tareas 
+    if (thread_index >= arr_input.lenght()) {
+      break;
+    }
+
+    formula_impresion = sem_can_print [(thread_index + 1) % 
+                                       (datos_compartidos->arr_input.lenght()])
+                          
+    goldbach(thread_index, arr_input, arr_prime_num, 
+             sem_can_print[thread_index], formula_impresion);
+  }
+  return NULL;
 }
 
 elemento_mas_grande_array(array_usuario) {
@@ -36,11 +68,12 @@ Goldbach(array_usuario, array_numeros_primos) {
         Llamar goldbach_impar(array_usuario, array_numeros_primos, main_index)
       }
     } else {
+      sem_wait();
       Imprimir "NA" // 0, 1 , 2, 3, 4, 5
+      sem_post();
     }
   }
 }
-
 
 goldbach_par(array_usuario, array_numeros_primos, main_index) {
   numero_acutal = array_usuario->elementos[main_index]
@@ -59,8 +92,9 @@ goldbach_par(array_usuario, array_numeros_primos, main_index) {
       }
     }
   }
+  sem_wait();
   Llamar rutina_impresion_par();
-
+  sem_post();
 }
 
 goldbach_impar(array_usuario, array_numeros_primos, main_index) {
@@ -82,5 +116,7 @@ goldbach_impar(array_usuario, array_numeros_primos, main_index) {
       }
     }
   }
+  sem_wait();
   Llamar rutina_impresion_impar();
+  sem_post();
 }
