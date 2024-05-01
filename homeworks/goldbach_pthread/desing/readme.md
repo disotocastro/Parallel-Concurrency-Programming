@@ -1,5 +1,5 @@
 # Golbach Serial: UML Diagram
-![UML_Diagram](./UML_Diagram.png)
+![UML_Diagram](./golbach_phread_UML.png)
 
 
 ## Summary

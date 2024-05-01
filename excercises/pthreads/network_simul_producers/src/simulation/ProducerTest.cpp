@@ -28,7 +28,6 @@ int ProducerTest::run() {
     }
 
     index = this->producerSharedData->getIndex();
-
     this->produce(this->createMessage(index));
     ++messagesProduced;
   }

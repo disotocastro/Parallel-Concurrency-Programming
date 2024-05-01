@@ -1,4 +1,4 @@
-# Golbach_Serial
+# Golbach_phread
 - Author: Juan Diego Soto Castro, C07722.
 - E-mail: ```juan.sotocastro@ucr.ac.cr```
 
@@ -17,13 +17,13 @@ Furthermore, when computing Goldbach's sums, the task will be divided into two f
 ## How to use
 - To compile: ```make```
 
-- To run 1: ```./golbach_serial < your_input.txt```
+- To run 1: ```./golbach_phread < your_input.txt```
 
-- To run 2: ```./golbach_serial``` and then enter your numbers, when you're ready, press ```CTRL+D```
+- To run 2: ```./golbach_phread``` and then enter your numbers, when you're ready, press ```CTRL+D```
 
 - Note: If you want to show the sums, you can enter the number in negative: ```-21```
 
-- If you need help: ```./golbach_serial --help```
+- If you need help: ```./golbach_phread --help```
 
 ## Notes
 - It's important to note that if you don't provide an input.txt file and prefer to enter numbers one by one, you'll need to press ```CTRL+D``` to initiate the calculation process.
