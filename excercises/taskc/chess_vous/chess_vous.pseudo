@@ -28,6 +28,7 @@ procedure main()
 end procedure
 
 procedure player1()
+  
   enter_room()
   signal(player1_ready)
   wait(clock_ready)

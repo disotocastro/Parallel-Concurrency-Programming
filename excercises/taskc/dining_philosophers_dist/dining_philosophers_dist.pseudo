@@ -1,0 +1,36 @@
+procedure main(argc, argv[]):
+  create_semaphore(waiter, 1)  // Semaphore to ensure only one request at a time
+  // True means the chopstick is available
+  chopsticks[] := array of 5 booleans, initially all true  
+
+  for id := 0 to 4 do
+    create_thread(philosopher, id)
+  end for
+  
+end procedure
+
+procedure philosopher(id):
+  while true do
+    think()
+    wait(waiter)
+    request_chopsticks(id)
+    signal(waiter)
+    eat()
+    wait(waiter)
+    release_chopsticks(id)
+    signal(waiter)
+  end while
+end procedure
+
+procedure request_chopsticks(id):
+  while not (chopsticks[id] and chopsticks[(id + 1) mod 5]) do
+    // Busy wait until both chopsticks are available
+  end while
+  chopsticks[id] := false
+  chopsticks[(id + 1) mod 5] := false
+end procedure
+
+procedure release_chopsticks(id):
+  chopsticks[id] := true
+  chopsticks[(id + 1) mod 5] := true
+end procedure
