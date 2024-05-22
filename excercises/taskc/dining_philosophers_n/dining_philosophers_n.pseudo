@@ -1,0 +1,110 @@
+// Declaraciones globales
+const EATING := 0
+const HUNGRY := 1
+const THINKING := 2
+const LEFT := (phnum + 4) % n_philosophers
+const RIGHT := (phnum + 1) % n_philosophers
+
+phil[n_philosophers]
+times := 200
+
+procedure main():
+  n_philosophers = input()
+
+  // Declaración
+  thread_id[n_philosophers]
+  attr
+
+  // Inicialización
+  init(attr)
+  set_detach_state(attr, PTHREAD_CREATE_JOINABLE)
+
+  for i := 0 to n_philosophers - 1 do
+    phil[i] := i
+  end for
+
+  // Create threads
+  for i := 0 to n_philosophers - 1 do
+    create_thread(thread_id[i], attr, philosopher, address(phil[i]))
+    print("Philosopher", i + 1, "is thinking...")
+  end for
+
+  // Join
+  for i := 0 to n_philosophers - 1 do
+    join_thread(thread_id[i])
+  end for
+
+  // Destrucción
+  destroy(attr)
+  exit()
+end procedure
+
+// Inicio del programa
+main()
+
+class Monitor:
+  // Estado de los filósofos
+  state[n_philosophers]
+  // Variables de condición para los filósofos
+  phcond[n_philosophers]
+  // Mutex para sincronización
+  mutex
+
+  procedure test(phnum):
+    if state[(phnum + 1) % 5] ≠ EATING and state[(phnum + 4) % 5] ≠ EATING and state[phnum] = HUNGRY then
+      state[phnum] := EATING
+      signal(phcond[phnum])
+    end if
+  end procedure
+
+  procedure take_fork(phnum):
+    lock(mutex)
+    state[phnum] := HUNGRY
+    test(phnum)
+    if state[phnum] ≠ EATING then
+      wait(phcond[phnum], mutex)
+    end if
+    print("Philosopher", phnum, "is Eating")
+    unlock(mutex)
+  end procedure
+
+  procedure put_fork(phnum):
+    lock(mutex)
+    state[phnum] := THINKING
+    test(RIGHT)
+    test(LEFT)
+    unlock(mutex)
+  end procedure
+
+  constructor Monitor:
+    for i := 0 to N - 1 do
+      state[i] := THINKING
+    end for
+    for i := 0 to N - 1 do
+      init(phcond[i])
+    end for
+    init(mutex)
+  end constructor
+
+  destructor ~Monitor:
+    for i := 0 to N - 1 do
+      destroy(phcond[i])
+    end for
+    destroy(mutex)
+  end destructor
+end class
+
+// Objeto global del monitor
+phil_object := new Monitor()
+
+procedure philosopher(arg):
+  c := 0
+  while c < times do
+    i := dereference(arg)
+    sleep(1)
+    phil_object.take_fork(i)
+    sleep(0.5)
+    phil_object.put_fork(i)
+    c := c + 1
+  end while
+end procedure
