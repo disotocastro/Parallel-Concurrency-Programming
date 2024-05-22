@@ -1,205 +1,144 @@
-// Copyright 2024 Juan Diego Soto Castro <juan.sotocastro@ucr.ac.cr> CC-BY 4.0
-
-#define _DEFAULT_SOURCE
-
-#include <assert.h>
-#include <inttypes.h>
-#include <pthread.h>
-#include <semaphore.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
 #include <unistd.h>
 
-typedef struct shared_data {
-  size_t team_count;
-  useconds_t stage1_duration;
-  useconds_t stage2_duration;
-  size_t position;
-  pthread_barrier_t start_barrier;
-  sem_t* batons;
-  pthread_mutex_t finish_mutex;
-} shared_data_t;
+#define THINKING 2
+#define HUNGRY 1
+#define EATING 0
+
+typedef struct monitor {
+    int N; // Number of philosophers
+    int* state; // Estado del Filosofo 
+    pthread_cond_t* phcond; // Philosopher condition variable
+    pthread_mutex_t mutex; // Mutex variable for synchronization
+    int times; // Number of iterations
+    int* meals; // Number of meals eaten by each philosopher
+} monitor_t;
 
 typedef struct private_data {
-  size_t thread_number;  // rank
-  shared_data_t* shared_data;
+    int phnum;
+    monitor_t* monitor;
 } private_data_t;
 
-int create_threads(shared_data_t* shared_data);
-int analyze_arguments(int argc, char* argv[], shared_data_t* shared_data);
-void* start_race(void* data);
-void* finish_race(void* data);
+void monitor_init(monitor_t* monitor, int N, int times);
+void monitor_destroy(monitor_t* monitor);
+void test(monitor_t* monitor, int phnum);
+void take_fork(monitor_t* monitor, int phnum);
+void put_fork(monitor_t* monitor, int phnum);
+void* philosopher(void* arg);
+void print_meals_eaten(monitor_t* monitor);
 
-int main(int argc, char* argv[]) {
-  int error = EXIT_SUCCESS;
+int main() {
+    int n_philosophers = 0;
+    printf("Please, enter the number of philosophers: ");
+    scanf("%d", &n_philosophers);
 
-  shared_data_t* shared_data = (shared_data_t*)
-    calloc(1, sizeof(shared_data_t));
-
-  if (shared_data) {
-    error = analyze_arguments(argc, argv, shared_data);
-    if (error == EXIT_SUCCESS) {
-      shared_data->position = 0;
-      error = pthread_barrier_init(&shared_data->start_barrier,
-        /*attr*/ NULL, /*count*/ shared_data->team_count);
-      shared_data->batons = (sem_t*) calloc(shared_data->team_count
-        , sizeof(sem_t));
-      error += pthread_mutex_init(&shared_data->finish_mutex, /*attr*/ NULL);
-
-      if (error == EXIT_SUCCESS && shared_data->batons) {
-        for (size_t index = 0; index < shared_data->team_count; ++index) {
-          sem_init(&shared_data->batons[index], /*pshared*/ 0, /*value*/ 0);
-        }
-
-        struct timespec start_time, finish_time;
-        clock_gettime(/*clk_id*/CLOCK_MONOTONIC, &start_time);
-
-        error = create_threads(shared_data);
-
-        clock_gettime(/*clk_id*/CLOCK_MONOTONIC, &finish_time);
-        double elapsed_time = finish_time.tv_sec - start_time.tv_sec +
-          (finish_time.tv_nsec - start_time.tv_nsec) * 1e-9;
-        printf("execution time: %.9lfs\n", elapsed_time);
-
-        for (size_t index = 0; index < shared_data->team_count; ++index) {
-          sem_destroy(&shared_data->batons[index]);
-        }
-        pthread_mutex_destroy(&shared_data->finish_mutex);
-        free(shared_data->batons);
-        pthread_barrier_destroy(&shared_data->start_barrier);
-      } else {
-        fprintf(stderr, "error: could not init mutex\n");
-        error = 11;
-      }
+    if (n_philosophers <= 0) {
+        fprintf(stderr, "Number of philosophers must be greater than 0\n");
+        return EXIT_FAILURE;
     }
 
-    free(shared_data);
-  } else {
-    fprintf(stderr, "error: could not allocated shared memory\n");
-    error = 12;
-  }
+    monitor_t monitor;   //   n          times
+    monitor_init(&monitor, n_philosophers, 30);
 
-  return error;
-}
+    // Create philo threads
+    pthread_t* thread_id = (pthread_t*)malloc(n_philosophers * sizeof(pthread_t));
+    private_data_t* private_data = (private_data_t*)malloc(n_philosophers * 
+      sizeof(private_data_t));
 
-int analyze_arguments(int argc, char* argv[]
-    , shared_data_t* shared_data) {
-  if (argc == 4) {
-    if ( sscanf(argv[1], "%zu", &shared_data->team_count) != 1
-      || shared_data->team_count == 0 ) {
-      fprintf(stderr, "invalid team count: %s\n", argv[1]);
-      return 11;
+    for (int i = 0; i < n_philosophers; i++) {
+        private_data[i].phnum = i;
+        private_data[i].monitor = &monitor;
+        pthread_create(&thread_id[i], NULL, philosopher, &private_data[i]);
+        printf("Philosopher %d is thinking...\n", i + 1);
     }
 
-    if ( sscanf(argv[2], "%u", &shared_data->stage1_duration) != 1 ) {
-      fprintf(stderr, "invalid stage 1 duration: %s\n", argv[2]);
-      return 12;
+    // Join threads
+    for (int i = 0; i < n_philosophers; i++) {
+        pthread_join(thread_id[i], NULL);
     }
 
-    if ( sscanf(argv[3], "%u", &shared_data->stage2_duration) != 1 ) {
-      fprintf(stderr, "invalid stage 2 duration: %s\n", argv[3]);
-      return 13;
-    }
-    return EXIT_SUCCESS;
-  } else {
-    fprintf(stderr, "usage: relay_race teams stage1duration stage2duration\n");
-    return 10;
-  }
-}
+    // Print meals eaten
+    print_meals_eaten(&monitor);
 
-int create_threads(shared_data_t* shared_data) {
-  int error = EXIT_SUCCESS;
-
-  const size_t thread_count = 2 * shared_data->team_count;
-  pthread_t* threads = (pthread_t*) malloc(thread_count * sizeof(pthread_t));
-
-  private_data_t* private_data = (private_data_t*)
-    calloc(thread_count, sizeof(private_data_t));
-
-  if (threads && private_data) {
-#ifdef REVERSE_ORDER
-    for (ssize_t index = shared_data->team_count - 1; index >= 0; --index) {
-#else
-    for (size_t index = 0; index < shared_data->team_count; ++index) {
-#endif
-      private_data[index].thread_number = index;
-      private_data[index].shared_data = shared_data;
-
-      error = pthread_create(&threads[index], NULL, start_race
-        , &private_data[index]);
-
-      if (error) {
-        fprintf(stderr, "error: could not create thread %zu\n", index);
-        error = 21;
-      }
-    }
-
-#ifdef REVERSE_ORDER
-    for (ssize_t index = thread_count - 1; index >= shared_data->team_count; --index) {
-#else
-    for (size_t index = shared_data->team_count; index < thread_count;
-        ++index) {
-#endif
-      private_data[index].thread_number = index;
-      private_data[index].shared_data = shared_data;
-
-      error = pthread_create(&threads[index], NULL, finish_race
-        , &private_data[index]);
-
-      if (error) {
-        fprintf(stderr, "error: could not create thread %zu\n", index);
-        error = 21;
-      }
-    }
-
-    for (size_t index = 0; index < thread_count; ++index) {
-      pthread_join(threads[index], NULL);
-    }
-
+    free(thread_id);
     free(private_data);
-    free(threads);
-  } else {
-    fprintf(stderr, "error: could not allocate memory for %zu threads\n"
-      , shared_data->team_count);
-    error = 22;
+    monitor_destroy(&monitor);
+    return 0;
+}
+
+void test(monitor_t* monitor, int phnum) {
+  if (monitor->state[(phnum + 1) % monitor->N] != EATING &&
+    monitor->state[(phnum + monitor->N - 1) % monitor->N] != EATING &&
+    monitor->state[phnum] == HUNGRY) {
+    monitor->state[phnum] = EATING;
+    monitor->meals[phnum]++; // Increment meals eaten
+    pthread_cond_signal(&monitor->phcond[phnum]);
   }
-
-  return error;
 }
 
-void* start_race(void* data) {
-  private_data_t* private_data = (private_data_t*)data;
-  shared_data_t* shared_data = private_data->shared_data;
-
-  const size_t rank = private_data->thread_number;
-  const size_t team_number = rank;
-
-  pthread_barrier_wait(&shared_data->start_barrier);
-  usleep(1000 * shared_data->stage1_duration);
-  sem_post(&shared_data->batons[team_number]);
-
-  return NULL;
+void take_fork(monitor_t* monitor, int phnum) {
+  pthread_mutex_lock(&monitor->mutex);
+    monitor->state[phnum] = HUNGRY;
+    test(monitor, phnum);
+    if (monitor->state[phnum] != EATING) {
+        pthread_cond_wait(&monitor->phcond[phnum], &monitor->mutex);
+    }
+    printf("Philosopher %d is Eating\n", phnum + 1);
+  pthread_mutex_unlock(&monitor->mutex);
 }
 
-void* finish_race(void* data) {
-  private_data_t* private_data = (private_data_t*)data;
-  shared_data_t* shared_data = private_data->shared_data;
+void put_fork(monitor_t* monitor, int phnum) {
+  pthread_mutex_lock(&monitor->mutex);
+    monitor->state[phnum] = THINKING;
+    test(monitor, (phnum + 1) % monitor->N);
+    test(monitor, (phnum + monitor->N - 1) % monitor->N);
+  pthread_mutex_unlock(&monitor->mutex);
+}
 
-  const size_t rank = private_data->thread_number;
-  const size_t team_number = rank - shared_data->team_count;
-  assert(team_number < shared_data->team_count);
+void monitor_init(monitor_t* monitor, int N, int times) {
+  monitor->N = N;
+  monitor->times = times;
+  monitor->state = (int*)malloc(N * sizeof(int));
+  monitor->phcond = (pthread_cond_t*)malloc(N * sizeof(pthread_cond_t));
+  monitor->meals = (int*)calloc(N, sizeof(int)); // Initialize meals eaten to 0
 
-  // wait(batons[team_number])
-  sem_wait(&shared_data->batons[team_number]);
-  usleep(1000 * shared_data->stage2_duration);
+  for (int i = 0; i < N; i++) {
+    monitor->state[i] = THINKING;
+    pthread_cond_init(&monitor->phcond[i], NULL);
+  }
+  pthread_mutex_init(&monitor->mutex, NULL);
+}
 
-  pthread_mutex_lock(&shared_data->finish_mutex);
-  const size_t our_position = ++shared_data->position;
-  // if (our_position <= 3) {
-    printf("Place %zu: team %zu\n", our_position, team_number);
-  // }
-  pthread_mutex_unlock(&shared_data->finish_mutex);
+void monitor_destroy(monitor_t* monitor) {
+  for (int i = 0; i < monitor->N; i++) {
+    pthread_cond_destroy(&monitor->phcond[i]);
+  }
+  pthread_mutex_destroy(&monitor->mutex);
+  free(monitor->state);
+  free(monitor->phcond);
+  free(monitor->meals);
+}
 
-  return NULL;
+void* philosopher(void* arg) {
+    private_data_t* data = (private_data_t*)arg;
+    int phnum = data->phnum;
+    monitor_t* monitor = data->monitor;
+    int meals_eaten = 0;
+    while (meals_eaten < monitor->times) {
+      sleep(1);
+      take_fork(monitor, phnum);
+      sleep(0.5);
+      put_fork(monitor, phnum);
+      meals_eaten = monitor->meals[phnum];
+    }
+    return NULL;
+}
+
+void print_meals_eaten(monitor_t* monitor) {
+    printf("Meals eaten by each philosopher:\n");
+    for (int i = 0; i < monitor->N; i++) {
+      printf("Philosopher %d: %d meals\n", i + 1, monitor->meals[i]);
+    }
 }
