@@ -49,6 +49,11 @@ int analyze_arguments(int argc, char* argv[]) {
 
 int print_odd(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
   int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
+  if (!arr_input_stdin || !arr_goldbach) {
+    fprintf(stderr, "Error: Invalid input arrays\n");
+    return EXIT_FAILURE;
+  }
+
   printf(" %ld sums", sums_counter);
   if (arr_input_stdin->elements[main_index] < 0) {
     printf(": ");
@@ -56,15 +61,16 @@ int print_odd(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
     int64_t print_counter = goldbach_index;
     goldbach_index = 0;
 
+    const int64_t NUMBERS_PER_SUM = 3; // Número de números por suma
     for (int i = 0; goldbach_index < print_counter; i++) {
-    if (i > 0) {
-      printf(", ");
-    }
+      if (i > 0) {
+        printf(", ");
+      }
       printf("%ld + %ld + %ld",
         arr_goldbach->elements[goldbach_index],
         arr_goldbach->elements[goldbach_index + 1],
         arr_goldbach->elements[goldbach_index + 2]);
-      goldbach_index += 3;
+      goldbach_index += NUMBERS_PER_SUM;
     }
   }
   printf("\n");

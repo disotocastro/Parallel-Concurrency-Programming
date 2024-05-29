@@ -166,50 +166,28 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
   
   int64_t count = arr_prime_numbers->count;
   int64_t current_num = llabs(arr_input_stdin->elements[main_index]);
-  
-  // Utilizar un hash set para verificar combinaciones previamente calculadas
-  bool* checked_combinations = (bool*)calloc(current_num + 1, sizeof(bool));
-  if (!checked_combinations) {
-    fprintf(stderr, "Error: Could not allocate memory for checked_combinations\n");
-    return EXIT_FAILURE;
-  }
 
   for (int64_t i = 0; i < count; i++) {
+    int64_t prime1 = arr_prime_numbers->elements[i];
     for (int64_t j = i; j < count; j++) {
-      int64_t prime1 = arr_prime_numbers->elements[i];
       int64_t prime2 = arr_prime_numbers->elements[j];
-      
-      // Optimizacion para reducir espacio de búsqueda
-      if (prime1 + prime2 >= current_num) break; 
-      
+      if (prime1 + prime2 >= current_num) break; // Reducción de espacio de búsqueda
+
       for (int64_t k = j; k < count; k++) {
         int64_t prime3 = arr_prime_numbers->elements[k];
         int64_t sum = prime1 + prime2 + prime3;
 
-        if (sum > current_num) break; 
-        // Optimizacion para reducir espacio de búsqueda
+        if (sum > current_num) break; // Reducción de espacio de búsqueda
 
         if (sum == current_num) {
           if (arr_input_stdin->elements[main_index] < 0) {
-            if (!checked_combinations[sum]) {
-              if (array_append(arr_goldbach, prime1) != EXIT_SUCCESS) {
-                free(checked_combinations);
-                fprintf(stderr, "Error: Could not add Goldbach sums\n");
-                return EXIT_FAILURE;
-              }
-              if (array_append(arr_goldbach, prime2) != EXIT_SUCCESS) {
-                free(checked_combinations);
-                fprintf(stderr, "Error: Could not add Goldbach sums\n");
-                return EXIT_FAILURE;
-              }
-              if (array_append(arr_goldbach, prime3) != EXIT_SUCCESS) {
-                free(checked_combinations);
-                fprintf(stderr, "Error: Could not add Goldbach sums\n");
-                return EXIT_FAILURE;
-              }
-              goldbach_index += 3;
-              checked_combinations[sum] = true;
+            if (array_append(arr_goldbach, prime1) != EXIT_SUCCESS ||
+                array_append(arr_goldbach, prime2) != EXIT_SUCCESS ||
+                array_append(arr_goldbach, prime3) != EXIT_SUCCESS) {
+              fprintf(stderr, "Error: Could not add Goldbach sums\n");
+              return EXIT_FAILURE;
             }
+            goldbach_index += 3;
           }
           sums_counter++;
         }
@@ -219,6 +197,5 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
 
   // Subrutina de impresión
   print_odd(arr_input_stdin, arr_goldbach, main_index, goldbach_index, sums_counter);
-  free(checked_combinations);
   return EXIT_SUCCESS;
 }
