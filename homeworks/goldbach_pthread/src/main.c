@@ -30,17 +30,17 @@ int main(int argc, char* argv[]) {
                                 (shared_data->arr_input.count, sizeof(sem_t));
 
     if (shared_data->can_print) {
-      // struct timespec start_time;
-      // clock_gettime(/*clk_id*/CLOCK_MONOTONIC, &start_time);
+      struct timespec start_time;
+      clock_gettime(/*clk_id*/CLOCK_MONOTONIC, &start_time);
 
       error = create_threads(shared_data);
 
-      // struct timespec finish_time;
-      // clock_gettime(/*clk_id*/CLOCK_MONOTONIC, &finish_time);
+      struct timespec finish_time;
+      clock_gettime(/*clk_id*/CLOCK_MONOTONIC, &finish_time);
 
-      // double elapsed = (finish_time.tv_sec - start_time.tv_sec) +
-      //   (finish_time.tv_nsec - start_time.tv_nsec) * 1e-9;
-      // printf("execution time: %.9lfs\n", elapsed);
+      double elapsed = (finish_time.tv_sec - start_time.tv_sec) +
+        (finish_time.tv_nsec - start_time.tv_nsec) * 1e-9;
+      printf("execution time: %.9lfs\n", elapsed);
 
       free(shared_data->can_print);
     } else {

@@ -82,7 +82,6 @@ void* run(void* data) {
     goldbach(thread_index, &shared_data->arr_input,
             &shared_data->arr_prime_num,
             &shared_data->can_print[thread_index],
-            
             &shared_data->can_print[(thread_index + 1) %
             shared_data->arr_input.count]);
   }

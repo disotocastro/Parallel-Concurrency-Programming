@@ -112,84 +112,93 @@ int64_t goldbach(size_t index, array_numbers_t* arr_input_stdin,
 }
 
 int64_t goldbach_even(array_numbers_t* arr_input_stdin,
-  array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach,
-  int64_t main_index, int64_t goldbach_index, int64_t sums_counter,
-  sem_t* can_print, sem_t* next_thread) {
-    for (size_t index_1 = 0; index_1 < arr_prime_numbers->count; index_1++) {
-      for (size_t index_2 = index_1; index_2 < arr_prime_numbers->count;
-        index_2++) {
-        if (arr_prime_numbers->elements[index_1] &&
-            arr_prime_numbers->elements[index_2] &&
-            (arr_prime_numbers->elements[index_1] +
-             arr_prime_numbers->elements[index_2]) ==
-          llabs(arr_input_stdin->elements[main_index])) {
+                      array_numbers_t* arr_prime_numbers, 
+                      array_numbers_t* arr_goldbach,
+                      int64_t main_index, 
+                      int64_t goldbach_index, 
+                      int64_t sums_counter,
+                      sem_t* can_print, 
+                      sem_t* next_thread) {
+  
+  int64_t count = arr_prime_numbers->count;
+  int64_t current_num = llabs(arr_input_stdin->elements[main_index]);
+
+  for (int64_t i = 0; i < count; i++) {
+    int64_t prime1 = arr_prime_numbers->elements[i];
+    for (int64_t j = i; j < count; j++) {
+      int64_t prime2 = arr_prime_numbers->elements[j];
+      
+      int64_t sum = prime1 + prime2;
+      if (sum > current_num) break; // Reducción de espacio de búsqueda
+
+      if (sum == current_num) {
+        if (arr_input_stdin->elements[main_index] < 0) {
+          if (array_append(arr_goldbach, prime1) != EXIT_SUCCESS ||
+              array_append(arr_goldbach, prime2) != EXIT_SUCCESS) {
+            fprintf(stderr, "Error: Could not add Goldbach sums\n");
+            return EXIT_FAILURE;
+          }
+          goldbach_index += 2;
+        }
+        sums_counter++;
+      }
+    }
+  }
+
+  sem_wait(can_print);
+  print_even(arr_input_stdin, arr_goldbach, main_index, goldbach_index, sums_counter);
+  sem_post(next_thread);
+
+  return EXIT_SUCCESS;
+}
+
+int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
+                     array_numbers_t* arr_prime_numbers, 
+                     array_numbers_t* arr_goldbach,
+                     int64_t main_index, 
+                     int64_t goldbach_index, 
+                     int64_t sums_counter,
+                     sem_t* can_print, 
+                     sem_t* next_thread) {
+  
+  int64_t count = arr_prime_numbers->count;
+  int64_t current_num = llabs(arr_input_stdin->elements[main_index]);
+
+  for (int64_t i = 0; i < count; i++) {
+    int64_t prime1 = arr_prime_numbers->elements[i];
+    for (int64_t j = i; j < count; j++) {
+      int64_t prime2 = arr_prime_numbers->elements[j];
+      
+      // Reducción de espacio de búsqueda
+      if (prime1 + prime2 >= current_num) break; 
+
+      for (int64_t k = j; k < count; k++) {
+        int64_t prime3 = arr_prime_numbers->elements[k];
+        int64_t sum = prime1 + prime2 + prime3;
+
+        // Reducción de espacio de búsqueda
+        if (sum > current_num) break; 
+
+
+        if (sum == current_num) {
           if (arr_input_stdin->elements[main_index] < 0) {
-            if (array_append(arr_goldbach,
-                arr_prime_numbers->elements[index_1]) != EXIT_SUCCESS) {
-                fprintf(stderr, "Error: Could not add goldbach sums\n");
-                return EXIT_FAILURE;
+            if (array_append(arr_goldbach, prime1) != EXIT_SUCCESS ||
+                array_append(arr_goldbach, prime2) != EXIT_SUCCESS ||
+                array_append(arr_goldbach, prime3) != EXIT_SUCCESS) {
+              fprintf(stderr, "Error: Could not add Goldbach sums\n");
+              return EXIT_FAILURE;
             }
-            if (array_append(arr_goldbach,
-                arr_prime_numbers->elements[index_2]) != EXIT_SUCCESS) {
-                fprintf(stderr, "Error: Could not add goldbach sums\n");
-                return EXIT_FAILURE;
-            }
-            goldbach_index += 2;
+            goldbach_index += 3;
           }
           sums_counter++;
         }
       }
     }
-
-    sem_wait(can_print);
-    print_even(arr_input_stdin, arr_goldbach,
-               main_index, goldbach_index, sums_counter);
-    sem_post(next_thread);
-    return EXIT_SUCCESS;
-}
-
-int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
-  array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach,
-  int64_t main_index, int64_t goldbach_index, int64_t sums_counter,
-  sem_t* can_print, sem_t* next_thread) {
-  int64_t count = (int64_t) arr_prime_numbers->count;
-  for (int64_t index_1 = 0; index_1 < count; index_1++) {
-    for (int64_t index_2 = index_1; index_2 < count; index_2++) {
-      for (int64_t index_3 = index_2; index_3 < count; index_3++) {
-        if (arr_prime_numbers->elements[index_1] != 0 &&
-            arr_prime_numbers->elements[index_2] != 0 &&
-            arr_prime_numbers->elements[index_3] != 0) {
-          if (arr_prime_numbers->elements[index_1] +
-              arr_prime_numbers->elements[index_2] +
-              arr_prime_numbers->elements[index_3] ==
-              llabs(arr_input_stdin->elements[main_index])) {
-            if (arr_input_stdin->elements[main_index] < 0) {
-              if (array_append(arr_goldbach,
-                arr_prime_numbers->elements[index_1]) != EXIT_SUCCESS) {
-                fprintf(stderr, "Error: Could not add goldbach sums\n");
-                return EXIT_FAILURE;
-              }
-              if (array_append(arr_goldbach,
-                arr_prime_numbers->elements[index_2]) != EXIT_SUCCESS) {
-                fprintf(stderr, "Error: Could not add goldbach sums\n");
-                return EXIT_FAILURE;
-              }
-              if (array_append(arr_goldbach,
-                arr_prime_numbers->elements[index_3]) != EXIT_SUCCESS) {
-                fprintf(stderr, "Error: Could not add goldbach sums\n");
-                return EXIT_FAILURE;
-              }
-              goldbach_index += 3;
-            }
-            sums_counter++;
-          }
-        }
-      }
-    }
   }
+
   sem_wait(can_print);
-  print_odd(arr_input_stdin, arr_goldbach, main_index,
-            goldbach_index, sums_counter);
+  print_odd(arr_input_stdin, arr_goldbach, main_index, goldbach_index, sums_counter);
   sem_post(next_thread);
+
   return EXIT_SUCCESS;
 }
