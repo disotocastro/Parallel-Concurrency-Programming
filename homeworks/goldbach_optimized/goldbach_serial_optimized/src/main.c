@@ -1,3 +1,5 @@
+// Copyright 2024 Diego Soto <juan.sotocastro@ucr.ac.cr>
+
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>

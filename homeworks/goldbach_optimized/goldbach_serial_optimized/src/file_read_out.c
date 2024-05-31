@@ -18,7 +18,7 @@ const char* const goldbach_help =
   " Example: -8 = 3+5 \n\n";
 
 int read_file(FILE * input, array_numbers_t* input_file) {
-  //printf("Your input numbers to test: \n");
+  //  printf("Your input numbers to test: \n");
   int64_t value = 0ll;
   while (fscanf(input, "%ld", &value) == 1) {
     if (array_append(input_file, value) != EXIT_SUCCESS) {
@@ -26,7 +26,7 @@ int read_file(FILE * input, array_numbers_t* input_file) {
       return EXIT_FAILURE;
     }
   }
-  //printf("\n");
+  //  printf("\n");
   return EXIT_SUCCESS;
 }
 // Rutina de impresión de ayuda del comando --help
@@ -61,7 +61,7 @@ int print_odd(array_numbers_t* arr_input_stdin, array_numbers_t* arr_goldbach,
     int64_t print_counter = goldbach_index;
     goldbach_index = 0;
 
-    const int64_t NUMBERS_PER_SUM = 3; // Número de números por suma
+    const int64_t NUMBERS_PER_SUM = 3;   //  Número de números por suma
     for (int i = 0; goldbach_index < print_counter; i++) {
       if (i > 0) {
         printf(", ");

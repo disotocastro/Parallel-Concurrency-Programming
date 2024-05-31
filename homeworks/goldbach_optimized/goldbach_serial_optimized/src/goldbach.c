@@ -146,7 +146,7 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
               fprintf(stderr, "Error: Could not add golbach sums\n");
               return EXIT_FAILURE;
             }
-            //array_append(arr_goldbach, next_prime);
+            //  array_append(arr_goldbach, next_prime);
             goldbach_index += 2;
           }
           sums_counter++;
@@ -163,7 +163,6 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
 int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
   array_numbers_t* arr_prime_numbers, array_numbers_t* arr_goldbach,
   int64_t main_index, int64_t goldbach_index, int64_t sums_counter) {
-  
   int64_t count = arr_prime_numbers->count;
   int64_t current_num = llabs(arr_input_stdin->elements[main_index]);
 
@@ -171,13 +170,13 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
     int64_t prime1 = arr_prime_numbers->elements[i];
     for (int64_t j = i; j < count; j++) {
       int64_t prime2 = arr_prime_numbers->elements[j];
-      if (prime1 + prime2 >= current_num) break; // Reducción de espacio de búsqueda
-
+      // Reducción de espacio de búsqueda
+      if (prime1 + prime2 >= current_num) break;
       for (int64_t k = j; k < count; k++) {
         int64_t prime3 = arr_prime_numbers->elements[k];
         int64_t sum = prime1 + prime2 + prime3;
 
-        if (sum > current_num) break; // Reducción de espacio de búsqueda
+        if (sum > current_num) break;  //  Reducción de espacio de búsqueda
 
         if (sum == current_num) {
           if (arr_input_stdin->elements[main_index] < 0) {
@@ -196,6 +195,7 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
   }
 
   // Subrutina de impresión
-  print_odd(arr_input_stdin, arr_goldbach, main_index, goldbach_index, sums_counter);
+  print_odd(arr_input_stdin, arr_goldbach,
+    main_index, goldbach_index, sums_counter);
   return EXIT_SUCCESS;
 }
