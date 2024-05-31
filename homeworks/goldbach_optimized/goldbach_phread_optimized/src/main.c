@@ -20,7 +20,6 @@ int main(int argc, char* argv[]) {
   if (shared_data) {
     analyze_arguments(argc, argv);
     shared_data->thread_count = get_thread_count(argc, argv);
-
     array_init(&shared_data->arr_input);
     read_file(input, &shared_data->arr_input);
     int64_t largest_element = largest_element_arr(&shared_data->arr_input);

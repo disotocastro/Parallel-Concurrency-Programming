@@ -112,14 +112,13 @@ int64_t goldbach(size_t index, array_numbers_t* arr_input_stdin,
 }
 
 int64_t goldbach_even(array_numbers_t* arr_input_stdin,
-                      array_numbers_t* arr_prime_numbers, 
+                      array_numbers_t* arr_prime_numbers,
                       array_numbers_t* arr_goldbach,
-                      int64_t main_index, 
-                      int64_t goldbach_index, 
+                      int64_t main_index,
+                      int64_t goldbach_index,
                       int64_t sums_counter,
-                      sem_t* can_print, 
+                      sem_t* can_print,
                       sem_t* next_thread) {
-  
   int64_t count = arr_prime_numbers->count;
   int64_t current_num = llabs(arr_input_stdin->elements[main_index]);
 
@@ -127,9 +126,8 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
     int64_t prime1 = arr_prime_numbers->elements[i];
     for (int64_t j = i; j < count; j++) {
       int64_t prime2 = arr_prime_numbers->elements[j];
-      
       int64_t sum = prime1 + prime2;
-      if (sum > current_num) break; // Reducción de espacio de búsqueda
+      if (sum > current_num) break;  // Reducción de espacio de búsqueda
 
       if (sum == current_num) {
         if (arr_input_stdin->elements[main_index] < 0) {
@@ -146,21 +144,21 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
   }
 
   sem_wait(can_print);
-  print_even(arr_input_stdin, arr_goldbach, main_index, goldbach_index, sums_counter);
+  print_even(arr_input_stdin, arr_goldbach, main_index,
+    goldbach_index, sums_counter);
   sem_post(next_thread);
 
   return EXIT_SUCCESS;
 }
 
 int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
-                     array_numbers_t* arr_prime_numbers, 
+                     array_numbers_t* arr_prime_numbers,
                      array_numbers_t* arr_goldbach,
-                     int64_t main_index, 
-                     int64_t goldbach_index, 
+                     int64_t main_index,
+                     int64_t goldbach_index,
                      int64_t sums_counter,
-                     sem_t* can_print, 
+                     sem_t* can_print,
                      sem_t* next_thread) {
-  
   int64_t count = arr_prime_numbers->count;
   int64_t current_num = llabs(arr_input_stdin->elements[main_index]);
 
@@ -168,18 +166,14 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
     int64_t prime1 = arr_prime_numbers->elements[i];
     for (int64_t j = i; j < count; j++) {
       int64_t prime2 = arr_prime_numbers->elements[j];
-      
       // Reducción de espacio de búsqueda
-      if (prime1 + prime2 >= current_num) break; 
+      if (prime1 + prime2 >= current_num) break;
 
       for (int64_t k = j; k < count; k++) {
         int64_t prime3 = arr_prime_numbers->elements[k];
         int64_t sum = prime1 + prime2 + prime3;
-
         // Reducción de espacio de búsqueda
-        if (sum > current_num) break; 
-
-
+        if (sum > current_num) break;
         if (sum == current_num) {
           if (arr_input_stdin->elements[main_index] < 0) {
             if (array_append(arr_goldbach, prime1) != EXIT_SUCCESS ||
@@ -197,7 +191,8 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
   }
 
   sem_wait(can_print);
-  print_odd(arr_input_stdin, arr_goldbach, main_index, goldbach_index, sums_counter);
+  print_odd(arr_input_stdin, arr_goldbach, main_index,
+    goldbach_index, sums_counter);
   sem_post(next_thread);
 
   return EXIT_SUCCESS;
