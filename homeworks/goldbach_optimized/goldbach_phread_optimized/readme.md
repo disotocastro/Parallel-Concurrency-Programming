@@ -1,4 +1,4 @@
-# Golbach_pthread
+# Golbach_Optimized
 - Author: Juan Diego Soto Castro, C07722.
 - E-mail: ```juan.sotocastro@ucr.ac.cr```
 
@@ -18,19 +18,36 @@ After generating the array of prime numbers, threads are created for calculating
 
 Furthermore, when computing Goldbach's sums, the task will be divided into two functions. One function will be responsible for calculating Goldbach sums for even numbers, while the other will handle sums for odd numbers. To find the sums, both methods employ brute force algorithms. Additionally, utilizing more efficient algorithms in terms of time, space and complexity, such as a backtracking algorithm, can lead to improved runtime.
 
+## Version Update
+
+Elimination of Redundant Conditions: In the original code, there were redundant checks to ensure prime numbers were non-zero (if (prime_1 != 0 && prime_2 != 0 && prime_3 != 0)), which is unnecessary since, by definition, elements in arr_prime_numbers must be prime and thus cannot be zero.
+
+Search Space Reduction: The optimized code adds a break condition in the nested loops to avoid unnecessary iterations. If the sum of the first two primes (prime1 + prime2) or the total sum (prime1 + prime2 + prime3) exceeds the current number (current_num), the corresponding loop is broken. This significantly reduces the number of iterations, especially when the prime numbers are large. This improvement was crucial and introduced a speedup of 14.2.
+
+In the Pthreads version of Goldbach, the code uses static mapping with semaphores and mutexes for synchronization during printing. While a fully functional dynamic mapping version was not implemented, several improvements were made to enhance efficiency and speedup compared to both the Pthreads and Serial versions, ensuring a fair comparison of different implementations.
+
+The same corrections as added in the serial version.
+
+Both goldbach_even and goldbach_odd functions now limit the search space using break conditions.
+
+Additionally, the sum and comparison logic is grouped into a single operation to simplify the program flow.
+
+Error handling is improved, enhancing the insertion time into arr_goldbach.
+
+
 ## How to use
 - To compile: ```make```
   
-- To run 1: ```./golbach_pthread < your_input.txt```
+- To run 1: ```./goldbach_optimized < your_input.txt```
 
-- To run 2: ```./golbach_pthread``` and then enter your numbers, when you're ready, press ```CTRL+D```
+- To run 2: ```./goldbach_optimized``` and then enter your numbers, when you're ready, press ```CTRL+D```
 
-- To run 3 (pthread): ```./golbach_pthread (num of threads) < your_input.txt```
+- To run 3 (pthread): ```./goldbach_optimized (num of threads) < your_input.txt```
 
 
 - Note: If you want to show the sums, you can enter the number in negative: ```-21```
 
-- If you need help: ```./golbach_pthread --help```
+- If you need help: ```./goldbach_optimized --help```
 
 ## Notes
 - It's important to note that if you don't provide an input.txt file and prefer to enter numbers one by one, you'll need to press ```CTRL+D``` to initiate the calculation process.
