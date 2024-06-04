@@ -33,9 +33,11 @@ El código optimizado introdujo las siguientes mejoras:
 En la versión Pthreads de Goldbach, el código utiliza un mapeo estático, 
 con el uso de semáforos y mutex para sincronizar las impresiones. 
 
-En este código, no se implementó una versión con mapeo dinámico, sin embargo, 
-se realizaron otras mejoras al código para mejorar tanto la eficiencia y speedup
-en comparación con la versión Pthreads y la versión Serial.
+En este código, no se logró la correcta implementanción de una versión con mapeo
+dinámico, sin embargo, se realizaron otras mejoras al código para mejorar tanto 
+la eficiencia y speedup en comparación con la versión Pthreads 
+y la versión Serial, esto con el fin de poder comparar de una manera justa
+las distintas implementanciones.
 
 1. **Las mismas correcciones que se agregaron en la versión serial.**
 

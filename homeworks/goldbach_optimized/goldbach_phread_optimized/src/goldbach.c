@@ -127,8 +127,10 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
     for (int64_t j = i; j < count; j++) {
       int64_t prime2 = arr_prime_numbers->elements[j];
       int64_t sum = prime1 + prime2;
-      if (sum > current_num) break;  // Reducción de espacio de búsqueda
+      // Si la suma excede el número actual, no tiene sentido seguir buscando
+      if (sum > current_num) break;
 
+      // Si la suma coincide con el número actual
       if (sum == current_num) {
         if (arr_input_stdin->elements[main_index] < 0) {
           if (array_append(arr_goldbach, prime1) != EXIT_SUCCESS ||
@@ -172,6 +174,7 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
       for (int64_t k = j; k < count; k++) {
         int64_t prime3 = arr_prime_numbers->elements[k];
         int64_t sum = prime1 + prime2 + prime3;
+        
         // Reducción de espacio de búsqueda
         if (sum > current_num) break;
         if (sum == current_num) {
