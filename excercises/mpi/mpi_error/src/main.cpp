@@ -1,4 +1,4 @@
-#include "Mpi.h"
+#include "Mpi.hpp"
 #include <iostream>
 #include <stdexcept>
 

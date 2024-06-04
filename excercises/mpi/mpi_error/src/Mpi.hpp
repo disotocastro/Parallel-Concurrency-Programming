@@ -2,6 +2,8 @@
 #define MPI_WRAPPER_MPI_H
 
 #include "mpi.h"
+#include "MpiError.hpp" // Agregar la inclusión de MpiError.hpp
+
 
 #include <exception>
 #include <iostream>
@@ -39,16 +41,15 @@ class Mpi {
     /// @param argv Referencia a la lista de argumentos.
     /// @throws std::runtime_error si MPI_Init falla.
     Mpi(int &argc, char** &argv) {
-      if (MPI_Init(&argc, &argv) == MPI_SUCCESS) {
-        MPI_Comm_size(MPI_COMM_WORLD, &process_count);
-        MPI_Comm_rank(MPI_COMM_WORLD, &process_number);
-        char char_process_name[MPI_MAX_PROCESSOR_NAME] = { '\0' };
-        int hostname_length = -1;
-        MPI_Get_processor_name(char_process_name, &hostname_length);
-        process_hostname = std::string(char_process_name, hostname_length);
-      } else {
-        fail("MPI_Init failed");
+      if (MPI_Init(&argc, &argv) != MPI_SUCCESS) {
+        throw MpiError("MPI_Init failed");
       }
+      MPI_Comm_size(MPI_COMM_WORLD, &process_count);
+      MPI_Comm_rank(MPI_COMM_WORLD, &process_number);
+      char char_process_name[MPI_MAX_PROCESSOR_NAME] = { '\0' };
+      int hostname_length = -1;
+      MPI_Get_processor_name(char_process_name, &hostname_length);
+      process_hostname = std::string(char_process_name, hostname_length);
     }
   
     /// @brief Destructor que finaliza MPI.
