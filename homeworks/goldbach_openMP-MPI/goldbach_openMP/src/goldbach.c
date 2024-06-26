@@ -129,24 +129,22 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
     for (int64_t j = i; j < count; j++) {
       int64_t prime2 = arr_prime_numbers->elements[j];
       int64_t sum = prime1 + prime2;
-      // Si la suma excede el número actual, no tiene sentido seguir buscando
       if (sum > current_num) break;
 
-      // Si la suma coincide con el número actual
       if (sum == current_num) {
         if (arr_input_stdin->elements[main_index] < 0) {
-#pragma omp ordered  // Asegurar orden para esta sección crítica
-          if (array_append(arr_goldbach, prime1) != EXIT_SUCCESS ||
-              array_append(arr_goldbach, prime2) != EXIT_SUCCESS) {
-            fprintf(stderr, "Error: Could not add Goldbach sums\n");
-            error = 1;
-            // return EXIT_FAILURE;
+#pragma omp ordered
+          {
+            if (array_append(arr_goldbach, prime1) != EXIT_SUCCESS ||
+                array_append(arr_goldbach, prime2) != EXIT_SUCCESS) {
+              fprintf(stderr, "Error: Could not add Goldbach sums\n");
+              error = 1;
+            }
           }
-#pragma omp critical  // Asegurar orden para esta sección crítica
-
+#pragma omp critical
           goldbach_index += 2;
         }
-#pragma omp critical  // Asegurar orden para esta sección crítica
+#pragma omp critical
         sums_counter++;
       }
     }
@@ -168,26 +166,27 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
 #pragma omp parallel for default(none) shared(                               \
         arr_input_stdin, arr_prime_numbers, arr_goldbach, main_index,        \
             goldbach_index, sums_counter, count, stderr, current_num, error) \
-    schedule(dynamic) ordered  // Agregar 'ordered' aquí para control de orden
+    schedule(dynamic) ordered  // 'ordered' para control de orden
   for (int64_t i = 0; i < count; i++) {
     int64_t prime1 = arr_prime_numbers->elements[i];
     for (int64_t j = i; j < count; j++) {
       int64_t prime2 = arr_prime_numbers->elements[j];
-      // Reducción de espacio de búsqueda
       for (int64_t k = j; k < count; k++) {
         int64_t prime3 = arr_prime_numbers->elements[k];
         int64_t sum = prime1 + prime2 + prime3;
 
-        if (sum > current_num) break;  //  Reducción de espacio de búsqueda
+        if (sum > current_num) break;
 
         if (sum == current_num) {
           if (arr_input_stdin->elements[main_index] < 0) {
-#pragma omp ordered  // Asegurar orden para esta sección crítica
-            if (array_append(arr_goldbach, prime1) != EXIT_SUCCESS ||
-                array_append(arr_goldbach, prime2) != EXIT_SUCCESS ||
-                array_append(arr_goldbach, prime3) != EXIT_SUCCESS) {
-              fprintf(stderr, "Error: Could not add Goldbach sums\n");
-              error = 1;
+#pragma omp ordered
+            {
+              if (array_append(arr_goldbach, prime1) != EXIT_SUCCESS ||
+                  array_append(arr_goldbach, prime2) != EXIT_SUCCESS ||
+                  array_append(arr_goldbach, prime3) != EXIT_SUCCESS) {
+                fprintf(stderr, "Error: Could not add Goldbach sums\n");
+                error = 1;
+              }
             }
 #pragma omp critical
             goldbach_index += 3;
@@ -198,8 +197,6 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
       }
     }
   }
-
-  // Subrutina de impresión
   print_odd(arr_input_stdin, arr_goldbach, main_index, goldbach_index,
             sums_counter);
   return error;

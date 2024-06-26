@@ -3,6 +3,7 @@
 #include "goldbach.h"
 
 #include <math.h> /* Makefile LIBS= -lm */
+#include <omp.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -115,57 +116,43 @@ int64_t goldbach_even(array_numbers_t* arr_input_stdin,
                       array_numbers_t* arr_prime_numbers,
                       array_numbers_t* arr_goldbach, int64_t main_index,
                       int64_t goldbach_index, int64_t sums_counter) {
-  int64_t count = (int)arr_prime_numbers->count;
-  int64_t this_prime = 0;
-  int64_t next_prime = 0;
+  int64_t count = arr_prime_numbers->count;
+  int64_t current_num = llabs(arr_input_stdin->elements[main_index]);
+  int error = 0;
 
-  // Array para manejar la impresión en orden
-  bool appended[count];
-  appended[0] = true;
-  for (int64_t i = 1; i < count; i++) {
-    appended[i] = false;
-  }
+#pragma omp parallel for default(none)                                   \
+    shared(arr_input_stdin, arr_prime_numbers, arr_goldbach, main_index, \
+               goldbach_index, sums_counter, count, stderr, current_num, \
+               error) schedule(dynamic) ordered
+  for (int64_t i = 0; i < count; i++) {
+    int64_t prime1 = arr_prime_numbers->elements[i];
+    for (int64_t j = i; j < count; j++) {
+      int64_t prime2 = arr_prime_numbers->elements[j];
+      int64_t sum = prime1 + prime2;
+      if (sum > current_num) break;
 
-#pragma omp parallel for private(this_prime, next_prime) schedule(dynamic)
-  for (int64_t index_1 = 0; index_1 < count; index_1++) {
-    for (int64_t index_2 = index_1; index_2 < count; index_2++) {
-      this_prime = arr_prime_numbers->elements[index_1];
-      next_prime = arr_prime_numbers->elements[index_2];
-
-      if (this_prime != 0 && next_prime != 0) {
-        if ((this_prime + next_prime) ==
-            llabs(arr_input_stdin->elements[main_index])) {
-#pragma omp critical
+      if (sum == current_num) {
+        if (arr_input_stdin->elements[main_index] < 0) {
+#pragma omp ordered
           {
-            if (arr_input_stdin->elements[main_index] < 0) {
-              if (array_append(arr_goldbach, this_prime) != EXIT_SUCCESS) {
-                fprintf(stderr, "Error: Could not add Goldbach sums\n");
-                continue;
-              }
-              if (array_append(arr_goldbach, next_prime) != EXIT_SUCCESS) {
-                fprintf(stderr, "Error: Could not add Goldbach sums\n");
-                continue;
-              }
-              goldbach_index += 2;
+            if (array_append(arr_goldbach, prime1) != EXIT_SUCCESS ||
+                array_append(arr_goldbach, prime2) != EXIT_SUCCESS) {
+              fprintf(stderr, "Error: Could not add Goldbach sums\n");
+              error = 1;
             }
-            sums_counter++;
           }
+#pragma omp critical
+          goldbach_index += 2;
         }
+#pragma omp critical
+        sums_counter++;
       }
     }
-    // Espera para la impresión en orden
-    while (!appended[index_1]) {
-#pragma omp flush(appended)
-    }
-    if (index_1 + 1 < count) {
-      appended[index_1 + 1] = true;
-    }
   }
 
-  // Subrutina de impresión
   print_even(arr_input_stdin, arr_goldbach, main_index, goldbach_index,
              sums_counter);
-  return EXIT_SUCCESS;
+  return error;
 }
 
 int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
@@ -174,56 +161,43 @@ int64_t goldbach_odd(array_numbers_t* arr_input_stdin,
                      int64_t goldbach_index, int64_t sums_counter) {
   int64_t count = arr_prime_numbers->count;
   int64_t current_num = llabs(arr_input_stdin->elements[main_index]);
+  int error = 0;
 
-  // Array para manejar la impresión en orden
-  bool appended[count];
-  appended[0] = true;
-  for (int64_t i = 1; i < count; i++) {
-    appended[i] = false;
-  }
-
-#pragma omp parallel for schedule(dynamic) shared(appended) \
-    firstprivate(current_num) reduction(+ : sums_counter)
+#pragma omp parallel for default(none) shared(                               \
+        arr_input_stdin, arr_prime_numbers, arr_goldbach, main_index,        \
+            goldbach_index, sums_counter, count, stderr, current_num, error) \
+    schedule(dynamic) ordered  // 'ordered' para control de orden
   for (int64_t i = 0; i < count; i++) {
     int64_t prime1 = arr_prime_numbers->elements[i];
     for (int64_t j = i; j < count; j++) {
       int64_t prime2 = arr_prime_numbers->elements[j];
-      // Reducción de espacio de búsqueda
-      if (prime1 + prime2 >= current_num) break;
       for (int64_t k = j; k < count; k++) {
         int64_t prime3 = arr_prime_numbers->elements[k];
         int64_t sum = prime1 + prime2 + prime3;
 
-        if (sum > current_num) break;  // Reducción de espacio de búsqueda
+        if (sum > current_num) break;
 
         if (sum == current_num) {
-#pragma omp critical
-          {
-            if (arr_input_stdin->elements[main_index] < 0) {
+          if (arr_input_stdin->elements[main_index] < 0) {
+#pragma omp ordered
+            {
               if (array_append(arr_goldbach, prime1) != EXIT_SUCCESS ||
                   array_append(arr_goldbach, prime2) != EXIT_SUCCESS ||
                   array_append(arr_goldbach, prime3) != EXIT_SUCCESS) {
                 fprintf(stderr, "Error: Could not add Goldbach sums\n");
-                continue;
+                error = 1;
               }
-              goldbach_index += 3;
             }
-            sums_counter++;
+#pragma omp critical
+            goldbach_index += 3;
           }
+#pragma omp critical
+          sums_counter++;
         }
       }
     }
-    // Espera para la impresión en orden
-    while (!appended[i]) {
-#pragma omp flush(appended)
-    }
-    if (i + 1 < count) {
-      appended[i + 1] = true;
-    }
   }
-
-  // Subrutina de impresión
   print_odd(arr_input_stdin, arr_goldbach, main_index, goldbach_index,
             sums_counter);
-  return EXIT_SUCCESS;
+  return error;
 }
