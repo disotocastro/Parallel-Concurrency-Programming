@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
   int64_t local_start = rank * total_input_num / process_count;
   int64_t local_end = (rank + 1) * total_input_num / process_count;
 
-  // Inicializa un arreglo local para los números de entrada de cada proceso
+  // Inicializa un arreglo para los números de entrada de cada proceso
   array_numbers_t* local_input =
       (array_numbers_t*)calloc(1, sizeof(array_numbers_t));
   array_init(local_input);
