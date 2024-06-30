@@ -91,7 +91,7 @@ int main(int argc, char* argv[]) {
     array_init(global_goldbach_results);
 
     // Agrega los resultados locales al resultado global
-    for (int i = 0; i < local_goldbach_results->count; ++i) {
+    for (size_t i = 0; i < local_goldbach_results->count; ++i) {
       array_append(global_goldbach_results,
                    local_goldbach_results->elements[i]);
     }
@@ -112,7 +112,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Imprime los resultados globales
-    for (int i = 0; i < global_goldbach_results->count; ++i) {
+    for (size_t i = 0; i < global_goldbach_results->count; ++i) {
       printf("%ld\n", global_goldbach_results->elements[i]);
     }
 
