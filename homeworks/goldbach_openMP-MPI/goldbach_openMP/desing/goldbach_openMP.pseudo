@@ -1,0 +1,124 @@
+// Copyright 2024 Diego Soto <juan.sotocastro@ucr.ac.cr>
+
+const MAX_INT64 = INT64_MAX
+
+// Función para encontrar el mayor elemento en un array
+function elemento_mas_grande_array(arr_input_stdin)
+  if arr_input_stdin es NULL
+    Imprimir "Error: No se pudieron leer los números de entrada"
+    return EXIT_FAILURE
+
+  numero_mas_grande = 0
+  for index = 0 to arr_input_stdin.count - 1
+    numero_actual = valor_absoluto(arr_input_stdin.elements[index])
+    if numero_actual > numero_mas_grande and numero_actual <= MAX_INT64
+      numero_mas_grande = numero_actual
+  return numero_mas_grande
+
+// Función para verificar si un número es primo
+function es_primo(num)
+  if num <= 1
+    return false
+  if num <= 3
+    return true
+
+  for index = 2 to sqrt(num)
+    if num % index == 0
+      return false
+  return true
+
+// Función para realizar la división de prueba y encontrar números primos
+function division_de_prueba(arr_numeros_primos, numero_mas_grande)
+  for num = 2 to numero_mas_grande
+    if es_primo(num)
+      array_append(arr_numeros_primos, num)
+  return EXIT_SUCCESS
+
+// Función principal para el cálculo de las sumas de Goldbach
+function goldbach(arr_input_stdin, arr_numeros_primos)
+  if arr_input_stdin es NULL or arr_numeros_primos es NULL
+    return EXIT_FAILURE
+
+  for main_index = 0 to arr_input_stdin.count - 1
+    inicializar arr_goldbach
+    numero_actual = arr_input_stdin.elements[main_index]
+    Imprimir numero_actual ":"
+
+    if 5 < valor_absoluto(numero_actual) < MAX_INT64
+      if valor_absoluto(numero_actual) % 2 == 0
+        if goldbach_par(arr_input_stdin, arr_numeros_primos, arr_goldbach, main_index) != EXIT_SUCCESS
+          Imprimir "Error: No se pudieron calcular las sumas de Goldbach pares"
+          return EXIT_FAILURE
+      else
+        if goldbach_impar(arr_input_stdin, arr_numeros_primos, arr_goldbach, main_index) != EXIT_SUCCESS
+          Imprimir "Error: No se pudieron calcular las sumas de Goldbach impares"
+          return EXIT_FAILURE
+    else
+      Imprimir " NA"
+    destruir arr_goldbach
+  return EXIT_SUCCESS
+
+// Función para calcular las sumas de Goldbach pares
+function goldbach_par(arr_input_stdin, arr_numeros_primos, arr_goldbach, main_index)
+  numero_actual = valor_absoluto(arr_input_stdin.elements[main_index])
+  error = 0
+
+  paralelo para i = 0 to arr_numeros_primos.count - 1
+    primo1 = arr_numeros_primos.elements[i]
+    para j = i to arr_numeros_primos.count - 1
+      primo2 = arr_numeros_primos.elements[j]
+      suma = primo1 + primo2
+      si suma > numero_actual romper
+
+      si suma == numero_actual
+        si arr_input_stdin.elements[main_index] < 0
+          si array_append(arr_goldbach, primo1) != EXIT_SUCCESS or array_append(arr_goldbach, primo2) != EXIT_SUCCESS
+            Imprimir "Error: No se pudieron agregar las sumas de Goldbach"
+            error = 1
+  imprimir_par(arr_input_stdin, arr_goldbach, main_index)
+  return error
+
+// Función para calcular las sumas de Goldbach impares
+function goldbach_impar(arr_input_stdin, arr_numeros_primos, arr_goldbach, main_index)
+  numero_actual = valor_absoluto(arr_input_stdin.elements[main_index])
+  error = 0
+
+  paralelo para i = 0 to arr_numeros_primos.count - 1
+    primo1 = arr_numeros_primos.elements[i]
+    para j = i to arr_numeros_primos.count - 1
+      primo2 = arr_numeros_primos.elements[j]
+      para k = j to arr_numeros_primos.count - 1
+        primo3 = arr_numeros_primos.elements[k]
+        suma = primo1 + primo2 + primo3
+        si suma > numero_actual romper
+
+        si suma == numero_actual
+          si arr_input_stdin.elements[main_index] < 0
+            si array_append(arr_goldbach, primo1) != EXIT_SUCCESS or array_append(arr_goldbach, primo2) != EXIT_SUCCESS or array_append(arr_goldbach, primo3) != EXIT_SUCCESS
+              Imprimir "Error: No se pudieron agregar las sumas de Goldbach"
+              error = 1
+  imprimir_impar(arr_input_stdin, arr_goldbach, main_index)
+  return error
+
+// Función principal del programa
+function main(argc, argv)
+  analizar_argumentos(argc, argv)
+
+  input = stdin
+  inicializar arr_input_stdin
+  leer_archivo(input, arr_input_stdin)
+
+  numero_mas_grande = elemento_mas_grande_array(arr_input_stdin)
+  inicializar arr_numeros_primos
+  division_de_prueba(arr_numeros_primos, numero_mas_grande)
+
+  registrar_tiempo_inicio()
+
+  goldbach(arr_input_stdin, arr_numeros_primos)
+
+  registrar_tiempo_fin()
+  imprimir_tiempo_ejecucion()
+
+  destruir arr_numeros_primos
+  destruir arr_input_stdin
+  return EXIT_SUCCESS

@@ -10,7 +10,7 @@ Este documento de reporte resume las pruebas realizadas tanto para Goldbach_MPI 
 
 Procesador: i5-8600 @ 3.10Gz x 6.
 
-RAM: 16GB.
+RAM: 16GB.t
 
 Sistema operativo: Ubuntu, con uso mínimo.
 
