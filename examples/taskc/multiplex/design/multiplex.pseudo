@@ -6,7 +6,6 @@ procedure main:
 end procedure
 
 procedure skater:
-  // Concurrency-bounded region
   wait(can_skate)
   skate()
   signal(can_skate)
