@@ -1,13 +1,16 @@
-# Golbach_Serial
+# Golbach_MPI
 - Author: Juan Diego Soto Castro, C07722.
 - E-mail: ```juan.sotocastro@ucr.ac.cr```
 
 ## Summary
-This C program calculates Goldbach sums for a list of integer numbers provided via standard input. The Goldbach conjecture states that every even integer greater than 5 can be expressed as the sum of two prime for the even numbers or sum of three numbers if the number is odd.
+This C program calculates Goldbach sums for a list of integer numbers provided via standard input. The Goldbach conjecture states that every even integer greater than 5 can be expressed as the sum of two prime numbers, and every odd integer greater than 5 can be expressed as the sum of three prime numbers.
 
-The program sequentially processes each input number, finding all possible Goldbach sums and showing the total of sums. 
-
-Additionally, the program prints a list of the input numbers along with the count of Goldbach sums for each number. If a negative number is entered, the program lists all Goldbach sums for the corresponding positive number.
+Features
+- Calculates Goldbach sums for both even and odd numbers.
+- Handles negative input numbers by calculating sums for their absolute values.
+- Uses MPI for parallel computation to improve performance over a serial implementation.
+- Prints the total count of Goldbach sums for each input number.
+- Lists all Goldbach sums for negative numbers.
 
 ## Analysis
 To create a program that calculates the Goldbach sums, the first step is to generate prime numbers. There are many methods for doing this; the Sieve of Eratosthenes and Trial Division are the most popular methods for generating large sets of prime numbers. While there are numerous variations of these two methods, this program employs the classic Trial Division approach. However, it's worth noting that there are various adaptations of these methods that can enhance performance and may be incorporated into the program in the future.
@@ -17,13 +20,13 @@ Furthermore, when computing Goldbach's sums, the task will be divided into two f
 ## How to use
 - To compile: ```make```
 
-- To run 1: ```./golbach_serial < your_input.txt```
+- To run 1: ```./golbach_MPI < your_input.txt```
 
-- To run 2: ```./golbach_serial``` and then enter your numbers, when you're ready, press ```CTRL+D```
+- To run 2: ```./golbach_MPI``` and then enter your numbers, when you're ready, press ```CTRL+D```
 
 - Note: If you want to show the sums, you can enter the number in negative: ```-21```
 
-- If you need help: ```./golbach_serial --help```
+- If you need help: ```./golbach_MPI --help```
 
 ## Notes
 - It's important to note that if you don't provide an input.txt file and prefer to enter numbers one by one, you'll need to press ```CTRL+D``` to initiate the calculation process.

@@ -1,0 +1,148 @@
+// Definir constantes y variables globales si es necesario
+const int64_t MAX_INT64 = INT64_MAX;
+
+// Función principal
+main(argc, argv) {
+  analizar_argumentos(argc, argv);
+  MPI_Init(&argc, &argv);
+
+  iniciar_reloj(start_time);
+
+  obtener_rank_proceso(rank);
+  obtener_numero_total_procesos(process_count);
+
+  // Inicializar arreglos de números
+  array_usuario = inicializar_arreglo();
+  if (rank == 0) {
+    array_usuario = leer_input_usuario(input_usuario);
+  }
+
+  total_input_num = contar_numeros(array_usuario);
+
+  // Distribuir número total de números de entrada a todos los procesos
+  distribuir_numero_total(total_input_num);
+
+  if (rank != 0) {
+    // Asignar memoria para los elementos de entrada si no es el proceso principal
+    array_usuario = asignar_memoria(total_input_num);
+  }
+
+  // Distribuir números de entrada a todos los procesos
+  distribuir_numeros(array_usuario, total_input_num);
+
+  // Calcular el mayor elemento
+  input_mas_grande = elemento_mas_grande_array(array_usuario);
+
+  // Inicializar y calcular números primos
+  array_numeros_primos = inicializar_arreglo();
+  trial_division(array_numeros_primos, input_mas_grande);
+
+  // Determinar la porción de la entrada que manejará cada proceso
+  determinar_porcion_proceso(local_start, local_end, rank, total_input_num, process_count);
+
+  // Inicializar arreglos locales
+  local_input = inicializar_arreglo();
+  distribuir_porcion_local(local_input, array_usuario, local_start, local_end);
+
+  local_goldbach_results = inicializar_arreglo();
+
+  // Calcular sumas de Goldbach para la porción local
+  Goldbach(local_input, array_numeros_primos);
+
+  // Recoger resultados de vuelta al proceso raíz
+  if (rank == 0) {
+    global_goldbach_results = inicializar_arreglo();
+    agregar_resultados(global_goldbach_results, local_goldbach_results);
+
+    for (i = 1; i < process_count; ++i) {
+      recibir_resultados_proceso(recv_count, recv_elements, i);
+      agregar_resultados(global_goldbach_results, recv_elements);
+    }
+
+    imprimir_resultados(global_goldbach_results);
+    destruir_arreglo(global_goldbach_results);
+  } else {
+    enviar_resultados(local_goldbach_results, rank);
+  }
+
+  obtener_tiempo_final(finish_time);
+  calcular_tiempo_ejecucion(elapsed, start_time, finish_time);
+
+  if (rank == 0) {
+    imprimir_tiempo_ejecucion(elapsed);
+  }
+
+  // Liberar memoria y finalizar MPI
+  destruir_arreglos(array_numeros_primos, array_usuario, local_input, local_goldbach_results);
+
+  MPI_Finalize();
+  return EXIT_SUCCESS;
+}
+
+// Función para encontrar el elemento más grande en un arreglo
+elemento_mas_grande_array(array_usuario) {
+  numero_mas_grande = 0;
+  for (i = 0; i < array_usuario.lenght(); i++) {
+    numero_actual = valor_absoluto(array_usuario[i]);
+    if (numero_actual > numero_mas_grande && numero_actual <= MAX_INT64) {
+      numero_mas_grande = numero_actual;
+    }
+  }
+  return numero_mas_grande;
+}
+
+// Función para calcular las sumas de Goldbach
+Goldbach(array_usuario, array_numeros_primos) {
+  for (main_index = 0; main_index < array_usuario.lenght(); main_index++) {
+    numero_actual = valor_absoluto(array_usuario[main_index]);
+    if (numero_actual > 5 && numero_actual < MAX_INT64) {
+      if (numero_actual % 2 == 0) {
+        goldbach_par(array_usuario, array_numeros_primos, main_index);
+      } else {
+        goldbach_impar(array_usuario, array_numeros_primos, main_index);
+      }
+    } else {
+      imprimir("NA");
+    }
+  }
+}
+
+// Función para calcular las sumas de Goldbach para números pares
+goldbach_par(array_usuario, array_numeros_primos, main_index) {
+  numero_acutal = array_usuario->elementos[main_index];
+  for (i = 0; i < array_usuario.lenght(); i++) {
+    for (j = i; j < array_usuario.lenght(); j++) {
+      primo_1 = array_numeros_primos[i];
+      primo_2 = array_numeros_primos[j];
+      if (primo_1 + primo_2 == numero_acutal) {
+        if (numero_acutal < 0) {
+          agregar_elemento(arr_goldbach, primo_1);
+          agregar_elemento(arr_goldbach, primo_2);
+        }
+      }
+    }
+  }
+  rutina_impresion_par(arr_goldbach);
+}
+
+// Función para calcular las sumas de Goldbach para números impares
+goldbach_impar(array_usuario, array_numeros_primos, main_index) {
+  numero_acutal = array_usuario->elementos[main_index];
+  for (i = 0; i < array_usuario.lenght(); i++) {
+    for (j = i; j < array_usuario.lenght(); j++) {
+      for (k = j; k < array_usuario.lenght(); k++) {
+        primo_1 = array_numeros_primos[i];
+        primo_2 = array_numeros_primos[j];
+        primo_3 = array_numeros_primos[k];
+        if (primo_1 + primo_2 + primo_3 == numero_acutal) {
+          if (numero_acutal < 0) {
+            agregar_elemento(arr_goldbach, primo_1);
+            agregar_elemento(arr_goldbach, primo_2);
+            agregar_elemento(arr_goldbach, primo_3);
+          }
+        }
+      }
+    }
+  }
+  rutina_impresion_impar(arr_goldbach);
+}
