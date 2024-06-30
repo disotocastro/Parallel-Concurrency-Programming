@@ -1,9 +1,8 @@
 procedure main:
-// we add a semaphore to give order to the solution
-thread_count := read_interger("How many threads? ");
-  create_threads(thread_count, secundary)
+  declare thread_count := read_integer()
+  create_threads(thread_count, secondary)
 end procedure
-//TODO: add the secundary procedure to be always in order
-procedure secundary:
+
+procedure secondary:
   statement a
 end procedure
